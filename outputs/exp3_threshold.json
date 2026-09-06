@@ -1,0 +1,67 @@
+{
+  "id": "exp3_threshold",
+  "title": "E3 阈值状态开关: 同一底层输出的三种认知内容",
+  "passed": true,
+  "checks": [
+    {
+      "name": "读取端对底层零副作用 (state 逐字节一致)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "threshold=0.5: 可见节点数 = 7",
+      "ok": true,
+      "detail": "visible 7 个: ABCDEFG"
+    },
+    {
+      "name": "threshold=0.1: 可见节点数 = 22",
+      "ok": true,
+      "detail": "visible 22 个: ABCDEFGHIJKLMNOPQRSTUV"
+    },
+    {
+      "name": "threshold=0.001: 可见节点数 = 26",
+      "ok": true,
+      "detail": "visible 26 个: ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    },
+    {
+      "name": "高阈值只保留链头, 低阈值放行到链尾 (认知状态剧变, 网络不变)",
+      "ok": true,
+      "detail": "0.5 < 0.1 < 0.001"
+    }
+  ],
+  "data": {
+    "activation_A": {
+      "A": 1.0,
+      "B": 0.9,
+      "C": 0.81,
+      "D": 0.729,
+      "E": 0.6561,
+      "F": 0.59049,
+      "G": 0.531441,
+      "H": 0.478297,
+      "I": 0.430467,
+      "J": 0.38742,
+      "K": 0.348678,
+      "L": 0.313811,
+      "M": 0.28243,
+      "N": 0.254187,
+      "O": 0.228768,
+      "P": 0.205891,
+      "Q": 0.185302,
+      "R": 0.166772,
+      "S": 0.150095,
+      "T": 0.135085,
+      "U": 0.121577,
+      "V": 0.109419,
+      "W": 0.098477,
+      "X": 0.088629,
+      "Y": 0.079766,
+      "Z": 0.07179
+    },
+    "visible_sets": {
+      "0.5": "ABCDEFG",
+      "0.1": "ABCDEFGHIJKLMNOPQRSTUV",
+      "0.001": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    }
+  }
+}

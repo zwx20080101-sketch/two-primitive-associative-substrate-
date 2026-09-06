@@ -1,0 +1,80 @@
+{
+  "id": "exp2_strength",
+  "title": "E2 重复经验强度: 底层保存全部, 阈值决定可访问",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P3: [A,B]x100 -> N(A,B)=100",
+      "ok": true,
+      "detail": "N(A,B)=100"
+    },
+    {
+      "name": "弱经验 [A,X]x2 -> N(A,X)=2",
+      "ok": true,
+      "detail": "N(A,X)=2"
+    },
+    {
+      "name": "P3: 有效强度 W(A,B)=100 > W(A,X)=2",
+      "ok": true,
+      "detail": "W(A,B)=100.0, W(A,X)=2.0"
+    },
+    {
+      "name": "归一化强度: strength(A->B)=1.0 > strength(A->X)=0.02",
+      "ok": true,
+      "detail": "s(A->B)=1.0, s(A->X)=0.02"
+    },
+    {
+      "name": "底层全量输出必须包含弱节点 X",
+      "ok": true,
+      "detail": "keys=['A', 'B', 'C', 'D', 'X']"
+    },
+    {
+      "name": "逐节点数值符合公式 (B=0.9, C=0.81, D=0.729, X=0.018)",
+      "ok": true,
+      "detail": "observed={'A': 1.0, 'B': 0.9, 'C': 0.81, 'D': 0.729, 'X': 0.018}"
+    },
+    {
+      "name": "B 明显强于 X (重复经验改变传播)",
+      "ok": true,
+      "detail": "a(B)=0.900000, a(X)=0.018000"
+    },
+    {
+      "name": "threshold=0.5: X 被过滤 (想不起 X)",
+      "ok": true,
+      "detail": "visible=['A', 'B', 'C', 'D']"
+    },
+    {
+      "name": "threshold=0.01: X 重新可访问 (X 一直存在)",
+      "ok": true,
+      "detail": "visible=['A', 'B', 'C', 'D', 'X']"
+    }
+  ],
+  "data": {
+    "network": {
+      "N(A,B)": 100,
+      "N(B,C)": 100,
+      "N(C,D)": 100,
+      "N(A,X)": 2
+    },
+    "full_activation": {
+      "A": 1.0,
+      "B": 0.9,
+      "C": 0.81,
+      "D": 0.729,
+      "X": 0.018
+    },
+    "visible_high_threshold": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "visible_low_threshold": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "X"
+    ]
+  }
+}

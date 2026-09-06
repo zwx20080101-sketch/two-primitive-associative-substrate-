@@ -1,0 +1,55 @@
+{
+  "id": "exp14_multi_path_evidence",
+  "title": "E14 多路证据: max vs sum 会合规则对比 (不改层文件)",
+  "passed": true,
+  "checks": [
+    {
+      "name": "1) max 规则: 双路 T = 单路 T = 0.81 (会合无增益, 现状)",
+      "ok": true,
+      "detail": "单路=0.8100, 双路=0.8100"
+    },
+    {
+      "name": "2) sum 规则: 双路 T = 1.0 (封顶), 单路 T = 0.81 (会合有增益)",
+      "ok": true,
+      "detail": "单路=0.8100, 双路=1.0000"
+    },
+    {
+      "name": "3) 双路/单路比值: max=1.0, sum≈1.23",
+      "ok": true,
+      "detail": "max 比值=1.0000, sum 比值=1.2346"
+    },
+    {
+      "name": "4) 成本清单已记录: 换 sum 需要重基线的实验 = E9/E8/E6a-S3",
+      "ok": true,
+      "detail": "E9: 打 A+E 时中间 C 会从 0.81 升到封顶 1.0 (会合点判据要重基线); E8: 打狗时 猫 会收到 咬->猫 与 追->猫 两路 -> 从 0.81 升到 1.0; E6a-S3: C 收到 X1 直达 + B 转来两路 -> 比值从 2.0 变化"
+    },
+    {
+      "name": "5) 循环安全: sum 在三角形环上终止且所有值 <= 1.0 (封顶)",
+      "ok": true,
+      "detail": "iterations=3, acts={'A': 1.0, 'B': 1.0, 'C': 0.9}"
+    }
+  ],
+  "data": {
+    "max_rule": {
+      "single_T": 0.81,
+      "dual_T": 0.81,
+      "dual_single_ratio": 1.0
+    },
+    "sum_rule": {
+      "single_T": 0.81,
+      "dual_T": 1.0,
+      "dual_single_ratio": 1.234568,
+      "converged_iterations_dual": 4
+    },
+    "affected_if_global_sum": {
+      "E9": "打 A+E 时中间 C 会从 0.81 升到封顶 1.0 (会合点判据要重基线)",
+      "E8": "打狗时 猫 会收到 咬->猫 与 追->猫 两路 -> 从 0.81 升到 1.0",
+      "E6a-S3": "C 收到 X1 直达 + B 转来两路 -> 比值从 2.0 变化"
+    },
+    "cycle_safety": {
+      "terminated": true,
+      "iterations": 3,
+      "bounded": true
+    }
+  }
+}

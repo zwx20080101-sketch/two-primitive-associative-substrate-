@@ -1,0 +1,88 @@
+{
+  "id": "exp5_direction_hello",
+  "title": "E5 L1 方向层: HELLO 正走顺、倒走费力 (顺序只来自经验统计)",
+  "passed": true,
+  "checks": [
+    {
+      "name": "L0 与 L1 都从空白启动",
+      "ok": true,
+      "detail": "L0: 0 nodes / 0 edges; L1: 0 nodes / 0 directed pairs"
+    },
+    {
+      "name": "经验后: L0 有 4 nodes / 3 无向连接; L1 有 4 nodes / 4 方向记录(含 l->l 重复标记)",
+      "ok": true,
+      "detail": "L0: 4 / 3; L1: 4 / 4"
+    },
+    {
+      "name": "方向分开记账: 顺向与 l->l 重复标记各 100 次, 反向各 0 次",
+      "ok": true,
+      "detail": "{'H->e': 100, 'e->l': 100, 'l->l': 100, 'l->o': 100, 'e->H': 0, 'l->e': 0, 'o->l': 0}"
+    },
+    {
+      "name": "从 H 打: 正向一路顺, 到达 o (0.9^3)",
+      "ok": true,
+      "detail": "H:1.0 -> e:0.9 -> l:0.81 -> o:0.729"
+    },
+    {
+      "name": "从 o 打: 第一跳 l 仍顺 (末尾好回忆)",
+      "ok": true,
+      "detail": "a(l)=0.900000000"
+    },
+    {
+      "name": "反向越走越费劲: e 已近消失, H 几乎不可达",
+      "ok": true,
+      "detail": "a(e)=0.008020, a(H)=0.00007146 (公式预期 e=0.008020, H=0.00007146)"
+    },
+    {
+      "name": "threshold=0.5 时倒背只够得着 o、l; 降到 1e-5 才倒完整",
+      "ok": true,
+      "detail": "0.5 -> lo; 1e-5 -> Helo"
+    },
+    {
+      "name": "冻结的 L0 仍完全对称: 从 o 打, H 照样 0.729",
+      "ok": true,
+      "detail": "L0 a(H)=0.729000000"
+    },
+    {
+      "name": "走读器: H 出发正向走通 H-e-l-o",
+      "ok": true,
+      "detail": "H-e-l-o"
+    },
+    {
+      "name": "走读器: o 出发反向仍能倒走 o-l-e-H (只是每步都弱)",
+      "ok": true,
+      "detail": "o-l-e-H"
+    }
+  ],
+  "data": {
+    "counts": {
+      "H->e": 100,
+      "e->l": 100,
+      "l->l": 100,
+      "l->o": 100,
+      "e->H": 0,
+      "l->e": 0,
+      "o->l": 0
+    },
+    "activation": {
+      "H": 1.0,
+      "e": 0.9,
+      "l": 0.81,
+      "o": 0.729
+    },
+    "reverse_activation": {
+      "H": 7.1464e-05,
+      "e": 0.008019802,
+      "l": 0.9,
+      "o": 1.0
+    },
+    "bottom_reverse_activation": {
+      "H": 0.729,
+      "e": 0.81,
+      "l": 0.9,
+      "o": 1.0
+    },
+    "forward_walk": "H-e-l-o",
+    "reverse_walk": "o-l-e-H"
+  }
+}

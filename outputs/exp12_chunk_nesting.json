@@ -1,0 +1,122 @@
+{
+  "id": "exp12_chunk_nesting",
+  "title": "E12 组块与嵌套: L4 组块层 (整词/双写/块复用/嵌套句)",
+  "passed": true,
+  "checks": [
+    {
+      "name": "S1 成块: HELLO 出现 100 次 -> 恰好 1 个块 (K=5)",
+      "ok": true,
+      "detail": "chunks=['CH_1']"
+    },
+    {
+      "name": "S1 双写: spell(CH_HELLO) = [H,e,l,l,o] (5 个位置, 双写还原)",
+      "ok": true,
+      "detail": "spell=['H', 'e', 'l', 'l', 'o']"
+    },
+    {
+      "name": "S1 成员绑定: 去重成员 H/e/l/o 各绑定 96 次 (第 5 次起)",
+      "ok": true,
+      "detail": "{'H': 96, 'e': 96, 'l': 96, 'o': 96}"
+    },
+    {
+      "name": "S1 对照: 平面 L1 链只能走 H-e-l-o, 还原不了双写 (局限记录)",
+      "ok": true,
+      "detail": "flat walk=['H', 'e', 'l', 'o']"
+    },
+    {
+      "name": "S1 原子性: 打'课堂' -> 块 CH_HELLO 作为整体被唤起 (0.9)",
+      "ok": true,
+      "detail": "a(CH_HELLO)=0.9000"
+    },
+    {
+      "name": "S2 成块: 红苹果 成块, 且两句共用同一个块节点",
+      "ok": true,
+      "detail": "chunk=CH_1, N(喜欢,CH_1)=100, N(买了,CH_1)=100"
+    },
+    {
+      "name": "S2 块度: 块节点在两句中 degree=2 (喜欢/买了)",
+      "ok": true,
+      "detail": "degree=2"
+    },
+    {
+      "name": "S2 取回: 从'喜欢'或'买了'都能整体唤起同一块 (0.9)",
+      "ok": true,
+      "detail": "a(块|喜欢)=0.9000, a(块|买了)=0.9000"
+    },
+    {
+      "name": "S2 展开: spell(块) = [红,苹果]",
+      "ok": true,
+      "detail": "spell=['红', '苹果']"
+    },
+    {
+      "name": "S3 成块: 咬猫 成块 C1, spell=[咬,猫]",
+      "ok": true,
+      "detail": "C1=CH_1, spell=['咬', '猫']"
+    },
+    {
+      "name": "S3 主谓: 块级序列 [C1,的,狗,追,老鼠] 中 狗-追 相邻 (N=100)",
+      "ok": true,
+      "detail": "N(狗,追)=100, N(C1,的)=100"
+    },
+    {
+      "name": "S3 跨块依赖: 打狗 -> 追=0.9 (主谓在块级没被从句打断)",
+      "ok": true,
+      "detail": "a(追|狗)=0.9000"
+    },
+    {
+      "name": "S3 整句取回: 从句首 C1 走读整句 C1-的-狗-追-老鼠",
+      "ok": true,
+      "detail": "CH_1-的-狗-追-老鼠"
+    },
+    {
+      "name": "S3 对照: 平面链没有独立块节点; '咬'只是 1 度字母, 展开不出独立'咬猫'",
+      "ok": true,
+      "detail": "咬 degree=1, nodes=['咬', '狗', '猫', '的', '老鼠', '追']"
+    }
+  ],
+  "data": {
+    "s1": {
+      "chunk": "CH_1",
+      "spell": [
+        "H",
+        "e",
+        "l",
+        "l",
+        "o"
+      ],
+      "member_binds": {
+        "H": 96,
+        "e": 96,
+        "l": 96,
+        "o": 96
+      },
+      "flat_walk": [
+        "H",
+        "e",
+        "l",
+        "o"
+      ]
+    },
+    "s2": {
+      "chunk": "CH_1",
+      "spell": [
+        "红",
+        "苹果"
+      ]
+    },
+    "s3": {
+      "chunk": "CH_1",
+      "spell": [
+        "咬",
+        "猫"
+      ],
+      "walk": [
+        "CH_1",
+        "的",
+        "狗",
+        "追",
+        "老鼠"
+      ]
+    }
+  }
+}

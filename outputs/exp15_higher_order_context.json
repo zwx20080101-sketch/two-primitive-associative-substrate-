@@ -1,0 +1,96 @@
+{
+  "id": "exp15_higher_order_context",
+  "title": "E15 高阶顺序: L2 三元组上下文 (双前缀->下一个, 不选句)",
+  "passed": true,
+  "checks": [
+    {
+      "name": "S5 滑动窗口锁定: 只计相邻三元组 (s0,s1,s2)、(s1,s2,s3)",
+      "ok": true,
+      "detail": "n(s0,s1,s2)=1, n(s1,s2,s3)=1; 非相邻 = 0"
+    },
+    {
+      "name": "S1 存储: n(X1,B,C)=100, n(X2,B,D)=100",
+      "ok": true,
+      "detail": "n(X1,B,C)=100, n(X2,B,D)=100"
+    },
+    {
+      "name": "S1 L2: [X1,B] 只有 C; [X2,B] 只有 D (双前缀消歧)",
+      "ok": true,
+      "detail": "[X1,B]->{'C': 1.0}; [X2,B]->{'D': 1.0}"
+    },
+    {
+      "name": "S1 L1 对照: 只看 B -> C=D 等强 (洞在 L1, L2 补上)",
+      "ok": true,
+      "detail": "C=0.9000, D=0.9000, ratio=1.0000"
+    },
+    {
+      "name": "S2 [A,B] -> C=D 等强、E=0; [Q,B] -> E、C/D=0 (第二前缀才够)",
+      "ok": true,
+      "detail": "[A,B]->{'C': 1.0, 'D': 1.0}; [Q,B]->{'E': 1.0}"
+    },
+    {
+      "name": "S3 能力边界: X/Y 在 3 前缀外 -> [A,B] 仍 C=D 等强 (记录, 不在 E15 解决)",
+      "ok": true,
+      "detail": "[A,B]->{'C': 1.0, 'D': 1.0} (需 3 前缀才能看到 X/Y, 属未来课题)"
+    },
+    {
+      "name": "S4 存储观测: 三元组种类随样本量单调不减且 <= 8^3=512",
+      "ok": true,
+      "detail": "10样本:16种; 100样本:16种; 500样本:16种; 2000样本:16种"
+    },
+    {
+      "name": "S6 基线回归: L0 空网络->learn([A,B])->B=0.9 仍成立 (未改动)",
+      "ok": true,
+      "detail": "nodes=2, a(B)=0.9000"
+    }
+  ],
+  "data": {
+    "s1": {
+      "query_X1B": {
+        "C": 1.0
+      },
+      "query_X2B": {
+        "D": 1.0
+      },
+      "L1_C": 0.9,
+      "L1_D": 0.9
+    },
+    "s2": {
+      "query_AB": {
+        "C": 1.0,
+        "D": 1.0
+      },
+      "query_QB": {
+        "E": 1.0
+      }
+    },
+    "s3": {
+      "query_AB": {
+        "C": 1.0,
+        "D": 1.0
+      }
+    },
+    "s4": [
+      {
+        "samples": 10,
+        "prefix_types": 16,
+        "triple_types": 16
+      },
+      {
+        "samples": 100,
+        "prefix_types": 16,
+        "triple_types": 16
+      },
+      {
+        "samples": 500,
+        "prefix_types": 16,
+        "triple_types": 16
+      },
+      {
+        "samples": 2000,
+        "prefix_types": 16,
+        "triple_types": 16
+      }
+    ]
+  }
+}

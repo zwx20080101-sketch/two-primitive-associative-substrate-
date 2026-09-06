@@ -1,0 +1,65 @@
+{
+  "id": "exp0_smoke",
+  "title": "E0 冒烟: 空网络与单事件绑定",
+  "passed": true,
+  "checks": [
+    {
+      "name": "空网络启动: 0 nodes / 0 connections",
+      "ok": true,
+      "detail": "nodes=0, connections=0"
+    },
+    {
+      "name": "learn([A,B]) 后: 2 nodes / 1 connection",
+      "ok": true,
+      "detail": "nodes=2, connections=1"
+    },
+    {
+      "name": "A-B 存在且 count=1",
+      "ok": true,
+      "detail": "N(A,B)=1"
+    },
+    {
+      "name": "A-Z 不存在 (无共现则无连接)",
+      "ok": true,
+      "detail": "N(A,Z)=0"
+    },
+    {
+      "name": "activate(A) 只唤醒 A、B",
+      "ok": true,
+      "detail": "keys=['A', 'B']"
+    },
+    {
+      "name": "B 按公式到达: 1.0 x strength(1.0) x hop_decay(0.9)",
+      "ok": true,
+      "detail": "a(B)=0.900000000"
+    },
+    {
+      "name": "再次 learn([A,B]): count 累计到 2 (记忆增强)",
+      "ok": true,
+      "detail": "N(A,B)=2"
+    },
+    {
+      "name": "读取端纯函数: 阈值 0.01 仍可见 A、B",
+      "ok": true,
+      "detail": "visible=['A', 'B']"
+    }
+  ],
+  "data": {
+    "start": {
+      "nodes": 0,
+      "connections": 0
+    },
+    "after_first_learn": {
+      "nodes": 2,
+      "connections": 1,
+      "N(A,B)": 2
+    },
+    "activation_after_first_learn": {
+      "A": 1.0,
+      "B": 0.9
+    },
+    "after_second_learn": {
+      "N(A,B)": 2
+    }
+  }
+}

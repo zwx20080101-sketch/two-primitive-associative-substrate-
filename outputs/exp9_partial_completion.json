@@ -1,0 +1,64 @@
+{
+  "id": "exp9_partial_completion",
+  "title": "E9 部分输入补全: 缺口回填, 不许无中生有",
+  "passed": true,
+  "checks": [
+    {
+      "name": "训练结构: 5 nodes / 4 edges",
+      "ok": true,
+      "detail": "nodes=5, edges=4"
+    },
+    {
+      "name": "1) 打 A: 全链回忆 B=0.9 C=0.81 D=0.729 E=0.6561",
+      "ok": true,
+      "detail": "A=1.0000, B=0.9000, C=0.8100, D=0.7290, E=0.6561"
+    },
+    {
+      "name": "2) 打 A+C+E: 缺口 B、D 被补出(0.9), 五节点全在",
+      "ok": true,
+      "detail": "A=1.0000, B=0.9000, C=1.0000, D=0.9000, E=1.0000"
+    },
+    {
+      "name": "3) 打 A+E: 中间 C=0.81 被补出 (两端会合, max 规则不叠加, 记录)",
+      "ok": true,
+      "detail": "A=1.0000, B=0.9000, C=0.8100, D=0.9000, E=1.0000"
+    },
+    {
+      "name": "4) 闭包: activate(F) 对未学过的 F 直接报错, 无法无中生有",
+      "ok": true,
+      "detail": "F in nodes: False, activate raised KeyError: True"
+    },
+    {
+      "name": "5) 补全只取回已存节点: 所有输出 ⊆ 训练节点集合",
+      "ok": true,
+      "detail": "output=['A', 'B', 'C', 'D', 'E'], learned=['A', 'B', 'C', 'D', 'E']"
+    }
+  ],
+  "data": {
+    "network": {
+      "nodes": 5,
+      "edges": 4
+    },
+    "from_A": {
+      "A": 1.0,
+      "B": 0.9,
+      "C": 0.81,
+      "D": 0.729,
+      "E": 0.6561
+    },
+    "from_A_C_E": {
+      "A": 1.0,
+      "B": 0.9,
+      "C": 1.0,
+      "D": 0.9,
+      "E": 1.0
+    },
+    "from_A_E": {
+      "A": 1.0,
+      "B": 0.9,
+      "C": 0.81,
+      "D": 0.9,
+      "E": 1.0
+    }
+  }
+}

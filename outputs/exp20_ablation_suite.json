@@ -1,0 +1,87 @@
+{
+  "id": "exp20_ablation_suite",
+  "title": "E20 消融/对照套件: 机制ON/OFF/随机/纯计数 统一量化",
+  "passed": true,
+  "checks": [
+    {
+      "name": "A 方向: ON 比值≫1(>1000), OFF≈1, 随机高比值率≈0",
+      "ok": true,
+      "detail": "ON=10201, OFF=1.000000, 随机率=0.00"
+    },
+    {
+      "name": "B 上下文: ON 正确-备选=1, OFF(无上下文)=0",
+      "ok": true,
+      "detail": "ON=1.00, OFF=0.00"
+    },
+    {
+      "name": "C 翻译: ON 命中=1, OFF(无S)=0, 标签置换率=1.0(机制与具体token无关)",
+      "ok": true,
+      "detail": "ON=1.0, OFF=0.0, 置换率=1.00"
+    },
+    {
+      "name": "D 补全: ON 命中=1, 纯计数(无扩散)=0, 标签置换率=1.0",
+      "ok": true,
+      "detail": "ON=1.0, 纯计数=0.0, 置换率=1.00"
+    },
+    {
+      "name": "E 双写: ON spell 精确=1, OFF(平面链)=0",
+      "ok": true,
+      "detail": "ON=1.0, OFF=0.0"
+    },
+    {
+      "name": "F 角色: ON 正确-备选=1, OFF(中位词)=0, 随机≈0.5",
+      "ok": true,
+      "detail": "ON=1.00, OFF=0.00, 随机率=0.33"
+    },
+    {
+      "name": "G 叠词: ON(stub)=1, OFF(基底单独)=0",
+      "ok": true,
+      "detail": "ON=1.0, OFF=0.0"
+    },
+    {
+      "name": "H 情绪: ON fear 差=1.8, OFF(无 stub)=0",
+      "ok": true,
+      "detail": "ON=1.80, OFF=0.00"
+    }
+  ],
+  "data": {
+    "rows": {
+      "A_方向": {
+        "on": 10201.0,
+        "off": 1.0,
+        "random_rate": 0.0
+      },
+      "B_上下文": {
+        "on": 1.0,
+        "off": 0.0
+      },
+      "C_翻译": {
+        "on": 1.0,
+        "off": 0.0,
+        "relabel_rate": 1.0
+      },
+      "D_补全": {
+        "on": 1.0,
+        "count_only": 0.0,
+        "relabel_rate": 1.0
+      },
+      "E_双写": {
+        "on": 1.0,
+        "off": 0.0
+      },
+      "F_角色": {
+        "on": 1.0,
+        "off": 0.0,
+        "random_rate": 0.333333
+      },
+      "G_叠词": {
+        "on": 1.0,
+        "off": 0.0
+      },
+      "H_情绪": {
+        "on": 1.8,
+        "off": 0.0
+      }
+    }
+  }
+}

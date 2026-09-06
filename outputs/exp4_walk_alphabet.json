@@ -1,0 +1,120 @@
+{
+  "id": "exp4_walk_alphabet",
+  "title": "E4 逐对强化 + 链式走读 (相邻对各强化 100 次)",
+  "passed": true,
+  "checks": [
+    {
+      "name": "底层启动为空: 0 nodes / 0 connections / 无任何预设",
+      "ok": true,
+      "detail": "nodes=0, connections=0"
+    },
+    {
+      "name": "经验后: 恰好 26 nodes / 25 connections (无预置字母)",
+      "ok": true,
+      "detail": "nodes=26, connections=25"
+    },
+    {
+      "name": "只有相邻对连接; A-Z、A-C 等从未共现 -> 无连接",
+      "ok": true,
+      "detail": "N(A,Z)=0, N(A,C)=0"
+    },
+    {
+      "name": "每条相邻边都被一起提起 100 次 (N 永久累计)",
+      "ok": true,
+      "detail": "示例: A-B:100, B-C:100, C-D:100, D-E:100 ..."
+    },
+    {
+      "name": "直接打 A: 全链 26 个字母全部亮起",
+      "ok": true,
+      "detail": "keys=ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    },
+    {
+      "name": "直接打 A: 信号到达末端 Z (0.9^25)",
+      "ok": true,
+      "detail": "a(Z)=0.071789799 (期望 0.071789799)"
+    },
+    {
+      "name": "打回 Z: 信号反向到达起点 A",
+      "ok": true,
+      "detail": "a(A)=0.071789799 (期望 0.071789799)"
+    },
+    {
+      "name": "走读器从 A 出发完整输出 A..Z",
+      "ok": true,
+      "detail": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    },
+    {
+      "name": "走读器从 Z 打回完整输出 Z..A",
+      "ok": true,
+      "detail": "ZYXWVUTSRQPONMLKJIHGFEDCBA"
+    },
+    {
+      "name": "激活强度降序读出 = 完整正向序列 A..Z",
+      "ok": true,
+      "detail": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    }
+  ],
+  "data": {
+    "network": {
+      "nodes": 26,
+      "connections": 25
+    },
+    "counts": {
+      "A-B": 100,
+      "B-C": 100,
+      "C-D": 100,
+      "D-E": 100,
+      "E-F": 100,
+      "F-G": 100,
+      "G-H": 100,
+      "H-I": 100,
+      "I-J": 100,
+      "J-K": 100,
+      "K-L": 100,
+      "L-M": 100,
+      "M-N": 100,
+      "N-O": 100,
+      "O-P": 100,
+      "P-Q": 100,
+      "Q-R": 100,
+      "R-S": 100,
+      "S-T": 100,
+      "T-U": 100,
+      "U-V": 100,
+      "V-W": 100,
+      "W-X": 100,
+      "X-Y": 100,
+      "Y-Z": 100
+    },
+    "activation": {
+      "A": 1.0,
+      "B": 0.9,
+      "C": 0.81,
+      "D": 0.729,
+      "E": 0.6561,
+      "F": 0.59049,
+      "G": 0.531441,
+      "H": 0.4782969,
+      "I": 0.43046721,
+      "J": 0.387420489,
+      "K": 0.34867844,
+      "L": 0.313810596,
+      "M": 0.282429536,
+      "N": 0.254186583,
+      "O": 0.228767925,
+      "P": 0.205891132,
+      "Q": 0.185302019,
+      "R": 0.166771817,
+      "S": 0.150094635,
+      "T": 0.135085172,
+      "U": 0.121576655,
+      "V": 0.109418989,
+      "W": 0.09847709,
+      "X": 0.088629381,
+      "Y": 0.079766443,
+      "Z": 0.071789799
+    },
+    "forward_walk": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    "reverse_walk": "ZYXWVUTSRQPONMLKJIHGFEDCBA"
+  }
+}
