@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Synapse-Net V0
 
 本仓库是 Synapse-Net V0 的参考实现。文档：
@@ -86,3 +87,7 @@ python make_pdf.py        # 生成 outputs/pdf/REPORT-zh.pdf
 - 发布前检查：① `python main.py` 全 PASS；② 结论与
   [CLAIMS-REGISTRY.md](./CLAIMS-REGISTRY.md) 逐条一致；
   ③ git tag 快照已建立（当前 v0.9.0，发布前再打 v1.0.0）。
+=======
+# two-primitive-associative-substrate-
+A minimal two‑primitive associative substrate, controlled empirical test suite (E0‑E22), visualization playground.双原语联想基底，受控实证测试套件与可视化探索玩具
+>>>>>>> 91b8d5a976d9c3adf42eafba2a7c6a51ccbef833
