@@ -12,7 +12,12 @@
 [GATE-REVIEW.md](./GATE-REVIEW.md)（上量 gate 评审）、
 [RESEARCH-PROPOSAL.md](./RESEARCH-PROPOSAL.md)（研究提案：科学验证）、
 [PAPER-OUTLINE.md](./PAPER-OUTLINE.md)（V2 论文大纲）、
-[CLAIMS-REGISTRY.md](./CLAIMS-REGISTRY.md)（结论-证据登记表）。
+[CLAIMS-REGISTRY.md](./CLAIMS-REGISTRY.md)（结论-证据登记表）、
+[BOUNDARIES-QUICK.md](./BOUNDARIES-QUICK.md)（边界速查）。
+
+中文开源研究报告（完整版）：
+[REPORT-zh.md](./REPORT-zh.md)（Markdown）·
+[REPORT-zh.pdf](./outputs/pdf/REPORT-zh.pdf)（PDF，由 `python make_pdf.py` 生成）。
 
 ```text
 synapse_net.py    # L0 共现基底(冻结): learn(共现绑定) / activate(激活扩散)
@@ -68,6 +73,10 @@ Python 不在 PATH 时可用捆绑运行时：
 python main.py            # 全量实验 E0-E22(确定性, 逐项 PASS)
 python main.py exp20_ablation_suite   # 只跑单个实验
 python benchmark.py       # 复杂度基准 -> outputs/benchmark.json
+python verify_claims.py   # 会审: 草稿数值/红线/数据一致性 77 项核对
+python scan_norms.py      # 措辞规范扫描
+python build_report.py    # 组装 REPORT-zh.md(章节草稿合并)
+python make_pdf.py        # 生成 outputs/pdf/REPORT-zh.pdf
 ```
 
 - 依赖：仅 Python 标准库，无第三方包；
