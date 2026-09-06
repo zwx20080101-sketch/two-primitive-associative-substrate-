@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Synapse-Net 交互演示 v3（脑网络 · 时间输入 · 能量流）</title>
+<style>
+  :root { color-scheme: light dark;
+    --bg:#ffffff; --fg:#2b2320; --panel:#ffffff; --line:#e2dfd8; --muted:#7a6f68;
+    --accent:#b06a5a; --warn:#b3472f; --chip:#f5d9c0;
+    --fire:#d96a6a; --idle:#f2c4c4; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#181b21; --fg:#eee7e3; --panel:#222630; --line:#45414a; --muted:#a99a92; --accent:#c98d7e; --warn:#e08a72; --chip:#4a3f2a; --fire:#ff8a8a; --idle:#5a3f47; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.5 "Microsoft YaHei","PingFang SC",system-ui,sans-serif; }
+  main { max-width:1200px; margin:0 auto; padding:14px 14px 30px; }
+  h1 { font-size:21px; margin:0 0 2px; }
+  p.lead { color:var(--muted); margin:0 0 10px; font-size:14px; }
+  .toolbar { display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:10px; }
+  .toolbar .field { display:flex; flex-direction:column; gap:3px; }
+  .toolbar label { font-size:11px; color:var(--muted); }
+  input[type=text],select,input[type=number],textarea { background:var(--panel); color:var(--fg); border:1px solid var(--line); border-radius:6px; padding:6px 8px; font:inherit; min-height:34px; }
+  input[type=range]{ width:130px; }
+  button { background:var(--accent); color:#fff; border:1px solid var(--accent); border-radius:6px; padding:7px 11px; font:inherit; cursor:pointer; filter:saturate(1); }
+  button:hover { filter:brightness(1.08); }
+  .check { display:inline-flex; align-items:center; gap:5px; min-height:34px; font-size:13px; }
+  .stat { display:inline-flex; flex-direction:column; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:4px 10px; margin-right:6px; }
+  .stat b{font-size:16px;} .stat span{font-size:11px;color:var(--muted);}
+  #stage { background:var(--panel); border:1px solid var(--line); border-radius:10px; margin-top:10px; overflow:hidden; }
+  svg { display:block; width:100%; height:74vh; min-height:420px; touch-action:none; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:8px 12px; margin-top:10px; }
+  .panel h3 { margin:0 0 6px; font-size:13px; color:var(--muted); font-weight:500; }
+  .log { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:8px 12px; margin-top:8px; color:var(--muted); font-size:13px; white-space:pre-wrap; }
+  .result { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:8px 12px; margin-top:8px; font-size:13px; white-space:pre-wrap; border-left:4px solid var(--accent); }
+  .bar-row { display:flex; align-items:center; gap:8px; margin:3px 0; font-size:12px; }
+  .bar { height:8px; border-radius:4px; background:var(--fire); opacity:.85; }
+  .barwrap { flex:1; background:var(--line); border-radius:4px; }
+  .chip { display:inline-block; background:var(--chip); border:1px solid var(--line); border-radius:6px; padding:1px 8px; margin:2px 3px 0 0; font-size:12px; }
+  .hint { color:var(--muted); font-size:12px; margin:6px 0 0; }
+  details.guide { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:8px 12px; margin-top:10px; }
+  details.guide summary { cursor:pointer; font-weight:500; font-size:14px; }
+  details.guide .g { font-size:13px; line-height:1.7; color:var(--fg); margin:4px 0; }
+  details.guide .g b { color:var(--accent); }
+  .snap-row { display:flex; gap:8px; align-items:center; margin:3px 0; font-size:13px; }
+  @media (max-width:760px){ svg{height:60vh;min-height:360px;} .toolbar .field,.field{width:100%;} }
+</style>
+</head>
+<body>
+<main>
+  <h1>Synapse-Net 交互演示 v3</h1>
+  <p class="lead">L0=共现绑定+激活扩散（基底）；L1 方向 / L4 组块=上层；拼写·叠词·情绪=外部 stub。激活=波纹扩散；结果=按公式的能量流；时间戳=因果载体。边界见开源报告。</p>
+
+  <details class="guide" open>
+    <summary>说明 / 理论 / 每个实验在证明什么</summary>
+    <div class="g"><b>理论：</b>仿大脑皮层的联想记忆——底层只有两条规则：<b>共现绑定</b>（谁和谁一起出现过）与<b>激活扩散</b>（点亮一个沿连接传播）。记忆=连接（永久 N + 时间戳），激活=当前心智内容；检索强度按公式 <b>a(v)=a(u)·s(u→v)·hop_decay</b>，λ=0 时 W=N；阈值只是读取端过滤，不改网络。</div>
+    <div class="g"><b>上层建筑（每个是不同的方式）：</b>L1 方向=记录<b>谁先谁后</b>（正强反弱→正走顺、倒走费力）；L2 三元组=<b>前两个决定下一个</b>（双前缀，≥3 前缀失效）；L4 组块=<b>重复单元成整体</b>并保留词内重复位置；外部 stub=语言规则（叠词）/动作（拼写）/情绪（增益），<b>不属基底</b>。参数（hop_decay、K、threshold、λ=0）均为预设。</div>
+    <div class="g"><b>怎么复刻一个实验：</b>① 下拉"实验场景"载入（自动给出建议种子）；② 勾选对应图层（L1/L2/L4）；③ 点"激活"看波纹逐跳扩散；④ 读"本次实验结果"：激活数、传导次数、最深跳、因果 Token 序列（按时间）、能量流直至衰减耗尽。也可用底部"批量输入"按格式（`@t` 时间、`[ ]` 同时、`>` 先后、`{ }` 单元、`;` 隔断）写自己的数据——见 SKILL-ai-data.md / INPUT-FORMAT.md。</div>
+    <div class="g"><b>每个实验在证明什么：</b>载入后"实验成果"框会显示该实验的<b>预期结果 + 它证明的命题</b>（对应报告 CLAIMS-REGISTRY 的 C/B 条目）。机制在则现象在、机制移除/条件不符则现象消失或退化；绝不把上层或 stub 当基底，也不作人脑等同论断。</div>
+  </details>
+
+  <div class="toolbar">
+    <div class="stat"><span>节点</span><b id="stNodes">0</b></div>
+    <div class="stat"><span>连接</span><b id="stEdges">0</b></div>
+    <div class="stat"><span>方向计数</span><b id="stDir">0</b></div>
+    <div class="stat"><span>三元组</span><b id="stTrip">0</b></div>
+    <div class="stat"><span>块</span><b id="stChunk">0</b></div>
+    <div class="stat"><span>事件</span><b id="stEvents">0</b></div>
+    <div class="stat"><span>激活中</span><b id="stActive">0</b></div>
+    <div class="stat"><span>时钟</span><b id="stClock">0</b></div>
+  </div>
+
+  <div class="toolbar">
+    <div class="field" style="flex:1"><label for="eventInput">经验输入（空格分隔）</label><input id="eventInput" type="text" placeholder="如：A B C 或 A>B>C 或 {H e l l o} 或 @2 [A B]" autocomplete="off"></div>
+    <div class="field"><label for="modeSel">类型</label>
+      <select id="modeSel"><option value="sync">同时窗口</option><option value="chain">有序序列</option><option value="unit">带边界单元</option><option value="ts">按格式解析(含@t)</option></select></div>
+    <div class="field"><label for="repeatInput">重复</label><input id="repeatInput" type="number" min="1" max="1000" value="1"></div>
+    <button id="learnBtn" class="primary" type="button">learn</button>
+    <button id="resetBtn" type="button">清空</button>
+    <div class="field"><label for="presetSel">实验场景</label>
+      <select id="presetSel"><option value="">请选择…</option>
+        <option value="e1">E1：26 字母链</option><option value="e2">E2：重复强度</option>
+        <option value="e4">E4：对称双向</option><option value="e5">E5：Hello 正倒</option>
+        <option value="e6a">E6a：分叉上下文</option><option value="e15">E15：双前缀</option>
+        <option value="e16">E16：角色(格标记)</option><option value="e7">E7：密集重复(近似)</option>
+        <option value="e12">E12：组块双写</option><option value="e18">E18：拼写</option>
+        <option value="e17">E17：叠词外推</option><option value="e19">E19：情绪 fear</option>
+      </select></div>
+  </div>
+
+  <div class="toolbar">
+    <label class="check"><input id="L1" type="checkbox"> L1 方向</label>
+    <label class="check"><input id="L2" type="checkbox"> L2 三元组</label>
+    <label class="check"><input id="L4" type="checkbox"> L4 组块</label>
+    <div class="field"><label for="seedInput">种子(可多个)</label><input id="seedInput" type="text" placeholder="如 A 或 A,E" style="width:150px"></div>
+    <button id="activateBtn" class="primary" type="button">激活</button>
+    <button id="stepBtn" type="button">单步</button>
+    <button id="playBtn" type="button">播放</button>
+    <button id="clearActBtn" type="button">清除激活</button>
+    <label class="check"><input id="dimCheck" type="checkbox" checked> 阈值过滤</label>
+    <div class="field"><label for="thrRange">阈值 <span id="thrVal">0.05</span></label><input id="thrRange" type="range" min="0" max="1" step="0.01" value="0.05"></div>
+    <div class="field"><label for="decayInput">hop_decay</label><input id="decayInput" type="number" min="0.05" max="1" step="0.05" value="0.9" style="width:70px"></div>
+    <label class="check"><input id="countCheck" type="checkbox"> 连接次数</label>
+    <button id="spellBtn" type="button">拼写</button>
+    <button id="redupBtn" type="button">叠词外推</button>
+    <button id="fearBtn" type="button">情绪 fear</button>
+  </div>
+
+  <div class="toolbar">
+    <div class="field" style="flex:1"><label for="batchArea">批量输入（格式见说明书）</label><textarea id="batchArea" rows="3" placeholder="@1 [A B]; @2 A>B>C; @3 {H e l l o}"></textarea></div>
+    <button id="loadBtn" class="primary" type="button">一键载入</button>
+    <button id="snapshotBtn" type="button">保存副本</button>
+    <button id="exportBtn" type="button">保存配置</button>
+    <button id="importBtn" type="button">配置</button>
+    <button id="saveLocalBtn" type="button">保存本机</button>
+    <button id="loadLocalBtn" type="button">恢复本机</button>
+    <input id="importFile" type="file" accept="application/json" style="display:none">
+  </div>
+  <p class="hint">点节点=设种子；Shift+点击=清除。CH_n=组块。拖动布局。保存副本后可继续训练再存新副本。</p>
+
+  <div class="log" id="formulaLive" aria-live="polite"></div>
+  <div class="panel" id="snapPanel"><h3>副本（快照）</h3><div id="snapBody">（空）</div></div>
+  <div id="stage"><svg id="svg" role="img" aria-label="Synapse-Net 网络图"><title>Synapse-Net 网络图</title></svg></div>
+  <div class="result" id="resultBox" aria-live="polite">本次实验结果：尚未激活</div>
+  <div class="log" id="trace" aria-live="polite">（激活后显示链路/能量流）</div>
+  <div class="panel" id="tripPanel"><h3>L2 三元组候选</h3><div id="tripBody"></div></div>
+  <div class="panel" id="chunkPanel"><h3>L4 组块记录</h3><div id="chunkBody"></div></div>
+  <div class="log" id="log" aria-live="polite">等待输入…</div>
+</main>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const K=5,FLOOR=1;
+const state={nodes:new Map(),edges:new Map(),dir:new Map(),trips:new Map(),units:new Map(),
+  activations:{},activeSeeds:[],queue:[],hop:0,events:0,clock:0,chunkSeq:0,selectedChunk:null,stepTimer:null,snapshots:[],
+  lastEnergy:[],hopDepth:{},simTime:0,scenarioKey:""};
+
+function log(m){$("log").textContent=m;}
+function ekey(a,b){return a<b?a+"\u0000"+b:b+"\u0000"+a;}
+function dkey(a,b){return a+">"+b;}
+function addNode(l){if(state.nodes.has(l))return;const n=state.nodes.size;const ang=n*2.399963+0.7;const r=130+(n%5)*18;state.nodes.set(l,{x:Math.cos(ang)*r,y:Math.sin(ang)*r,first:state.clock,last:state.clock});}
+function bindEdge(a,b){if(a===b)return;addNode(a);addNode(b);const k=ekey(a,b);const e=state.edges.get(k);if(e){e.n+=1;e.last=state.clock;}else state.edges.set(k,{a,b,n:1,last:state.clock});}
+
+function learnEvent(tokens,mode){
+  if(mode==="unit"){learnUnit(tokens);return;}
+  if(mode==="sync"){const u=[...new Set(tokens)];u.forEach(addNode);for(let i=0;i<u.length;i++)for(let j=i+1;j<u.length;j++)bindEdge(u[i],u[j]);return;}
+  tokens.forEach(addNode);
+  for(let i=0;i+1<tokens.length;i++){const a=tokens[i],b=tokens[i+1];bindEdge(a,b);state.dir.set(dkey(a,b),(state.dir.get(dkey(a,b))||0)+1);}
+  for(let i=0;i+2<tokens.length;i++){const p=tokens[i]+"\u0000"+tokens[i+1],c=tokens[i+2];const m=state.trips.get(p)||new Map();m.set(c,(m.get(c)||0)+1);state.trips.set(p,m);}
+}
+function learnUnit(unit){const key=unit.join("\u0001");let rec=state.units.get(key);if(!rec){rec={count:0,id:null,record:[...unit]};state.units.set(key,rec);}rec.count++;if(rec.count===K&&!rec.id){rec.id="CH_"+(++state.chunkSeq);addNode(rec.id);}if(rec.id){[...new Set(unit)].forEach(m=>bindEdge(rec.id,m));}}
+function addExperience(tokens,mode,rep){for(let r=0;r<rep;r++)learnEvent(tokens,mode);state.events+=rep;relax(50);}
+
+function neighbors(l){const out=new Map();for(const e of state.edges.values()){if(e.a===l)out.set(e.b,e.n);else if(e.b===l)out.set(e.a,e.n);}return out;}
+function strengthU(u,v){const ns=neighbors(u);const n=ns.get(v);if(n==null)return 0;let b=0;ns.forEach(c=>{if(c>b)b=c;});return b>0?n/b:0;}
+function strengthD(u,v){let cnt=(state.dir.get(dkey(u,v))||0)+FLOOR;let best=FLOOR;for(const w of neighbors(u).keys()){best=Math.max(best,(state.dir.get(dkey(u,w))||0)+FLOOR);}return cnt/best;}
+function strength(u,v){return ($("L1").checked)?strengthD(u,v):strengthU(u,v);}
+
+function resetActivations(seeds){state.activations={};state.activeSeeds=Array.isArray(seeds)?[...seeds]:(seeds?[seeds]:[]);state.queue=[...state.activeSeeds];state.hop=0;state.lastEnergy=[];state.hopDepth={};state.activeSeeds.forEach(s=>{state.activations[s]=1;state.hopDepth[s]=0;});state.simTime=0;if(state.stepTimer){clearTimeout(state.stepTimer);state.stepTimer=null;}$("playBtn").textContent="播放";}
+function fullActivate(arg,animate){const s=Array.isArray(arg)?arg:[arg];resetActivations(s);if(!s.length)return;const d=parseFloat($("decayInput").value)||0.9;const A=state.activations;let q=[...s];while(q.length){const n=[];for(const u of q){neighbors(u).forEach((c,v)=>{const ar=A[u]*strength(u,v)*d;if(ar>(A[v]??-1)+1e-12){A[v]=ar;state.hopDepth[v]=state.hopDepth[u]+1;state.lastEnergy.push({from:u,to:v,energy:ar,hop:state.hopDepth[v]});n.push(v);}});}q=n;}state.hop=Math.max(...Object.values(state.hopDepth),0);state.simTime=state.hop*0.1;
+  if(animate)revealWave(state.hopDepth);render();}
+function revealWave(hopDepth){const buckets={};for(const [n,hp] of Object.entries(hopDepth)){(buckets[hp]=buckets[hp]||[]).push(n);}const levels=Object.keys(buckets).map(Number).sort((a,b)=>a-b);let li=0;const step=()=>{if(li>=levels.length)return;for(const n of buckets[levels[li]]){const p=state.nodes.get(n);if(p)pulseRing(p.x,p.y);}li++;state.stepTimer=setTimeout(step,500);};step();}
+function pulseRing(x,y){const svg=$("svg"),NS="http://www.w3.org/2000/svg";const c=document.createElementNS(NS,"circle");c.setAttribute("cx",x);c.setAttribute("cy",y);c.setAttribute("r",12);c.setAttribute("fill","none");c.setAttribute("stroke",getComputedStyle(document.documentElement).getPropertyValue("--fire").trim());c.setAttribute("stroke-width","2");c.setAttribute("opacity","0.8");svg.appendChild(c);let t=0;const iv=setInterval(()=>{t++;const r=12+t*7;c.setAttribute("r",String(r));c.setAttribute("opacity",String(Math.max(0,0.8-t*0.06)));if(t>14){clearInterval(iv);c.remove();}},40);}
+function stepActivation(){if(!state.activeSeeds.length){log("请先设种子");return;}const d=parseFloat($("decayInput").value)||0.9;const A=state.activations;const n=[];for(const u of state.queue){neighbors(u).forEach((c,v)=>{const ar=A[u]*strength(u,v)*d;if(ar>(A[v]??-1)+1e-12){A[v]=ar;state.hopDepth[v]=state.hopDepth[u]+1;state.lastEnergy.push({from:u,to:v,energy:ar,hop:state.hopDepth[v]});n.push(v);}});}state.queue=n;state.hop++;render();}
+function startPlay(){if(!state.activeSeeds.length){log("请先设种子");return;}if(state.stepTimer){clearTimeout(state.stepTimer);state.stepTimer=null;$("playBtn").textContent="播放";return;}if(!state.queue.length)resetActivations(state.activeSeeds);const rm=matchMedia("(prefers-reduced-motion: reduce)").matches;if(rm){fullActivate(state.activeSeeds,false);emitResult(state.activeSeeds);return;}$("playBtn").textContent="停止";const tick=()=>{stepActivation();const last=state.lastEnergy[state.lastEnergy.length-1];const delay=Math.max(240,900-420*(last?last.energy:0.5));state.simTime+=delay/1000;if(state.queue.length){state.stepTimer=setTimeout(tick,delay);}else{state.stepTimer=null;$("playBtn").textContent="播放";emitResult(state.activeSeeds);}};tick();}
+
+function relax(iter){const arr=[...state.nodes.values()];if(arr.length<2){render();return;}// components for clusters
+  for(let it=0;it<iter;it++){for(const n of arr){n.vx=0;n.vy=0;}
+    for(let i=0;i<arr.length;i++)for(let j=i+1;j<arr.length;j++){const a=arr[i],b=arr[j];let dx=a.x-b.x,dy=a.y-b.y;let d2=dx*dx+dy*dy;if(d2<1){dx=Math.random()-.5;dy=Math.random()-.5;d2=1;}const d=Math.sqrt(d2),f=2600/d2;a.vx+=dx/d*f;a.vy+=dy/d*f;b.vx-=dx/d*f;b.vy-=dy/d*f;}
+    for(const e of state.edges.values()){const a=state.nodes.get(e.a),b=state.nodes.get(e.b);if(!a||!b)continue;const dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1,f=(d-90)*0.06;a.vx+=dx/d*f;a.vy+=dy/d*f;b.vx-=dx/d*f;b.vy-=dy/d*f;}
+    // cluster lobes: pull nodes to their component centroid, components repel
+    const comps=components();for(const comp of comps){let cx=0,cy=0;comp.forEach(l=>{const p=state.nodes.get(l);cx+=p.x;cy+=p.y;});cx/=comp.length;cy/=comp.length;for(const l of comp){const p=state.nodes.get(l);p.vx+=(cx-p.x)*0.02;p.vy+=(cy-p.y)*0.02;}}
+    for(let i=0;i<comps.length;i++)for(let j=i+1;j<comps.length;j++){let ca=centroid(comps[i]),cb=centroid(comps[j]);let dx=ca.x-cb.x,dy=ca.y-cb.y,d=Math.sqrt(dx*dx+dy*dy)||1,f=16000/d;dx/=d;dy/=d;for(const l of comps[i]){const p=state.nodes.get(l);p.vx+=dx*f*0.02;p.vy+=dy*f*0.02;}for(const l of comps[j]){const p=state.nodes.get(l);p.vx-=dx*f*0.02;p.vy-=dy*f*0.02;}}
+    for(const n of arr){n.x=Math.max(-560,Math.min(560,n.x+Math.max(-24,Math.min(24,n.vx*0.05))));n.y=Math.max(-360,Math.min(360,n.y+Math.max(-24,Math.min(24,n.vy*0.05))));}}
+  render();}
+function components(){const seen=new Set(),comps=[];for(const l of state.nodes.keys()){if(seen.has(l))continue;const q=[l];seen.add(l);const comp=[l];while(q.length){const u=q.shift();for(const v of neighbors(u).keys()){if(!seen.has(v)){seen.add(v);q.push(v);comp.push(v);}}}comps.push(comp);}return comps;}
+function centroid(comp){let x=0,y=0;comp.forEach(l=>{const p=state.nodes.get(l);x+=p.x;y+=p.y;});return{x:x/comp.length,y:y/comp.length};}
+
+function cssC(){const c=getComputedStyle(document.documentElement);return{bg:c.getPropertyValue("--bg").trim(),panel:c.getPropertyValue("--panel").trim(),fg:c.getPropertyValue("--fg").trim(),line:c.getPropertyValue("--line").trim(),accent:c.getPropertyValue("--accent").trim(),muted:c.getPropertyValue("--muted").trim(),warn:c.getPropertyValue("--warn").trim(),chip:c.getPropertyValue("--chip").trim(),fire:c.getPropertyValue("--fire").trim(),idle:c.getPropertyValue("--idle").trim()};}
+
+function render(){const svg=$("svg"),NS="http://www.w3.org/2000/svg";svg.textContent="";const A=state.activations,thr=parseFloat($("thrRange").value)||0,dim=$("dimCheck").checked,showCnt=$("countCheck").checked;const L1on=$("L1").checked,L2on=$("L2").checked,L4on=$("L4").checked;const C=cssC();
+  const pts=[...state.nodes.values()];let mnx=0,mxx=0,mny=0,mxy=0;if(pts.length){mnx=Math.min(...pts.map(p=>p.x))-80;mxx=Math.max(...pts.map(p=>p.x))+80;mny=Math.min(...pts.map(p=>p.y))-80;mxy=Math.max(...pts.map(p=>p.y))+80;}const w=Math.max(320,mxx-mnx),h=Math.max(240,mxy-mny);svg.setAttribute("viewBox",`${mnx} ${mny} ${w} ${h}`);svg.style.background=C.panel||C.bg;
+  for(const e of state.edges.values()){const a=state.nodes.get(e.a),b=state.nodes.get(e.b);if(!a||!b)continue;const ea=A[e.a]||0,eb=A[e.b]||0,hot=ea>0||eb>0,heat=Math.max(ea,eb);const lw=hot?Math.min(7,1.4+Math.log10(e.n+1)*2):Math.min(3.5,0.6+Math.log10(e.n+1)*1.5);const line=document.createElementNS(NS,"line");line.setAttribute("x1",a.x);line.setAttribute("y1",a.y);line.setAttribute("x2",b.x);line.setAttribute("y2",b.y);line.setAttribute("stroke",hot?C.fire:C.line);line.setAttribute("stroke-width",lw);line.setAttribute("opacity",hot?Math.max(0.5,heat):1);svg.appendChild(line);
+    if(showCnt&&!L1on){const t=document.createElementNS(NS,"text");let txt=`N=${e.n}`;if(hot){const from=ea>0?e.a:e.b;const to=from===e.a?e.b:e.a;txt+=`·s=${strength(from,to).toFixed(2)}`;}t.setAttribute("x",(a.x+b.x)/2);t.setAttribute("y",(a.y+b.y)/2-6);t.setAttribute("text-anchor","middle");t.setAttribute("font-size","10px");t.setAttribute("fill",hot?C.fg:C.muted);t.setAttribute("stroke",C.panel||C.bg);t.setAttribute("stroke-width","3px");t.setAttribute("paint-order","stroke");t.textContent=txt;svg.appendChild(t);}
+    if(L1on){const f=state.dir.get(dkey(e.a,e.b))||0,r=state.dir.get(dkey(e.b,e.a))||0;if(f>r||r>f){const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;const t=document.createElementNS(NS,"text");t.setAttribute("x",mx);t.setAttribute("y",my-6);t.setAttribute("text-anchor","middle");t.setAttribute("font-size","9px");t.setAttribute("fill",C.muted);t.setAttribute("stroke",C.panel||C.bg);t.setAttribute("stroke-width","3px");t.setAttribute("paint-order","stroke");t.textContent=f>r?`${e.a}→${e.b}:${f}`:`${e.b}→${e.a}:${r}`;svg.appendChild(t);}}
+  }
+  for(const [label,p] of state.nodes){const a=A[label]||0;const visible=a>=thr;const isSeed=state.activeSeeds.includes(label);const isChunk=label.startsWith("CH_");const op=(dim&&!visible)?0.15:1;const r=11+Math.sqrt(a)*14;const g=document.createElementNS(NS,"g");g.setAttribute("cursor","pointer");g.setAttribute("data-label",label);if(a>0)g.setAttribute("class","firing");
+    const circle=document.createElementNS(NS,"circle");circle.setAttribute("cx",p.x);circle.setAttribute("cy",p.y);circle.setAttribute("r",r);circle.setAttribute("fill",a>0?C.fire:(isChunk?C.chip:C.idle));circle.setAttribute("stroke",isSeed?C.warn:(isChunk?(state.selectedChunk===label?C.warn:C.muted):C.accent));circle.setAttribute("stroke-width",(isSeed||state.selectedChunk===label)?3:1.2);circle.setAttribute("stroke-dasharray",isChunk?"4 3":"");circle.setAttribute("opacity",op);g.appendChild(circle);
+    const t=document.createElementNS(NS,"text");t.setAttribute("x",p.x);t.setAttribute("y",p.y+4);t.setAttribute("text-anchor","middle");t.setAttribute("font-size","11px");t.setAttribute("fill",C.fg);t.setAttribute("opacity",op);t.textContent=label;g.appendChild(t);
+    if(a>0){const v=document.createElementNS(NS,"text");v.setAttribute("x",p.x);v.setAttribute("y",p.y-r-6);v.setAttribute("text-anchor","middle");v.setAttribute("font-size","10px");v.setAttribute("fill",C.muted);v.textContent=a.toFixed(3);g.appendChild(v);}
+    if(isChunk&&state.selectedChunk===label){const tt=document.createElementNS(NS,"text");const rec=[...state.units.values()].find(u=>u.id===label);tt.setAttribute("x",p.x);tt.setAttribute("y",p.y-r-18);tt.setAttribute("text-anchor","middle");tt.setAttribute("font-size","10px");tt.setAttribute("fill",C.muted);tt.textContent=rec?`spell:${rec.record.join("")}`:"";g.appendChild(tt);}
+    svg.appendChild(g);
+  }
+  $("stNodes").textContent=state.nodes.size;$("stEdges").textContent=state.edges.size;$("stDir").textContent=state.dir.size;$("stTrip").textContent=[...state.trips.values()].reduce((s,m)=>s+m.size,0);$("stChunk").textContent=[...state.units.values()].filter(u=>u.id).length;$("stEvents").textContent=state.events;$("stActive").textContent=Object.keys(A).length;$("stClock").textContent=state.clock.toFixed(2);
+  if(L2on){const seg=[...state.trips.entries()].sort((a,b)=>sumV(b[1])-sumV(a[1])).slice(0,4);$("tripBody").innerHTML=seg.map(([pk,m])=>{const[a,b]=pk.split("\u0000");const mxv=Math.max(...m.values());return `<div class="bar-row"><span>(${a},${b})→</span><div class="barwrap">${[...m.entries()].sort((x,y)=>y[1]-x[1]).map(([c,v])=>`<div class="bar" style="width:${(v/mxv*100).toFixed(0)}%"></div>`).join("")}</div><span>${[...m.entries()].sort((x,y)=>y[1]-x[1]).map(([c,v])=>`${c}:${v}`).join("　")}</span></div>`;}).join("");}else $("tripBody").innerHTML="（开启 L2 显示）";
+  if(L4on){const ch=[...state.units.values()].filter(u=>u.id);$("chunkBody").innerHTML=ch.length?ch.map(u=>`<div><span class="chip">${u.id}</span> spell：${u.record.join(" ")}　count=${u.count}</div>`).join(""):"（无达到 K="+K+" 的单元）";}else $("chunkBody").innerHTML="（开启 L4 显示）";
+  updateFormulaLive(A);updateTrace(A);updateButtonStates();}
+function sumV(m){let s=0;m.forEach(v=>s+=v);return s;}
+function updateFormulaLive(A){const d=(parseFloat($("decayInput").value)||0.9).toFixed(2);const thr=(parseFloat($("thrRange").value)||0).toFixed(2);let s=`公式态：hop_decay=${d}；λ=0→W=N；threshold=${thr}；K=${K}；clock=${state.clock.toFixed(2)}`;if(state.activeSeeds.length){let best=null;for(const e of state.edges.values()){const ea=A[e.a]||0,eb=A[e.b]||0;if((ea>0||eb>0)&&(!best||e.n>best.n))best={e,ea,eb};}if(best){const from=best.ea>0?best.e.a:best.e.b;const to=from===best.e.a?best.e.b:best.e.a;const st=strength(from,to);s+=`；强边 N=${best.e.n}，s(${from}→${to})=${st.toFixed(2)}，a(${to})=${(A[to]??0).toFixed(3)}，最近t=${best.e.last}`;}}else s+="；尚无激活";$("formulaLive").textContent=s;}
+function updateTrace(A){if(!state.activeSeeds.length){$("trace").textContent="（激活后显示链路/能量流）";return;}const entries=Object.entries(A).filter(([k,v])=>v>0).sort((x,y)=>y[1]-x[1]);const input=state.activeSeeds.join(" + ");const chain=entries.map(([k,v])=>v>=1?`${k}(种子)`:`${k}(${v.toFixed(3)})`).join(" → ");$("trace").textContent=`输入 ⇒ 链路：${input} ⇒ ${chain}`;if(state.lastEnergy.length){const last=state.lastEnergy[state.lastEnergy.length-1];$("trace").textContent+=`\n能量流：共 ${state.lastEnergy.length} 次传导；${state.lastEnergy.map(x=>`${x.from}→${x.to}(${x.energy.toFixed(3)})`).join("　")}；末次 ${last.from}→${last.to}，之后能量不再越过（衰减耗尽）。`;}}
+function updateButtonStates(){const hasChunk=[...state.units.values()].some(u=>u.id);const hasRF=state.nodes.has("R")&&state.nodes.has("F");$("spellBtn").disabled=!hasChunk;$("spellBtn").title=hasChunk?"":"需加载 E12/E18 组块场景";$("redupBtn").disabled=!hasRF;$("redupBtn").title=hasRF?"":"需加载 E17 叠词场景";$("fearBtn").disabled=!state.activeSeeds.length;$("fearBtn").title=state.activeSeeds.length?"":"需先激活一个种子";}
+
+function parseTokens(raw){return raw.split(/[\s,，、;；]+/).map(x=>x.trim()).filter(Boolean);}
+function clearNetwork(){state.nodes.clear();state.edges.clear();state.dir.clear();state.trips.clear();state.units.clear();state.activations={};state.activeSeeds=[];state.queue=[];state.events=0;state.clock=0;state.chunkSeq=0;state.selectedChunk=null;state.lastEnergy=[];if(state.stepTimer){clearTimeout(state.stepTimer);state.stepTimer=null;}$("playBtn").textContent="播放";}
+
+function parseEvent(ev){ev=ev.trim();let t=null;const tm=ev.match(/^@([0-9.]+)\s*(.*)$/);if(tm){t=parseFloat(tm[1]);ev=tm[2].trim();}
+  if(t!=null)state.clock=Math.max(state.clock,t);
+  state.events++;
+  if(ev.startsWith("[")&&ev.endsWith("]")){learnEvent(parseTokens(ev.slice(1,-1)),"sync");return;}
+  if(ev.startsWith("{")&&ev.endsWith("}")){learnUnit(parseTokens(ev.slice(1,-1)));return;}
+  if(ev.includes(">")){learnEvent(parseTokens(ev),"chain");return;}
+  const toks=parseTokens(ev);if(toks.length)learnEvent(toks,toks.length>1?"sync":"chain");}
+function loadBatch(text){clearNetwork();const lines=text.split(/[;\n]+/);for(const ln of lines){const line=ln.replace(/#.*/,"").trim();if(!line)continue;parseEvent(line);}if(state.clock>0){for(const n of state.nodes.values())n.last=Math.max(n.last||0,state.clock);for(const e of state.edges.values())e.last=Math.max(e.last||0,state.clock);}relax(60);log(`批量载入完成：${state.nodes.size} 节点，${state.edges.size} 连接，${state.events} 事件，clock=${state.clock.toFixed(2)}`);render();}
+function applyTs(text){const lines=text.split(/[;\n]+/);for(const ln of lines){const line=ln.replace(/#.*/,"").trim();if(!line)continue;parseEvent(line);}if(state.clock>0){for(const n of state.nodes.values())n.last=Math.max(n.last||0,state.clock);for(const e of state.edges.values())e.last=Math.max(e.last||0,state.clock);}relax(60);log(`载入：${state.nodes.size} 节点，${state.edges.size} 连接，${state.events} 事件，clock=${state.clock.toFixed(2)}`);render();}
+
+const EXPERIMENTS={
+  e1:{name:"E1 26字母链",steps:[["A B C D E F G H I J K L M N O P Q R S T U V W X Y Z","chain",1]],expect:"26 节点 / 25 连接；A-Z 无连接；激活 A 全链按每跳 0.9 递减到 Z≈0.0718"},
+  e2:{name:"E2 重复强度",steps:[["A B","chain",100],["B C","chain",100],["C D","chain",100],["A X","chain",2]],expect:"B=0.9、C=0.81、D=0.729、X=0.018；threshold 0.5 时 X 被过滤、仍在底层"},
+  e4:{name:"E4 对称双向",steps:[["A B","chain",100],["B C","chain",100],["C D","chain",100],["D E","chain",100]],expect:"正/反走等强=对称；方向偏置需 L1"},
+  e5:{name:"E5 Hello 正倒",steps:[["H e l l o","chain",100]],expect:"开启 L1：正走到 o=0.729；倒走到 H≈7.1e-5（方向不对称）"},
+  e6a:{name:"E6a 分叉上下文",steps:[["X1 B C","chain",100],["X2 B D","chain",100]],expect:"无上下文(单看 B) C=D 等强；L2 [X1,B]→C 唯一"},
+  e15:{name:"E15 双前缀",steps:[["X1 B C","chain",100],["X2 B D","chain",100]],expect:"[X1,B]→C；[X2,B]→D；3 前缀外不消歧"},
+  e16:{name:"E16 角色(格标记)",steps:[["狗 咬 猫","chain",100],["猫 咬 狗","chain",100],["狗 把 猫 咬","chain",100],["猫 把 狗 咬","chain",100]],expect:"语序/L2 [狗,咬]→猫；把→受事；中位词“咬”诚实歧义"},
+  e7:{name:"E7 密集重复(近似)",steps:[["快 不稳","chain",100],["快 疼","chain",60],["快 稳","chain",20]],expect:"高频“快-不稳/快-疼”更强；低密度弱边更弱（近似表现，非真实时间轴）"},
+  e12:{name:"E12 组块双写",steps:[["H e l l o","unit",10],["H e l l o","chain",10]],expect:"CH_1 spell=[H,e,l,l,o]（双写还原）；平面链只能 H-e-l-o"},
+  e18:{name:"E18 拼写",steps:[["H e l l o","unit",10],["H e l l o","chain",10]],expect:"点“拼写”输出 H→e→l→l→o → Hello"},
+  e17:{name:"E17 叠词外推",steps:[["天 天","chain",100],["夜 夜","chain",100],["天 R","sync",100],["夜 R","sync",100],["天 F","sync",100],["夜 F","sync",100],["人 F","sync",100],["的","chain",1]],expect:"点“叠词外推”：人→人人；的 拒绝（规则=外部语言 stub）"},
+  e19:{name:"E19 情绪 fear",steps:[["蛇 剧疼","chain",100],["剧疼 剧","chain",100],["棍 轻疼","chain",100],["轻疼 轻","chain",100]],expect:"激活蛇→fear≈2.7、肉色；激活棍→fear≈0.9；增益=外部情绪 stub"},
+};
+const SEEDS={e1:"A",e2:"A",e4:"A",e5:"H",e6a:"X1",e15:"X1",e16:"狗",e7:"快",e12:"H",e18:"H",e17:"人",e19:"蛇"};
+const LAYERS={e1:[],e2:[],e4:[],e5:["L1"],e6a:["L1","L2"],e15:["L2"],e16:["L1","L2"],e7:[],e12:["L4"],e18:["L4"],e17:[],e19:[]};
+const WHY={e1:"证明：仅凭相邻共现，可从空网络自组织成有序链，无预置知识（C01）。",
+ e2:"证明：共现次数调制检索强度；弱连接保留在全量输出，仅阈值决定可访问——存在≠可访问（C02）。",
+ e4:"证明：无向共现下正/反检索等强，方向偏置需要方向层（下层自身对称，C03）。",
+ e5:"证明：方向不对称来自经验统计；正向高频、反向未发生→只剩保底，故倒背费力（C04）。",
+ e6a:"证明：无上下文时分叉诚实等强；上下文/情景作为共现结构可偏置分支（C05/C06）。",
+ e15:"证明：双前缀三元组可消歧；3 前缀之外超出表示（C16，边界 B01）。",
+ e16:"证明：角色=输入语序/格标记+基底绑定；树结构无需下沉，中位词诚实歧义（C17）。",
+ e7:"证明：密集事件（高计数）可产生强关联与“提前检索”；弱而少的事件弱（近似表现，非真实时间轴，C08）。",
+ e12:"证明：重复单元可成块并保留词内重复位置；平面链做不到（C13，边界 B04）。",
+ e18:"证明：块记录+外部动作模块能逐字母还原拼写；听回可补方向/重复标记（C13，stub=外部）。",
+ e17:"证明：叠词外推属于外部语言规则；基底只给标记/特征证据，输出听回成新记忆（C18）。",
+ e19:"证明：密度相同、仅标记不同时基底不分轻重；fear 差异来自外部情绪读取端增益，无需写侧调制（C19）。"};
+
+$("learnBtn").addEventListener("click",()=>{const mode=$("modeSel").value;if(mode==="ts"){const txt=$("eventInput").value;if(!txt.trim()){log("请输入格式文本，如 @1 [A B]; @2 A>B>C");return;}applyTs(txt);return;}const t=parseTokens($("eventInput").value);if(!t.length){log("请输入符号");return;}const rep=Math.max(1,parseInt($("repeatInput").value,10)||1);addExperience(t,mode,rep);log(`learn ${mode} ${t.join(" ")} ×${rep}`);render();});
+$("presetSel").addEventListener("change",()=>{const k=$("presetSel").value;if(!k||!EXPERIMENTS[k])return;clearNetwork();const Ls=LAYERS[k]||[];["L1","L2","L4"].forEach(id=>$(id).checked=Ls.includes(id));for(const [tok,mode,rep] of EXPERIMENTS[k].steps){addExperience(parseTokens(tok),mode,rep);}const seed=SEEDS[k]||"";if(seed)$("seedInput").value=seed;state.scenarioKey=k;$("resultBox").textContent=`实验成果（${EXPERIMENTS[k].name}）：\n${EXPERIMENTS[k].expect}\n${WHY[k]||""}\n建议种子：${seed}（点"激活"看逐跳扩散）`;log(`载入：${EXPERIMENTS[k].name}`);render();});
+$("resetBtn").addEventListener("click",()=>{clearNetwork();$("resultBox").textContent="本次实验结果：尚未激活";log("已清空");render();});
+$("activateBtn").addEventListener("click",()=>{const s=parseTokens($("seedInput").value);if(!s.length){log("请输入种子");return;}const miss=s.filter(x=>!state.nodes.has(x));if(miss.length){log("不存在："+miss.join(" "));return;}resetActivations(s);const rm=matchMedia("(prefers-reduced-motion: reduce)").matches;if(rm){fullActivate(s,false);emitResult(s);}else{startPlay();}});
+$("stepBtn").addEventListener("click",stepActivation);
+$("playBtn").addEventListener("click",startPlay);
+$("clearActBtn").addEventListener("click",()=>{resetActivations([]);$("resultBox").textContent="本次实验结果：已清除激活";render();});
+$("thrRange").addEventListener("input",()=>{$("thrVal").textContent=parseFloat($("thrRange").value).toFixed(2);render();});
+["dimCheck","countCheck","L1","L2","L4"].forEach(id=>$(id).addEventListener("change",render));
+$("decayInput").addEventListener("change",()=>{if(state.activeSeeds.length)fullActivate(state.activeSeeds,false);});
+$("svg").addEventListener("pointerdown",(ev)=>{const tg=ev.target.closest("g[data-label]");if(!tg)return;const label=tg.getAttribute("data-label");if(ev.shiftKey||state.activeSeeds.includes(label)){resetActivations([]);}else{$("seedInput").value=label;resetActivations([label]);const rm=matchMedia("(prefers-reduced-motion: reduce)").matches;if(rm){fullActivate([label],false);emitResult([label]);}else{startPlay();}}if(label.startsWith("CH_"))state.selectedChunk=label;render();});
+function emitResult(seeds){const A=state.activations;const acts=Object.keys(A).length;const trans=state.lastEnergy.length;const maxA=Math.max(...Object.values(A));const hop=state.hop;const heads=Object.values(A).filter(v=>v>=1).length;const perHop=hop>0?state.simTime/hop:0;const byHop={};for(const[k,v]of Object.entries(A)){const hp=state.hopDepth[k]??0;(byHop[hp]=byHop[hp]||[]).push(k);}let txt=`本次实验结果\n`;txt+=`  种子：${seeds.join("+")}；激活节点 ${acts}（种子 ${heads}）；传导 ${trans} 次；最深 ${hop} 跳；峰值能量 ${maxA.toFixed(3)}；总时间≈${state.simTime.toFixed(2)}\n`;txt+=`  因果 Token 序列（按激活先后/时间）：\n`;txt+=Object.keys(byHop).sort((a,b)=>a-b).map(hp=>`    t~${(Number(hp)*perHop).toFixed(2)}｜第${hp}跳：${byHop[hp].join(" → ")}`).join("\n")+"\n";txt+=`  能量轨迹：${state.lastEnergy.length?state.lastEnergy.map(x=>`${x.from}→${x.to}(${x.energy.toFixed(3)})`).slice(0,18).join("　"):"（无）"}\n`;txt+=`  末次传导 ${state.lastEnergy.length?state.lastEnergy[state.lastEnergy.length-1].from+"→"+state.lastEnergy[state.lastEnergy.length-1].to:"无"}，能量衰减耗尽。\n`;txt+=`  传导公式：a(v)=a(u)·s(u→v)·hop_decay（λ=0→W=N）`;if(state.scenarioKey&&WHY[state.scenarioKey])txt+=`\n本实验证明了什么：${WHY[state.scenarioKey]}`;$("resultBox").textContent=txt;}
+$("loadBtn").addEventListener("click",()=>loadBatch($("batchArea").value));
+function snapshot(){const snap={name:"副本"+(state.snapshots.length+1)+" t="+state.clock.toFixed(2),time:Date.now(),nodes:MapToObj(state.nodes),edges:MapToObj(state.edges),dir:MapToObj(state.dir),trips:MapToObj(state.trips),units:MapToObj(state.units),events:state.events,clock:state.clock,chunkSeq:state.chunkSeq};state.snapshots.push(snap);renderSnaps();}
+function MapToObj(m){const o={};for(const[k,v]of m){o[k]=v instanceof Map?MapToObj(v):v;}return o;}
+function ObjToMap(o){const m=new Map();for(const k in o){m.set(k,o[k]);}return m;}
+function networkToObj(){return {nodes:MapToObj(state.nodes),edges:MapToObj(state.edges),dir:MapToObj(state.dir),trips:MapToObj(state.trips),units:MapToObj(state.units)};}
+function restoreNetworkObj(o){state.nodes=ObjToMap(o.nodes||{});state.edges=ObjToMap(o.edges||{});state.dir=ObjToMap(o.dir||{});state.units=ObjToMap(o.units||{});state.trips=new Map(Object.entries(o.trips||{}).map(([p,inner])=>[p,new Map(Object.entries(inner||{}))]));}
+function restoreSnap(i){const s=state.snapshots[i];restoreNetworkObj({nodes:s.nodes,edges:s.edges,dir:s.dir,trips:s.trips,units:s.units});state.events=s.events;state.clock=s.clock;state.chunkSeq=s.chunkSeq;state.activations={};state.activeSeeds=[];state.queue=[];state.lastEnergy=[];log("已恢复："+s.name);render();renderSnaps();}
+function currentConfig(){return {scenario:$("presetSel").value,seed:$("seedInput").value,mode:$("modeSel").value,repeat:$("repeatInput").value,hop:parseFloat($("decayInput").value)||0.9,thr:parseFloat($("thrRange").value)||0,L1:$("L1").checked,L2:$("L2").checked,L4:$("L4").checked,dim:$("dimCheck").checked,count:$("countCheck").checked};}
+function applyConfig(c){if(!c)return;$("presetSel").value=c.scenario||"";$("seedInput").value=c.seed||"";$("modeSel").value=c.mode||"sync";$("repeatInput").value=c.repeat||1;$("decayInput").value=c.hop??0.9;$("thrRange").value=c.thr??0.05;$("thrVal").textContent=parseFloat($("thrRange").value).toFixed(2);$("L1").checked=!!c.L1;$("L2").checked=!!c.L2;$("L4").checked=!!c.L4;$("dimCheck").checked=c.dim!==false;$("countCheck").checked=c.count!==false;}
+function renderSnaps(){$("snapBody").innerHTML=state.snapshots.length?state.snapshots.map((s,i)=>`<div class="snap-row"><span>${s.name}</span><button data-snap="${i}">恢复</button><button data-snapdel="${i}">删除</button></div>`).join(""):"（空）";document.querySelectorAll("[data-snap]").forEach(b=>b.addEventListener("click",()=>restoreSnap(parseInt(b.getAttribute("data-snap"),10))));document.querySelectorAll("[data-snapdel]").forEach(b=>b.addEventListener("click",()=>{state.snapshots.splice(parseInt(b.getAttribute("data-snapdel"),10),1);renderSnaps();}));}
+$("snapshotBtn").addEventListener("click",snapshot);
+$("exportBtn").addEventListener("click",()=>{const bundle={version:1,config:currentConfig(),network:networkToObj(),snapshots:state.snapshots,events:state.events,clock:state.clock,chunkSeq:state.chunkSeq};const blob=new Blob([JSON.stringify(bundle)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="synapse-config.json";a.click();});
+$("importBtn").addEventListener("click",()=>$("importFile").click());
+$("importFile").addEventListener("change",(ev)=>{const f=ev.target.files[0];if(!f)return;f.text().then(t=>{const j=JSON.parse(t);applyConfig(j.config);if(j.network)restoreNetworkObj(j.network);state.snapshots=j.snapshots||[];state.events=j.events??0;state.clock=j.clock??0;state.chunkSeq=j.chunkSeq??0;state.scenarioKey=j.scenarioKey||"";state.activations={};state.activeSeeds=[];state.queue=[];state.lastEnergy=[];render();renderSnaps();log("已载入配置（含选项、网络、副本）");});});
+function saveLocal(){const bundle={version:1,scenarioKey:state.scenarioKey,config:currentConfig(),network:networkToObj(),snapshots:state.snapshots,events:state.events,clock:state.clock,chunkSeq:state.chunkSeq};try{localStorage.setItem("synapseConfig",JSON.stringify(bundle));log("已保存到本机（localStorage），重开页面仍在");}catch(e){log("本机保存失败："+e.message);}}
+function loadLocal(){try{const t=localStorage.getItem("synapseConfig");if(!t)return;const j=JSON.parse(t);applyConfig(j.config);if(j.network)restoreNetworkObj(j.network);state.snapshots=j.snapshots||[];state.events=j.events??0;state.clock=j.clock??0;state.chunkSeq=j.chunkSeq??0;state.scenarioKey=j.scenarioKey||"";state.activations={};state.activeSeeds=[];state.queue=[];state.lastEnergy=[];render();renderSnaps();log("已恢复本机配置");}catch(e){log("本机恢复失败："+e.message);}}
+$("saveLocalBtn").addEventListener("click",saveLocal);
+$("loadLocalBtn").addEventListener("click",loadLocal);
+$("spellBtn").addEventListener("click",()=>{const ch=[...state.units.values()].filter(u=>u.id);if(!ch.length){log("尚无达到 K 的块");return;}const rec=ch[ch.length-1].record;log(`拼写输出：${rec.join(" → ")}（${rec.join("")}）`);});
+$("redupBtn").addEventListener("click",()=>{const nbR=neighbors("R"),nbF=neighbors("F");const rule=nbR.size>0;const cand=[...nbF.keys()];const out=cand.filter(w=>(state.dir.get(dkey(w,w))||0)===0).map(w=>w+w);log(`叠词外推：规则已学=${rule}；候选=${cand.join(" ")}；外推=${out.join(" ")||"（无）"}（规则=外部语言 stub）`);});
+$("fearBtn").addEventListener("click",()=>{const A=state.activations;if(!state.activeSeeds.length){log("先激活一个种子");return;}const gain={"剧":3,"轻":1};let pain=null,maxA=0;for(const[n,v]of Object.entries(A)){if(!state.activeSeeds.includes(n)&&v>maxA&&v>0.4){maxA=v;pain=n;}}if(!pain){log("未找到疼痛节点");return;}let g=1;for(const m in gain){if(A[m]>1e-9)g=Math.max(g,gain[m]);}const fear=pain?maxA*g:0;log(`情绪：a(${pain})=${maxA.toFixed(3)}，增益=${g}，fear=${fear.toFixed(2)}${fear>=2?"（触发躲避）":""}（读取端=外部情绪 stub）`);});
+
+render();
+loadLocal();
+</script>
+</body>
+</html>
