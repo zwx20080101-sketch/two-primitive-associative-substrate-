@@ -1,5 +1,7 @@
-<<<<<<< HEAD
 # Synapse-Net V0
+
+> 双原语联想基底（共现绑定 + 激活扩散）· 受控实证测试套件 E0–E26 · 可视化探索玩具
+> A minimal two-primitive associative substrate, controlled empirical test suite (E0–E26), visualization playground.
 
 本仓库是 Synapse-Net V0 的参考实现。文档：
 [DESIGN.md](./DESIGN.md)（实验设计）、[STATUS.md](./STATUS.md)（状态与计划）、
@@ -33,13 +35,28 @@ attention.py      # 读取端: attention_filter 纯函数
 language_stub.py  # 外部 stub: 语言规则(叠词判定/渲染)
 motor_stub.py     # 外部 stub: 动作/书写(块 -> 字母输出)
 emotion_stub.py   # 外部 stub: 情绪(读取端增益/阈值)
-experiments/      # E0-E22 实验
+experiments/      # E0-E26 实验（索引见 experiments/README.md）
 main.py           # 实验入口
 benchmark.py      # 复杂度基准
 outputs/          # 每次运行的 JSON 报告(数据备份)
 ```
 
 底层 `synapse_net.py` 已冻结，不再修改；新能力一律以"上一层"的形式添加。
+
+## 两轮实验阶段
+
+实验分两轮，编号在 [CLAIMS-REGISTRY.md](./CLAIMS-REGISTRY.md) 里连续登记（C/B 条目不分轮重编号）：
+
+| 轮次 | 实验 | 主题 | 产物（登记表编号） | 设计文档 |
+| --- | --- | --- | --- | --- |
+| **第一轮** | **E0–E22** | **单层能力目录**：一次一层、每层一个现象，外加消融（E20）/规模（E21）/统计（E22） | **C01–C22 / B01–B07** | [DESIGN.md](./DESIGN.md)、[REPORT-zh.md](./REPORT-zh.md) |
+| **第二轮** | **E23–E26** | **组合律 + S1/S2/S3**：多层共存与归因 → 模块分化 → 模块内动力学 → 模块间协调 | **C23–C26 / B08–B19** | [DESIGN-E23.md](./DESIGN-E23.md)、[DESIGN-E24.md](./DESIGN-E24.md)、[DESIGN-E25.md](./DESIGN-E25.md)、[DESIGN-E26.md](./DESIGN-E26.md) |
+| 展示层 | **P5a** | S1–S3 **只读分析面板**（快照回放 + 字段级自检 + commit 溯源）；P5b 已决定不做 | 无新 C/B 条目 | [DESIGN-P5.md](./DESIGN-P5.md) |
+
+两轮的关系：第一轮回答"每一层各自能做什么"；第二轮回答"多层同时打开时怎么合成、
+以及从 L0 统计里能读出什么宏观结构"（S1/S2/S3 都是**读取端分析**，不写回记忆）。
+每轮的失败与边界同样登记（B 条目），见登记表"边界与负结果"一节。
+实验文件的完整索引见 [experiments/README.md](./experiments/README.md)。
 
 ## 运行
 
@@ -119,15 +136,17 @@ E12 组块双写、E18 拼写、E17 叠词外推、E19 情绪。
 - 上层 L1/L2/L4 与外部 stub（拼写/叠词/情绪）为可开关图层与按钮；
   边界：上层按"上层表示层 / 外部 stub"呈现，不冒充基底；
    λ=0（W=N）、hop_decay、K、threshold 均为预设值；不模拟真实时间轴/多模态。
-   （本轮冻结：网页玩具 v3；已知未覆盖的"分层影响/组合律"仅记录，尚未实现。）
+  （网页玩具 v3 + **S1–S3 只读分析面板（P5a）**；"分层影响/组合律"已由 E23 实现，
+   S1/S2/S3 分别由 E24/E25/E26 实现。）
 
 ## 复现与发布
 
 ```powershell
-python main.py            # 全量实验 E0-E22(确定性, 逐项 PASS)
+python main.py            # 全量实验 E0-E26(确定性, 逐项 PASS)
 python main.py exp20_ablation_suite   # 只跑单个实验
 python benchmark.py       # 复杂度基准 -> outputs/benchmark.json
-python verify_claims.py   # 会审: 草稿数值/红线/数据一致性 77 项核对
+python verify_claims.py   # 会审: 草稿数值/红线/数据一致性 81 项核对
+python verify_playground.py  # 网页分析面板: 快照↔JSON 逐字段一致 + 面板边界 7 项
 python scan_norms.py      # 措辞规范扫描
 python build_report.py    # 组装 REPORT-zh.md(章节草稿合并)
 python make_pdf.py        # 生成 outputs/pdf/REPORT-zh.pdf
@@ -139,8 +158,4 @@ python make_pdf.py        # 生成 outputs/pdf/REPORT-zh.pdf
   `exp22_stats.json` 由对应实验模块自行写出；
 - 发布前检查：① `python main.py` 全 PASS；② 结论与
   [CLAIMS-REGISTRY.md](./CLAIMS-REGISTRY.md) 逐条一致；
-  ③ git tag 快照已建立（当前 v0.9.0，发布前再打 v1.0.0）。
-=======
-# two-primitive-associative-substrate-
-A minimal two‑primitive associative substrate, controlled empirical test suite (E0‑E22), visualization playground.双原语联想基底，受控实证测试套件与可视化探索玩具
->>>>>>> 91b8d5a976d9c3adf42eafba2a7c6a51ccbef833
+  ③ git tag 快照已建立（当前 **v0.9.5-p5a**；实验 tag 序列 v0.9.1-e23 → v0.9.5-p5a）。
