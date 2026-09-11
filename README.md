@@ -18,6 +18,7 @@
 数据整理指南（给 AI）：[SKILL-ai-data.md](./SKILL-ai-data.md)；
 输入格式：[INPUT-FORMAT.md](./INPUT-FORMAT.md)。
 未覆盖/待探索缺口：[OPEN-QUESTIONS.md](./OPEN-QUESTIONS.md)。
+后续开发计划（含三条外部建议评估）：[NEXT-PLAN.md](./NEXT-PLAN.md)。
 
 中文开源研究报告（完整版）：
 [REPORT-zh.md](./REPORT-zh.md)（Markdown）·
@@ -54,7 +55,7 @@ python main.py exp1_chain # 只跑一个实验
 `exp12_chunk_nesting`、`exp13_repeat_marker`、`exp14_multi_path_evidence`、
 `exp15_higher_order_context`、`exp16_role_markers`、`exp17_system_reduplication`、
 `exp18_spelling_output`、`exp19_emotion_modulation`、`exp20_ablation_suite`、
-`exp21_scale_consistency`、`exp22_sampling_statistics`。
+`exp21_scale_consistency`、`exp22_sampling_statistics`、`exp23_composition`。
 
 底层核心接口：
 

@@ -1,0 +1,460 @@
+{
+  "id": "exp23_composition",
+  "title": "E23 分层影响/组合律: L1+L2+L4 同时开启时各层现象能否共存并可归因",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P1 各层返回量可读（8×3 表完整）",
+      "ok": true,
+      "detail": "8 组合"
+    },
+    {
+      "name": "P2a L1 必然性: L1 开→方向比>1e3; 关→≈1",
+      "ok": true,
+      "detail": "L1开比值=16777216.0; L0-only 比值=1.0"
+    },
+    {
+      "name": "P2b L2 必然性: 仅 L2 时 (A,B)→C; 仅 L1/L0 时平局",
+      "ok": true,
+      "detail": "C010 pick=C, C100 pick=tie, C000 pick=tie"
+    },
+    {
+      "name": "P2c L4 必然性: 仅 L4 时 9 块且 A→Z 跳数下降",
+      "ok": true,
+      "detail": "C001 chunks=9, hops=10 vs L0 hops=25"
+    },
+    {
+      "name": "P3 组合: C111 同时保住 方向/分叉选择/块粒度 三层现象",
+      "ok": true,
+      "detail": "ratio=16777216.0, fork=C, chunks=9, hops=10, chunk_reachable=True"
+    },
+    {
+      "name": "P4 无越权: L1/L2 未改 L0; L4 新增仅 CH_ 节点",
+      "ok": true,
+      "detail": "L0 基线唯一=True; L4 新增节点全为 CH_=True"
+    },
+    {
+      "name": "P5 一致性: 同一组合规则在分叉1/分叉2 都选中正确候选",
+      "ok": true,
+      "detail": "C111: C/F; C010: C/F"
+    }
+  ],
+  "data": {
+    "C000": {
+      "flags": {
+        "L1": false,
+        "L2": false,
+        "L4": false
+      },
+      "q1": {
+        "fwd": 0.071789799,
+        "rev": 0.071789799,
+        "ratio": 1.0
+      },
+      "q2": {
+        "cand": {
+          "C": 1,
+          "x": 1
+        },
+        "pick": "tie"
+      },
+      "q4": {
+        "cand": {
+          "F": 1,
+          "w": 1
+        },
+        "pick": "tie"
+      },
+      "q3": {
+        "chunks": 0,
+        "chunk_reachable": false,
+        "hops_A_to_Z": 25
+      },
+      "returns": {
+        "L1": null,
+        "L2": null,
+        "L4": null
+      },
+      "l0_baseline": {
+        "nodes": 30,
+        "edges": 29,
+        "N_B_C": 1,
+        "N_B_x": 1
+      },
+      "l4_added_nodes": []
+    },
+    "C001": {
+      "flags": {
+        "L1": false,
+        "L2": false,
+        "L4": true
+      },
+      "q1": {
+        "fwd": 0.34867844,
+        "rev": 0.34867844,
+        "ratio": 1.0
+      },
+      "q2": {
+        "cand": {
+          "C": 1,
+          "x": 1
+        },
+        "pick": "tie"
+      },
+      "q4": {
+        "cand": {
+          "F": 1,
+          "w": 1
+        },
+        "pick": "tie"
+      },
+      "q3": {
+        "chunks": 9,
+        "chunk_reachable": true,
+        "hops_A_to_Z": 10
+      },
+      "returns": {
+        "L1": null,
+        "L2": null,
+        "L4": {
+          "chunks": 9,
+          "members": 26
+        }
+      },
+      "l0_baseline": {
+        "nodes": 30,
+        "edges": 29,
+        "N_B_C": 1,
+        "N_B_x": 1
+      },
+      "l4_added_nodes": [
+        "CH_1",
+        "CH_2",
+        "CH_3",
+        "CH_4",
+        "CH_5",
+        "CH_6",
+        "CH_7",
+        "CH_8",
+        "CH_9"
+      ]
+    },
+    "C010": {
+      "flags": {
+        "L1": false,
+        "L2": true,
+        "L4": false
+      },
+      "q1": {
+        "fwd": 0.071789799,
+        "rev": 0.071789799,
+        "ratio": 1.0
+      },
+      "q2": {
+        "cand": {
+          "C": 1.0,
+          "x": 0.0
+        },
+        "pick": "C"
+      },
+      "q4": {
+        "cand": {
+          "F": 1.0,
+          "w": 0.0
+        },
+        "pick": "F"
+      },
+      "q3": {
+        "chunks": 0,
+        "chunk_reachable": false,
+        "hops_A_to_Z": 25
+      },
+      "returns": {
+        "L1": null,
+        "L2": {
+          "C": 1.0
+        },
+        "L4": null
+      },
+      "l0_baseline": {
+        "nodes": 30,
+        "edges": 29,
+        "N_B_C": 1,
+        "N_B_x": 1
+      },
+      "l4_added_nodes": []
+    },
+    "C011": {
+      "flags": {
+        "L1": false,
+        "L2": true,
+        "L4": true
+      },
+      "q1": {
+        "fwd": 0.34867844,
+        "rev": 0.34867844,
+        "ratio": 1.0
+      },
+      "q2": {
+        "cand": {
+          "C": 1.0,
+          "x": 0.0
+        },
+        "pick": "C"
+      },
+      "q4": {
+        "cand": {
+          "F": 1.0,
+          "w": 0.0
+        },
+        "pick": "F"
+      },
+      "q3": {
+        "chunks": 9,
+        "chunk_reachable": true,
+        "hops_A_to_Z": 10
+      },
+      "returns": {
+        "L1": null,
+        "L2": {
+          "C": 1.0
+        },
+        "L4": {
+          "chunks": 9,
+          "members": 26
+        }
+      },
+      "l0_baseline": {
+        "nodes": 30,
+        "edges": 29,
+        "N_B_C": 1,
+        "N_B_x": 1
+      },
+      "l4_added_nodes": [
+        "CH_1",
+        "CH_2",
+        "CH_3",
+        "CH_4",
+        "CH_5",
+        "CH_6",
+        "CH_7",
+        "CH_8",
+        "CH_9"
+      ]
+    },
+    "C100": {
+      "flags": {
+        "L1": true,
+        "L2": false,
+        "L4": false
+      },
+      "q1": {
+        "fwd": 0.071789799,
+        "rev": 4e-09,
+        "ratio": 16777216.0
+      },
+      "q2": {
+        "cand": {
+          "C": 1.0,
+          "x": 1.0
+        },
+        "pick": "tie"
+      },
+      "q4": {
+        "cand": {
+          "F": 1.0,
+          "w": 1.0
+        },
+        "pick": "tie"
+      },
+      "q3": {
+        "chunks": 0,
+        "chunk_reachable": false,
+        "hops_A_to_Z": 25
+      },
+      "returns": {
+        "L1": {
+          "B->C": 1,
+          "B->x": 1
+        },
+        "L2": null,
+        "L4": null
+      },
+      "l0_baseline": {
+        "nodes": 30,
+        "edges": 29,
+        "N_B_C": 1,
+        "N_B_x": 1
+      },
+      "l4_added_nodes": []
+    },
+    "C101": {
+      "flags": {
+        "L1": true,
+        "L2": false,
+        "L4": true
+      },
+      "q1": {
+        "fwd": 0.071789799,
+        "rev": 4e-09,
+        "ratio": 16777216.0
+      },
+      "q2": {
+        "cand": {
+          "C": 1.0,
+          "x": 1.0
+        },
+        "pick": "tie"
+      },
+      "q4": {
+        "cand": {
+          "F": 1.0,
+          "w": 1.0
+        },
+        "pick": "tie"
+      },
+      "q3": {
+        "chunks": 9,
+        "chunk_reachable": true,
+        "hops_A_to_Z": 10
+      },
+      "returns": {
+        "L1": {
+          "B->C": 1,
+          "B->x": 1
+        },
+        "L2": null,
+        "L4": {
+          "chunks": 9,
+          "members": 26
+        }
+      },
+      "l0_baseline": {
+        "nodes": 30,
+        "edges": 29,
+        "N_B_C": 1,
+        "N_B_x": 1
+      },
+      "l4_added_nodes": [
+        "CH_1",
+        "CH_2",
+        "CH_3",
+        "CH_4",
+        "CH_5",
+        "CH_6",
+        "CH_7",
+        "CH_8",
+        "CH_9"
+      ]
+    },
+    "C110": {
+      "flags": {
+        "L1": true,
+        "L2": true,
+        "L4": false
+      },
+      "q1": {
+        "fwd": 0.071789799,
+        "rev": 4e-09,
+        "ratio": 16777216.0
+      },
+      "q2": {
+        "cand": {
+          "C": 1.0,
+          "x": 0.0
+        },
+        "pick": "C"
+      },
+      "q4": {
+        "cand": {
+          "F": 1.0,
+          "w": 0.0
+        },
+        "pick": "F"
+      },
+      "q3": {
+        "chunks": 0,
+        "chunk_reachable": false,
+        "hops_A_to_Z": 25
+      },
+      "returns": {
+        "L1": {
+          "B->C": 1,
+          "B->x": 1
+        },
+        "L2": {
+          "C": 1.0
+        },
+        "L4": null
+      },
+      "l0_baseline": {
+        "nodes": 30,
+        "edges": 29,
+        "N_B_C": 1,
+        "N_B_x": 1
+      },
+      "l4_added_nodes": []
+    },
+    "C111": {
+      "flags": {
+        "L1": true,
+        "L2": true,
+        "L4": true
+      },
+      "q1": {
+        "fwd": 0.071789799,
+        "rev": 4e-09,
+        "ratio": 16777216.0
+      },
+      "q2": {
+        "cand": {
+          "C": 1.0,
+          "x": 0.0
+        },
+        "pick": "C"
+      },
+      "q4": {
+        "cand": {
+          "F": 1.0,
+          "w": 0.0
+        },
+        "pick": "F"
+      },
+      "q3": {
+        "chunks": 9,
+        "chunk_reachable": true,
+        "hops_A_to_Z": 10
+      },
+      "returns": {
+        "L1": {
+          "B->C": 1,
+          "B->x": 1
+        },
+        "L2": {
+          "C": 1.0
+        },
+        "L4": {
+          "chunks": 9,
+          "members": 26
+        }
+      },
+      "l0_baseline": {
+        "nodes": 30,
+        "edges": 29,
+        "N_B_C": 1,
+        "N_B_x": 1
+      },
+      "l4_added_nodes": [
+        "CH_1",
+        "CH_2",
+        "CH_3",
+        "CH_4",
+        "CH_5",
+        "CH_6",
+        "CH_7",
+        "CH_8",
+        "CH_9"
+      ]
+    }
+  }
+}

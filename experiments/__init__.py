@@ -25,6 +25,7 @@ from . import (
     exp20_ablation_suite,
     exp21_scale_consistency,
     exp22_sampling_statistics,
+    exp23_composition,
 )
 
 ALL = {
@@ -52,4 +53,5 @@ ALL = {
     "exp20_ablation_suite": exp20_ablation_suite,
     "exp21_scale_consistency": exp21_scale_consistency,
     "exp22_sampling_statistics": exp22_sampling_statistics,
+    "exp23_composition": exp23_composition,
 }
