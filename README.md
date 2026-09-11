@@ -56,6 +56,7 @@ python main.py exp1_chain # 只跑一个实验
 `exp15_higher_order_context`、`exp16_role_markers`、`exp17_system_reduplication`、
 `exp18_spelling_output`、`exp19_emotion_modulation`、`exp20_ablation_suite`、
 `exp21_scale_consistency`、`exp22_sampling_statistics`、`exp23_composition`。
+`exp24_module_differentiation`（numpy 依赖）。
 
 底层核心接口：
 

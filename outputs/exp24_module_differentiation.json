@@ -1,0 +1,198 @@
+{
+  "id": "exp24_module_differentiation",
+  "title": "E24 S1 模块分化: 共现矩阵+ICA 能否还原植入模块（LCA 仅旁证）",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P1 语料信号: 组内/组间强度比≥5 且 观测 ARI > 置换零分布 95 分位",
+      "ok": true,
+      "detail": "组内/组间=555.4, 谱聚类 ARI=1.000, 零分布95分位=0.176"
+    },
+    {
+      "name": "P1b 可辨识性: 模块质量(=组大小×强度)两两差距≥5%（非简并）",
+      "ok": true,
+      "detail": "模块质量=[np.float64(1080.0), np.float64(2000.0), np.float64(3900.0)], 最小相对差距=0.460"
+    },
+    {
+      "name": "P2 C1 恢复(修订方法: 谱聚类): ARI≥0.8 且恢复模块数=3",
+      "ok": true,
+      "detail": "谱聚类 ARI=1.000, 模块数=3；（预注册 ICA 失败: ARI=-0.001, 模块数=1）"
+    },
+    {
+      "name": "P3 10 种子归属稳定性 ARI≥0.8（谱聚类）",
+      "ok": true,
+      "detail": "谱聚类稳定 ARI=1.000（ICA 稳定 ARI=0.165）"
+    },
+    {
+      "name": "P4 负对照: 随机语料无模块结构（模块富集度≤2）",
+      "ok": true,
+      "detail": "随机语料模块富集度=1.14（植入语料=555.4）"
+    },
+    {
+      "name": "P5 链对回: 归属沿链成连续段且不交错（runs≤K+2）",
+      "ok": true,
+      "detail": "runs=3, 不交错=True, 模块数=3, |ρ|=0.32(仅记录)"
+    },
+    {
+      "name": "P6 分叉对回: 分支独有节点分离指数≥0.9（共享前缀归属按预注册报告）",
+      "ok": true,
+      "detail": "分离指数=1.00; 共享前缀模块=[1, 2]; 单独成团=False"
+    },
+    {
+      "name": "P7 无越权: S1 只读 L0（跑前后节点/连接数一致）",
+      "ok": true,
+      "detail": "before=(15, 34), after=(15, 34)"
+    }
+  ],
+  "data": {
+    "C1": {
+      "ARI_spectral": 1.0,
+      "modules_spectral": 3,
+      "stability_ARI_spectral": 1.0,
+      "ica_primary": {
+        "ARI": -0.001,
+        "modules": 1,
+        "stability_ARI": 0.165
+      },
+      "method_revision": "预注册 ICA 在共现矩阵上失败(见 B09); 最小方法修订=谱聚类, 判据阈值不变",
+      "within_between_ratio": 555.4,
+      "identifiability_min_gap": 0.46,
+      "assign_spectral": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "truth": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "C4_null": {
+      "enrichment": 1.145
+    },
+    "C2_chain": {
+      "runs": 3,
+      "rank_corr_first_component": 0.318,
+      "modules": 3,
+      "assign": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "C3_fork": {
+      "branch_separation": 1.0,
+      "prefix_modules": [
+        1,
+        2
+      ],
+      "prefix_own_module": false,
+      "assign": [
+        2,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        2,
+        2
+      ]
+    },
+    "C1_hub": {
+      "hub_module": 0,
+      "hub_alone": false
+    },
+    "lca_secondary": {
+      "active_fraction": 1.0,
+      "converged_steps": 200,
+      "dominant_components": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        2,
+        0,
+        0,
+        0,
+        0,
+        2
+      ],
+      "ari_vs_ica": -0.016
+    }
+  }
+}
