@@ -28,6 +28,7 @@ from . import (
     exp23_composition,
     exp24_module_differentiation,
     exp25_module_dynamics,
+    exp26_module_coordination,
 )
 
 ALL = {
@@ -58,4 +59,5 @@ ALL = {
     "exp23_composition": exp23_composition,
     "exp24_module_differentiation": exp24_module_differentiation,
     "exp25_module_dynamics": exp25_module_dynamics,
+    "exp26_module_coordination": exp26_module_coordination,
 }

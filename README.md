@@ -58,6 +58,7 @@ python main.py exp1_chain # 只跑一个实验
 `exp21_scale_consistency`、`exp22_sampling_statistics`、`exp23_composition`。
 `exp24_module_differentiation`（numpy 依赖）。
 `exp25_module_dynamics`（numpy 依赖：模块平均激活的双稳与滞回）。
+`exp26_module_coordination`（numpy 依赖：EI 整合量与剂量响应，精确枚举 2^12 状态）。
 
 底层核心接口：
 

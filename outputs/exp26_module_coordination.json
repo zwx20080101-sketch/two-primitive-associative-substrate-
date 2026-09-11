@@ -1,0 +1,280 @@
+{
+  "id": "exp26_module_coordination",
+  "title": "E26 S3 模块间协调: EI 整合量 + 剂量响应（半稠密 w=65）",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P1 接口回归: E24 语料重现谱聚类 ARI=1.000 与 rho=0.0019",
+      "ok": true,
+      "detail": "ARI=1.000, 3 模块, rho=0.0019（期望 0.0019）"
+    },
+    {
+      "name": "P2 语料构造核查: C1' 跨模块密度>=50% 且块均值>=25; C2' 跨模块对=0",
+      "ok": true,
+      "detail": "C1' 密度=0.51, 跨模块块均值=37.9; C2' 跨模块非零对=0; 划分覆盖=1.00"
+    },
+    {
+      "name": "P3 剂量响应: 10 个种子每一个都严格单调 且 EI_int(w=65)>=0.01",
+      "ok": true,
+      "detail": "单调种子数=10/10; EI_int 均值=[-0.0, 0.0118, 0.056, 0.1021, 0.1474]; min(EI_int@65)=0.1317"
+    },
+    {
+      "name": "P4 负对照（精确预测）: C2' 的 EI_int = 0",
+      "ok": true,
+      "detail": "C2' EI_int=-1.332e-15（容差 1e-09）"
+    },
+    {
+      "name": "P5 必要性消融（精确预测）: 跨模块边置零后 EI_int = 0",
+      "ok": true,
+      "detail": "未消融 EI_int=0.1403 → 消融后=-1.332e-15（容差 1e-09）"
+    },
+    {
+      "name": "P6 因果涌现（双向判据, 任一方向都算完成）",
+      "ok": true,
+      "detail": "EI_micro_density=0.395, EI_macro_density=0.515, 差=+0.121 -> C 宏观不劣于微观"
+    },
+    {
+      "name": "P7 无越权: L0/L1 只读, EI 不新增结构节点",
+      "ok": true,
+      "detail": "L0/L1 跑前跑后=(12, 43, 12) -> (12, 43, 12)"
+    }
+  ],
+  "data": {
+    "corpus": {
+      "C1_prime": {
+        "modules": [
+          3,
+          4,
+          5
+        ],
+        "strengths": [
+          90,
+          110,
+          130
+        ],
+        "cross_density": 0.511,
+        "cross_pairs": 24,
+        "cross_block_mean": 37.92,
+        "partition": [
+          1,
+          1,
+          1,
+          2,
+          2,
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "partition_note": "spectral",
+        "partition_stability_ARI": 1.0
+      },
+      "C2_prime": {
+        "cross_pairs": 0,
+        "partition_note": "spectral",
+        "partition_stability_ARI": 1.0
+      },
+      "C3_prime": {
+        "modules": [
+          4,
+          4,
+          4
+        ],
+        "strengths": [
+          90,
+          60,
+          130
+        ],
+        "source_weights": {
+          "S1": 65,
+          "S2": 40
+        }
+      }
+    },
+    "dose_response": {
+      "w_values": [
+        0,
+        10,
+        25,
+        40,
+        65
+      ],
+      "EI_int_mean": [
+        -0.0,
+        0.0118,
+        0.056,
+        0.1021,
+        0.1474
+      ],
+      "EI_int_per_seed": [
+        [
+          -0.0,
+          0.01191,
+          0.05788,
+          0.10349,
+          0.14033
+        ],
+        [
+          -0.0,
+          0.01057,
+          0.05984,
+          0.11971,
+          0.16601
+        ],
+        [
+          -0.0,
+          0.01352,
+          0.05349,
+          0.0978,
+          0.15494
+        ],
+        [
+          -0.0,
+          0.0114,
+          0.05501,
+          0.09451,
+          0.13749
+        ],
+        [
+          -0.0,
+          0.0101,
+          0.05293,
+          0.09453,
+          0.13174
+        ],
+        [
+          -0.0,
+          0.01197,
+          0.0509,
+          0.0964,
+          0.14119
+        ],
+        [
+          -0.0,
+          0.01409,
+          0.06531,
+          0.10419,
+          0.14417
+        ],
+        [
+          -0.0,
+          0.01033,
+          0.05441,
+          0.1017,
+          0.15005
+        ],
+        [
+          -0.0,
+          0.01244,
+          0.05685,
+          0.1006,
+          0.146
+        ],
+        [
+          0.0,
+          0.01122,
+          0.05301,
+          0.10807,
+          0.16173
+        ]
+      ],
+      "monotone_per_seed": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "min_EI_int_w65": 0.13174
+    },
+    "saturation_w91": {
+      "EI_int_per_seed": [
+        0.1451,
+        0.1692,
+        0.1785,
+        0.1486,
+        0.1414,
+        0.1417,
+        0.1826,
+        0.1573,
+        0.1506,
+        0.1655
+      ],
+      "note": "饱和区记录点（B16）: 非单调, 置换对照退化为恒等"
+    },
+    "EI_parts_C1": {
+      "ei_micro": 4.73784,
+      "ei_macro": 1.54609,
+      "module_parts": [
+        0.67646,
+        0.31203,
+        0.41727
+      ],
+      "ei_int": 0.14033,
+      "EI_micro_density": 0.3948,
+      "EI_macro_density": 0.5154
+    },
+    "C2_prime_EI_int": -0.0,
+    "ablation_EI_int": -0.0,
+    "experience_curve": [
+      {
+        "cross_events": 0,
+        "EI_int": -0.0
+      },
+      {
+        "cross_events": 1,
+        "EI_int": 0.00013
+      },
+      {
+        "cross_events": 5,
+        "EI_int": 0.0032
+      },
+      {
+        "cross_events": 20,
+        "EI_int": 0.04058
+      },
+      {
+        "cross_events": 100,
+        "EI_int": 0.1462
+      }
+    ],
+    "asym_C1_prime": 0.7202,
+    "rho_C1": 0.2728,
+    "C3_prime_exploratory": {
+      "EI_int": 0.16644,
+      "EI_macro": 1.19222,
+      "n_cross_pairs_strong": 16,
+      "n_cross_pairs_weak": 16,
+      "asym": 1.0579,
+      "transfer_entropy": {
+        "TE(S1->T)": 0.09104,
+        "TE(T->S1)": 0.15579,
+        "TE(S2->T)": 0.03411,
+        "TE(T->S2)": 0.13547
+      },
+      "partition_stability_ARI": 1.0,
+      "partition_vs_truth_ARI": 1.0,
+      "note": "第二口径（共享下游仲裁）, exploratory, 不参与 PASS/FAIL"
+    },
+    "readonly": {
+      "L0_L1_before": [
+        12,
+        43,
+        12
+      ],
+      "L0_L1_after": [
+        12,
+        43,
+        12
+      ]
+    }
+  }
+}
