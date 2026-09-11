@@ -27,6 +27,7 @@ from . import (
     exp22_sampling_statistics,
     exp23_composition,
     exp24_module_differentiation,
+    exp25_module_dynamics,
 )
 
 ALL = {
@@ -56,4 +57,5 @@ ALL = {
     "exp22_sampling_statistics": exp22_sampling_statistics,
     "exp23_composition": exp23_composition,
     "exp24_module_differentiation": exp24_module_differentiation,
+    "exp25_module_dynamics": exp25_module_dynamics,
 }

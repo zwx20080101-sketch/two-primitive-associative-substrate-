@@ -1,0 +1,173 @@
+{
+  "id": "exp25_module_dynamics",
+  "title": "E25 S2 模块内动力学: 模块平均激活的双稳与滞回（ρ=0.0019 独立分支）",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P1 接口: 模块划分来自 E24 谱聚类, 覆盖全部节点, V 为模块均值",
+      "ok": true,
+      "detail": "3 模块, 覆盖 15/15 节点, ρ=0.0019"
+    },
+    {
+      "name": "P2 双稳: 按 ρ 分支判据（每模块低/高态各≥20% 初值）",
+      "ok": true,
+      "detail": "独立分支(ρ=0.0019<0.5): 每模块盆地=[{'low': 0.49, 'high': 0.51}, {'low': 0.54, 'high': 0.46}, {'low': 0.53, 'high': 0.47}]; 最靠近判定线的收敛态|V|=0.80（远离 0.5，非硬切）; 联合吸引子数(低/高二值模式)=8, 细簇=8(仅记录)"
+    },
+    {
+      "name": "P3 滞回: C1 宽度≥10%; C2 单模块对照 ≤2%",
+      "ok": true,
+      "detail": "C1 宽度=0.150(up=0.30000000000000204,down=-0.2999999999999985), C2 宽度=0.012(up=0.20000000000000195,down=0.15000000000000213)"
+    },
+    {
+      "name": "P4 未归类初值: C1 比例≤20%",
+      "ok": true,
+      "detail": "C1 未归类=0.000, C2 未归类=0.000"
+    },
+    {
+      "name": "P5 划分依赖: C1 多种子一致性 ARI≥0.8; C2 人工单模块不检查",
+      "ok": true,
+      "detail": "C1 一致性 ARI=1.000"
+    },
+    {
+      "name": "P6 次级口径: L1 对称化方向计数与本语料 L0 共现一致（如实记录）",
+      "ok": true,
+      "detail": "对称化后与 L0 计数一致=True（成对事件下必然一致，方向信息为零）"
+    },
+    {
+      "name": "P7 无越权: L0/L1 只读（跑前后节点/连接数一致）",
+      "ok": true,
+      "detail": "before=(15, 34), after=(15, 34)"
+    }
+  ],
+  "data": {
+    "W_C1": [
+      [
+        0.7692,
+        0.0019,
+        0.0013
+      ],
+      [
+        0.0019,
+        0.6923,
+        0.0016
+      ],
+      [
+        0.0013,
+        0.0016,
+        1.0
+      ]
+    ],
+    "rho_C1": 0.0019,
+    "branch": "independent",
+    "C1": {
+      "joint_attractor_patterns": 8,
+      "joint_clusters_fine": 8,
+      "basins_per_module": [
+        {
+          "low": 0.49,
+          "high": 0.51
+        },
+        {
+          "low": 0.54,
+          "high": 0.46
+        },
+        {
+          "low": 0.53,
+          "high": 0.47
+        }
+      ],
+      "state_separation": [
+        {
+          "low_mean": -0.8723,
+          "high_mean": 0.872,
+          "low_span": [
+            -0.8742,
+            -0.8699
+          ],
+          "high_span": [
+            0.8699,
+            0.8742
+          ]
+        },
+        {
+          "low_mean": -0.8065,
+          "high_mean": 0.8063,
+          "low_span": [
+            -0.8106,
+            -0.8019
+          ],
+          "high_span": [
+            0.8019,
+            0.8106
+          ]
+        },
+        {
+          "low_mean": -0.9575,
+          "high_mean": 0.9575,
+          "low_span": [
+            -0.958,
+            -0.957
+          ],
+          "high_span": [
+            0.957,
+            0.958
+          ]
+        }
+      ],
+      "unclassified_ratio": 0.0,
+      "hysteresis_width": 0.15,
+      "up_transition": 0.30000000000000204,
+      "down_transition": -0.2999999999999985,
+      "hysteresis_width_5x_settling_aux": 0.15,
+      "fit_quadratic": {
+        "A": -35.0956,
+        "B": 0.4603,
+        "C": 34.9257,
+        "discriminant_B2_4AC": 4903.1696
+      }
+    },
+    "C2": {
+      "modules": 1,
+      "basins": [
+        {
+          "low": 1.0,
+          "high": 0.0
+        }
+      ],
+      "hysteresis_width": 0.012,
+      "up_transition": 0.20000000000000195,
+      "down_transition": 0.15000000000000213,
+      "note": "单稳（自耦合 0.231×2=0.46<1，唯一不动点）; 0.012 = 一个扫描步长(0.05/4.0)的离散化伪影，非真实滞回"
+    },
+    "C3_exploratory": {
+      "joint_attractor_patterns": 2,
+      "joint_clusters_fine": 2,
+      "basins_per_module": [
+        {
+          "low": 0.485,
+          "high": 0.515
+        },
+        {
+          "low": 0.485,
+          "high": 0.515
+        }
+      ],
+      "hysteresis_width": 0.163,
+      "winner_take_all": false,
+      "note": "非负 L0 权重下预期无互斥切换；本项为 exploratory，不参与 PASS/FAIL"
+    },
+    "secondary_L1": {
+      "symmetric_equals_L0": true
+    },
+    "readonly": {
+      "l0_before": [
+        15,
+        34
+      ],
+      "l0_after": [
+        15,
+        34
+      ]
+    }
+  }
+}
