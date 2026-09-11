@@ -8,8 +8,8 @@
   :root { color-scheme: light dark;
     --bg:#ffffff; --fg:#2b2320; --panel:#ffffff; --line:#e2dfd8; --muted:#7a6f68;
     --accent:#b06a5a; --warn:#b3472f; --chip:#f5d9c0;
-    --fire:#d96a6a; --idle:#f2c4c4; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#181b21; --fg:#eee7e3; --panel:#222630; --line:#45414a; --muted:#a99a92; --accent:#c98d7e; --warn:#e08a72; --chip:#4a3f2a; --fire:#ff8a8a; --idle:#5a3f47; } }
+    --fire:#d96a6a; --idle:#f2c4c4; --ok:#2e7d52; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#181b21; --fg:#eee7e3; --panel:#222630; --line:#45414a; --muted:#a99a92; --accent:#c98d7e; --warn:#e08a72; --chip:#4a3f2a; --fire:#ff8a8a; --idle:#5a3f47; --ok:#7fce9e; } }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.5 "Microsoft YaHei","PingFang SC",system-ui,sans-serif; }
   main { max-width:1200px; margin:0 auto; padding:14px 14px 30px; }
@@ -41,6 +41,16 @@
   details.guide .g { font-size:13px; line-height:1.7; color:var(--fg); margin:4px 0; }
   details.guide .g b { color:var(--accent); }
   .snap-row { display:flex; gap:8px; align-items:center; margin:3px 0; font-size:13px; }
+  .an-grid { display:flex; flex-wrap:wrap; gap:12px; margin-top:8px; }
+  .an-card { flex:1 1 330px; min-width:290px; border:1px solid var(--line); border-radius:8px; padding:8px 10px; }
+  .an-card h4 { margin:0 0 6px; font-size:12px; color:var(--muted); font-weight:500; }
+  .an-note { color:var(--muted); font-size:11px; margin-top:6px; line-height:1.6; }
+  .an-ok { color:var(--ok); font-size:12px; }
+  .an-bad { color:var(--warn); font-size:12px; font-weight:600; }
+  .an-table { border-collapse:collapse; width:100%; font-size:12px; }
+  .an-table th,.an-table td { border-bottom:1px solid var(--line); padding:2px 6px; text-align:left; }
+  .wbtn { background:var(--panel); color:var(--fg); border:1px solid var(--line); border-radius:6px; padding:3px 9px; font-size:12px; margin:0 4px 4px 0; cursor:pointer; }
+  .wbtn.on { background:var(--accent); color:#fff; border-color:var(--accent); }
   @media (max-width:760px){ svg{height:60vh;min-height:360px;} .toolbar .field,.field{width:100%;} }
 </style>
 </head>
@@ -123,6 +133,19 @@
   <div class="log" id="trace" aria-live="polite">（激活后显示链路/能量流）</div>
   <div class="panel" id="tripPanel"><h3>L2 三元组候选</h3><div id="tripBody"></div></div>
   <div class="panel" id="chunkPanel"><h3>L4 组块记录</h3><div id="chunkBody"></div></div>
+  <div class="panel" id="analysisPanel">
+    <h3>分析面板（只读 · S1/S2/S3）</h3>
+    <p class="hint"><b>这三个开关只影响显示，不改变实验</b>：它们读的是已冻结的实验快照（E24/E25/E26），与当前网络无关。会改变实验结果的是上面的 <b>L1/L2/L4</b> 经验层开关。数据来源见每个卡片底部标注（commit + tag + 文件）。</p>
+    <label class="check"><input id="S1" type="checkbox"> S1 模块分化</label>
+    <label class="check"><input id="S2" type="checkbox"> S2 模块内动力学</label>
+    <label class="check"><input id="S3" type="checkbox"> S3 模块间协调</label>
+    <button id="roTestBtn" type="button">只读自检（V2）</button>
+    <div class="log" id="selfCheckBox" aria-live="polite"></div>
+    <div class="an-grid" id="anGrid"></div>
+    <div class="log" id="roTestOut" aria-live="polite">（只读自检未运行：点上面按钮，会载入 E5 语料并逐个切换 S1/S2/S3 比对状态与激活输出）</div>
+    <p class="hint" id="scaleGuard"></p>
+  </div>
+  <script id="analysisSnapshot" type="application/json">{"provenance":{"exp24":{"file":"outputs/exp24_module_differentiation.json","claim":"C24","commit":"b5fdce7","tag":"v0.9.4-e26"},"exp25":{"file":"outputs/exp25_module_dynamics.json","claim":"C25","commit":"b5fdce7","tag":"v0.9.4-e26"},"exp26":{"file":"outputs/exp26_module_coordination.json","claim":"C26","commit":"b5fdce7","tag":"v0.9.4-e26"}},"S1":{"node_names":["g0_0","g0_1","g0_2","g0_3","g1_0","g1_1","g1_2","g1_3","g1_4","g2_0","g2_1","g2_2","g2_3","g2_4","g2_5"],"modules":3,"assign":[1,1,1,1,0,0,0,0,0,2,2,2,2,2,2],"truth":[0,0,0,0,1,1,1,1,1,2,2,2,2,2,2],"ari_spectral":1.0,"stability_ari":1.0,"within_between_ratio":555.4,"identifiability_min_gap":0.46,"null_enrichment":1.145},"S2":{"rho":0.0019,"block_matrix":[[0.7692,0.0019,0.0013],[0.0019,0.6923,0.0016],[0.0013,0.0016,1.0]],"basins_per_module":[{"low":0.49,"high":0.51},{"low":0.54,"high":0.46},{"low":0.53,"high":0.47}],"state_separation":[{"low_mean":-0.8723,"high_mean":0.872,"low_span":[-0.8742,-0.8699],"high_span":[0.8699,0.8742]},{"low_mean":-0.8065,"high_mean":0.8063,"low_span":[-0.8106,-0.8019],"high_span":[0.8019,0.8106]},{"low_mean":-0.9575,"high_mean":0.9575,"low_span":[-0.958,-0.957],"high_span":[0.957,0.958]}],"joint_attractor_patterns":8,"hysteresis_width":0.15,"up_transition":0.30000000000000204,"down_transition":-0.2999999999999985,"control_width":0.012,"unclassified":0.0},"S3":{"w_values":[0,10,25,40,65],"EI_int_mean":[-0.0,0.0118,0.056,0.1021,0.1474],"EI_int_per_seed":[[-0.0,0.01191,0.05788,0.10349,0.14033],[-0.0,0.01057,0.05984,0.11971,0.16601],[-0.0,0.01352,0.05349,0.0978,0.15494],[-0.0,0.0114,0.05501,0.09451,0.13749],[-0.0,0.0101,0.05293,0.09453,0.13174],[-0.0,0.01197,0.0509,0.0964,0.14119],[-0.0,0.01409,0.06531,0.10419,0.14417],[-0.0,0.01033,0.05441,0.1017,0.15005],[-0.0,0.01244,0.05685,0.1006,0.146],[0.0,0.01122,0.05301,0.10807,0.16173]],"monotone_per_seed":[true,true,true,true,true,true,true,true,true,true],"min_EI_int_w65":0.13174,"C2_prime_EI_int":-0.0,"ablation_EI_int":-0.0,"experience_curve":[{"cross_events":0,"EI_int":-0.0},{"cross_events":1,"EI_int":0.00013},{"cross_events":5,"EI_int":0.0032},{"cross_events":20,"EI_int":0.04058},{"cross_events":100,"EI_int":0.1462}],"asym_C1":0.7202,"rho_C1":0.2728}}</script>
   <div class="log" id="log" aria-live="polite">等待输入…</div>
 </main>
 
@@ -275,6 +298,107 @@ $("spellBtn").addEventListener("click",()=>{const ch=[...state.units.values()].f
 $("redupBtn").addEventListener("click",()=>{const nbR=neighbors("R"),nbF=neighbors("F");const rule=nbR.size>0;const cand=[...nbF.keys()];const out=cand.filter(w=>(state.dir.get(dkey(w,w))||0)===0).map(w=>w+w);log(`叠词外推：规则已学=${rule}；候选=${cand.join(" ")}；外推=${out.join(" ")||"（无）"}（规则=外部语言 stub）`);});
 $("fearBtn").addEventListener("click",()=>{const A=state.activations;if(!state.activeSeeds.length){log("先激活一个种子");return;}const gain={"剧":3,"轻":1};let pain=null,maxA=0;for(const[n,v]of Object.entries(A)){if(!state.activeSeeds.includes(n)&&v>maxA&&v>0.4){maxA=v;pain=n;}}if(!pain){log("未找到疼痛节点");return;}let g=1;for(const m in gain){if(A[m]>1e-9)g=Math.max(g,gain[m]);}const fear=pain?maxA*g:0;log(`情绪：a(${pain})=${maxA.toFixed(3)}，增益=${g}，fear=${fear.toFixed(2)}${fear>=2?"（触发躲避）":""}（读取端=外部情绪 stub）`);});
 
+/* ================= P5a：S1–S3 只读分析面板（不改实验） ================= */
+const SNAP=JSON.parse($("analysisSnapshot").textContent);
+const MOD_COLOR=["#b06a5a","#7d9a6a","#7a86a8","#c2a25a"];
+let S3_W_INDEX=4;
+function provLine(k){const p=SNAP.provenance[k];return `数据来源：${k.replace("exp","E")}，commit ${p.commit}，tag ${p.tag}，${p.file}（${p.claim}）`;}
+function cardS1(){const s=SNAP.S1,groups={};s.assign.forEach((m,i)=>{(groups[m]=groups[m]||[]).push(s.node_names[i]);});
+  const chips=Object.keys(groups).sort().map(m=>`<div>模块 ${m}：${groups[m].map(n=>`<span class="chip" style="border-color:${MOD_COLOR[+m%4]}">${n}</span>`).join("")}</div>`).join("");
+  const map={};Object.keys(groups).forEach(m=>{const cnt={};groups[m].forEach(n=>{const t=s.truth[s.node_names.indexOf(n)];cnt[t]=(cnt[t]||0)+1;});map[m]=+Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0];});
+  const agree=s.assign.filter((m,i)=>map[m]===s.truth[i]).length;
+  return `<div class="an-card"><h4>S1 模块分化（E24）</h4>
+  <div>读出模块数 <b>${s.modules}</b>；与植入真值同划分 <b>${agree}/${s.assign.length}</b> 节点</div>
+  <div>ARI（谱聚类 vs 真值）= <b>${s.ari_spectral.toFixed(3)}</b>；多种子稳定性 ARI = <b>${s.stability_ari.toFixed(3)}</b></div>
+  <div>模块富集度（组内/组间）= <b>${s.within_between_ratio}</b>；随机对照 = <b>${s.null_enrichment}</b></div>
+  <div style="margin-top:6px">${chips}</div>
+  <div class="an-note">颜色只表示模块归属。预注册的 ICA/LCA 在这份数据上失败，已登记 B09/B10；本条是"最小方法修订＝谱聚类读出"。<br>${provLine("exp24")}</div></div>`;}
+function cardS2(){const s=SNAP.S2;
+  const rows=s.basins_per_module.map((b,i)=>`<div class="bar-row"><span>模块 ${i}</span><div class="barwrap"><div class="bar" style="width:${(b.low*100).toFixed(0)}%"></div></div><span>低 ${b.low} / 高 ${b.high}｜收敛态 |V|≈${Math.abs(s.state_separation[i].low_mean).toFixed(2)}</span></div>`).join("");
+  const W=300,H=92,x0=22,x1=W-10,yLow=H-22,yHigh=18,lo=-2,hi=2;
+  const sx=v=>x0+(v-lo)/(hi-lo)*(x1-x0), up=s.up_transition, dn=s.down_transition;
+  const svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:92px">
+   <line x1="${x0}" y1="${yLow}" x2="${x1}" y2="${yLow}" stroke="currentColor" opacity=".25"/>
+   <polyline points="${sx(lo)},${yLow} ${sx(up)},${yLow} ${sx(up)},${yHigh} ${sx(hi)},${yHigh}" fill="none" stroke="#b06a5a" stroke-width="2"/>
+   <polyline points="${sx(hi)},${yHigh} ${sx(dn)},${yHigh} ${sx(dn)},${yLow} ${sx(lo)},${yLow}" fill="none" stroke="#7a86a8" stroke-width="2" stroke-dasharray="4 3"/>
+   <text x="${sx(up)}" y="12" font-size="9" text-anchor="middle" fill="currentColor" opacity=".75">上扫 ${up.toFixed(2)}</text>
+   <text x="${sx(dn)}" y="${H-4}" font-size="9" text-anchor="middle" fill="currentColor" opacity=".75">下扫 ${dn.toFixed(2)}</text>
+   <text x="${x0}" y="${H-4}" font-size="9" fill="currentColor" opacity=".5">I=-2</text>
+   <text x="${x1}" y="${H-4}" font-size="9" text-anchor="end" fill="currentColor" opacity=".5">I=2</text></svg>`;
+  return `<div class="an-card"><h4>S2 模块内动力学（E25）</h4>
+  <div>闭合耦合比 ρ = <b>${s.rho}</b>（&lt;0.5 → 独立分支）｜联合二值模式数 = <b>${s.joint_attractor_patterns}</b>（=2³）｜未归类 = <b>${s.unclassified}</b></div>
+  <div style="margin:6px 0 4px">${rows}</div>
+  <div>滞回宽度 <b>${s.hysteresis_width}</b>（阈值 10%）；单模块对照 <b>${s.control_width}</b>（≤2%）</div>
+  ${svg}
+  <div class="an-note">曲线是<b>由记录的两个转变点重建的示意</b>——E25 快照只存了转变点与宽度，原始 I 扫描轨迹未入库。<br>${provLine("exp25")}</div></div>`;}
+function cardS3(){const s=SNAP.S3,i=S3_W_INDEX,w=s.w_values[i];
+  const btns=s.w_values.map((v,j)=>`<button class="wbtn${j===i?" on":""}" data-widx="${j}" type="button">w=${v}</button>`).join("");
+  const seeds=s.EI_int_per_seed.map(r=>r[i]);
+  const W=300,H=94,x0=26,x1=W-12,y0=H-24,y1=14,maxV=Math.max(...s.EI_int_mean,0.01);
+  const sx=j=>x0+j*(x1-x0)/(s.w_values.length-1), sy=v=>y0-(v/maxV)*(y0-y1);
+  const pts=s.EI_int_mean.map((v,j)=>`${sx(j).toFixed(1)},${sy(v).toFixed(1)}`).join(" ");
+  const dots=s.EI_int_mean.map((v,j)=>`<circle cx="${sx(j).toFixed(1)}" cy="${sy(v).toFixed(1)}" r="${j===i?4:2.5}" fill="${j===i?"#b06a5a":"currentColor"}" opacity="${j===i?1:.5}"/>`).join("");
+  const exp=s.experience_curve.map(p=>`${p.cross_events}次→${p.EI_int}`).join("　");
+  return `<div class="an-card"><h4>S3 模块间协调（E26）</h4>
+  <div>${btns}</div>
+  <div>选中记录点 w=${w}：EI_int = <b>${s.EI_int_mean[i]}</b>（10 个种子范围 ${Math.min(...seeds)}–${Math.max(...seeds)}；最小 ${s.min_EI_int_w65}@w=65）</div>
+  <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:94px">
+   <line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="currentColor" opacity=".25"/>
+   <polyline points="${pts}" fill="none" stroke="#b06a5a" stroke-width="2"/>${dots}
+   <text x="${x0}" y="${y0+12}" font-size="9" fill="currentColor" opacity=".6">w=0</text>
+   <text x="${x1}" y="${y0+12}" font-size="9" text-anchor="end" fill="currentColor" opacity=".6">w=65</text>
+   <text x="${x0}" y="12" font-size="9" fill="currentColor" opacity=".6">EI_int（比特）</text></svg>
+  <div>零耦合对照 = <b>${s.C2_prime_EI_int}</b>；跨模块边消融后 = <b>${s.ablation_EI_int}</b>（两者都是精确 0）</div>
+  <div>随经验量：${exp}</div>
+  <div>结构方向性 asym = <b>${s.asym_C1}</b>（有序事件使 L1 方向不对称）</div>
+  <div class="an-note">w 只能在 <b>记录点 0/10/25/40/65</b> 之间切换；不提供手动输入、不外推——曲线是记录点的连线，不是新数据。<br>${provLine("exp26")}</div></div>`;}
+function renderAnalysis(){const g=$("anGrid");
+  if(!$("S1").checked&&!$("S2").checked&&!$("S3").checked){g.innerHTML='<div class="an-note">（勾选 S1/S2/S3 查看只读分析；这三个开关不影响实验，也不改变当前网络）</div>';renderGuard();return;}
+  let html="";if($("S1").checked)html+=cardS1();if($("S2").checked)html+=cardS2();if($("S3").checked)html+=cardS3();
+  g.innerHTML=html;
+  g.querySelectorAll("[data-widx]").forEach(b=>b.addEventListener("click",()=>{S3_W_INDEX=parseInt(b.getAttribute("data-widx"),10);renderAnalysis();}));
+  renderGuard();}
+function selfCheckRows(){const r=[],add=(f,e,a,ok)=>r.push({f,e,a,ok}),s1=SNAP.S1,s2=SNAP.S2,s3=SNAP.S3;
+  add("exp26: C2_prime_EI_int","|值| < 1e-9",String(s3.C2_prime_EI_int),Math.abs(s3.C2_prime_EI_int)<1e-9);
+  add("exp26: ablation_EI_int","|值| < 1e-9",String(s3.ablation_EI_int),Math.abs(s3.ablation_EI_int)<1e-9);
+  add("exp26: EI_int(w=0)","= 0",String(s3.EI_int_mean[0]),Math.abs(s3.EI_int_mean[0])<1e-9);
+  add("exp26: dose_response.monotone_per_seed","全 true",JSON.stringify(s3.monotone_per_seed),s3.monotone_per_seed.every(Boolean));
+  add("exp26: min_EI_int_w65","≥ 0.01",String(s3.min_EI_int_w65),s3.min_EI_int_w65>=0.01);
+  add("exp25: C1.unclassified_ratio","≤ 0.20",String(s2.unclassified),s2.unclassified<=0.2);
+  add("exp25: C1.hysteresis_width","≥ 0.10",String(s2.hysteresis_width),s2.hysteresis_width>=0.10);
+  add("exp25: C2.hysteresis_width","≤ 0.02",String(s2.control_width),s2.control_width<=0.02);
+  add("exp24: C1.ARI_spectral","≥ 0.8",String(s1.ari_spectral),s1.ari_spectral>=0.8);
+  add("exp24: C1.stability_ARI","≥ 0.8",String(s1.stability_ari),s1.stability_ari>=0.8);
+  add("exp24: C1.assign 覆盖","= 15 节点",String(s1.assign.length),s1.assign.length===s1.node_names.length);
+  return r;}
+function renderSelfCheck(){const rows=selfCheckRows(),bad=rows.filter(r=>!r.ok);
+  $("selfCheckBox").innerHTML=(bad.length?`<span class="an-bad">快照自检失败 ${bad.length} 项（下面是具体字段，不是网页坏了就是数据坏了）</span>`:`<span class="an-ok">快照自检通过（${rows.length} 项字段级检查）</span>`)
+   +`<table class="an-table"><tr><th>字段</th><th>期望</th><th>实际</th><th>结果</th></tr>`
+   +rows.map(r=>`<tr><td>${r.f}</td><td>${r.e}</td><td>${r.a}</td><td class="${r.ok?"an-ok":"an-bad"}">${r.ok?"OK":"FAIL"}</td></tr>`).join("")+`</table>`;}
+function sigState(){return JSON.stringify({n:[...state.nodes.entries()],e:[...state.edges.entries()],d:[...state.dir.entries()],t:[...state.trips.entries()].map(([k,m])=>[k,[...m.entries()]]),u:[...state.units.entries()]});}
+function sigAct(){return JSON.stringify(Object.entries(state.activations).sort());}
+function runReadonlyTest(){const prior={S1:$("S1").checked,S2:$("S2").checked,S3:$("S3").checked};
+  const combos=[[0,0,0],[1,0,0],[0,1,0],[0,0,1],[1,1,0],[1,0,1],[0,1,1],[1,1,1]],lines=[];let ref=null,diff=0;
+  clearNetwork();const Ls=LAYERS.e5||[];["L1","L2","L4"].forEach(id=>$(id).checked=Ls.includes(id));
+  for(const [tok,mode,rep] of EXPERIMENTS.e5.steps)addExperience(parseTokens(tok),mode,rep);
+  for(const c of combos){$("S1").checked=!!c[0];$("S2").checked=!!c[1];$("S3").checked=!!c[2];renderAnalysis();
+    resetActivations(["H"]);fullActivate(["H"],false);
+    const s=sigState(),a=sigAct();
+    if(ref===null)ref={s,a};else{if(s!==ref.s)diff++;if(a!==ref.a)diff++;}
+    lines.push(`S1=${c[0]} S2=${c[1]} S3=${c[2]}｜节点 ${state.nodes.size}｜连接 ${state.edges.size}｜激活 ${Object.keys(state.activations).length} 个（种子 H）`);}
+  $("S1").checked=prior.S1;$("S2").checked=prior.S2;$("S3").checked=prior.S3;renderAnalysis();render();
+  $("roTestOut").innerHTML=`只读自检（V2）：载入 E5 语料 → 8 种 S1/S2/S3 组合 → 比对网络状态与激活向量。<br>`
+   +`<span class="${diff===0?"an-ok":"an-bad"}">差异条数 = ${diff}（要求 0）${diff===0?"：分析面板开关不改变实验 ✓":"：分析面板改动了状态，必须修"}</span><br>`
+   +lines.join("<br>");}
+function renderGuard(){const n=state.nodes.size;
+  $("scaleGuard").textContent=n>12
+   ? `当前网络 ${n} 节点：超过 12 节点 → 页内精确 EI 试算已禁用（需 2ⁿ×2ⁿ 内存，15 节点约 8.6 GB）。分析面板显示的仍是快照数据。`
+   : `当前网络 ${n} 节点（≤12）：分析面板仍然只显示快照数据；页内试算留给 P5b（且必须先过"块对角语料 EI_int 必须为 0"的自检）。`;}
+["S1","S2","S3"].forEach(id=>$(id).addEventListener("change",renderAnalysis));
+$("roTestBtn").addEventListener("click",runReadonlyTest);
+new MutationObserver(()=>renderGuard()).observe($("stNodes"),{childList:true,subtree:true,characterData:true});
+renderSelfCheck();
+renderAnalysis();
 render();
 loadLocal();
 </script>

@@ -60,6 +60,9 @@ python main.py exp1_chain # 只跑一个实验
 `exp25_module_dynamics`（numpy 依赖：模块平均激活的双稳与滞回）。
 `exp26_module_coordination`（numpy 依赖：EI 整合量与剂量响应，精确枚举 2^12 状态）。
 
+`verify_playground.py` 校验网页分析面板：内嵌快照 ↔ `outputs/*.json` 逐字段一致（V1）、
+来源可追溯（commit+tag）、面板无自由输入、字段级自检表存在、无越权措辞。
+
 底层核心接口：
 
 ```python
