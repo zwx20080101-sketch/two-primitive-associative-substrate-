@@ -1,0 +1,763 @@
+{
+  "id": "exp27_context_window",
+  "title": "E27 上下文窗口边界: k_min = k*（B01 正式化）",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P1 语料构造核查: 两场景仅'最远 token'与'目标'不同; 对照行无判别 token",
+      "ok": true,
+      "detail": "k*=1: 差异位置=[0, 1]; k*=2: 差异位置=[0, 2]; k*=3: 差异位置=[0, 3]; k*=4: 差异位置=[0, 4]; k*=5: 差异位置=[0, 5]; k*=inf: 差异位置=[1]"
+    },
+    {
+      "name": "P2 阴性复现(B01): k*=3 上 L1 与 L2 的 C/D 对比度精确为 0",
+      "ok": true,
+      "detail": "k*=3: L1 对比度=0.000e+00（C=0.9000, D=0.9000）, L2 对比度=0.000e+00"
+    },
+    {
+      "name": "P3 阳性对照: k*=2 上 L2 决定度 = 1.00; 且每个 k* 的 probe-k(k>=k*) = 1.00",
+      "ok": true,
+      "detail": "k*=2 上 L2(probe-2) 决定度=1.0000; 所有 k>=k* 的 probe-k 均 >=1-1e-6: True"
+    },
+    {
+      "name": "P4 定量律: k*∈{1..5} 上 k_min = k*; 对照行(无判别 token)恒 0.50",
+      "ok": true,
+      "detail": "k_min={\"1\": 1, \"2\": 2, \"3\": 3, \"4\": 4, \"5\": 5}; 对照行恒 0.50: True"
+    },
+    {
+      "name": "P5 只读: 层文件哈希不变; 每次测量前后 L0/L1/L2 计数不变",
+      "ok": true,
+      "detail": "层文件哈希 before==after: True; 各档测量前后计数一致: True"
+    },
+    {
+      "name": "P6 登记: JSON 内含 C27 与 B01(升级) 的拟登记文本",
+      "ok": true,
+      "detail": "文本已写入 JSON 的 registration 字段"
+    }
+  ],
+  "data": {
+    "ladder": {
+      "1": {
+        "scenes": {
+          "X": [
+            "uX",
+            "C"
+          ],
+          "Y": [
+            "uY",
+            "D"
+          ]
+        },
+        "degree_by_k": {
+          "1": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX"
+            ],
+            "key_sceneY": [
+              "uY"
+            ],
+            "same_key": false,
+            "degenerate": false
+          },
+          "2": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX"
+            ],
+            "key_sceneY": [
+              "uY"
+            ],
+            "same_key": false,
+            "degenerate": true
+          },
+          "3": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX"
+            ],
+            "key_sceneY": [
+              "uY"
+            ],
+            "same_key": false,
+            "degenerate": true
+          },
+          "4": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX"
+            ],
+            "key_sceneY": [
+              "uY"
+            ],
+            "same_key": false,
+            "degenerate": true
+          },
+          "5": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX"
+            ],
+            "key_sceneY": [
+              "uY"
+            ],
+            "same_key": false,
+            "degenerate": true
+          }
+        },
+        "L0": {
+          "contrast": 1.0,
+          "target_sceneX": 0.9,
+          "target_sceneY": 0.0,
+          "seed": "uX"
+        },
+        "L1": {
+          "contrast": 1.0,
+          "target_sceneX": 0.9,
+          "target_sceneY": 0.0,
+          "seed": "uX"
+        },
+        "L2": {
+          "contrast": null,
+          "note": "序列不足 3 token，L2 无 2 前缀可用（N/A）"
+        },
+        "readonly_ok": true
+      },
+      "2": {
+        "scenes": {
+          "X": [
+            "uX",
+            "s1",
+            "C"
+          ],
+          "Y": [
+            "uY",
+            "s1",
+            "D"
+          ]
+        },
+        "degree_by_k": {
+          "1": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "s1"
+            ],
+            "key_sceneY": [
+              "s1"
+            ],
+            "same_key": true,
+            "degenerate": false
+          },
+          "2": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX",
+              "s1"
+            ],
+            "key_sceneY": [
+              "uY",
+              "s1"
+            ],
+            "same_key": false,
+            "degenerate": false
+          },
+          "3": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX",
+              "s1"
+            ],
+            "key_sceneY": [
+              "uY",
+              "s1"
+            ],
+            "same_key": false,
+            "degenerate": true
+          },
+          "4": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX",
+              "s1"
+            ],
+            "key_sceneY": [
+              "uY",
+              "s1"
+            ],
+            "same_key": false,
+            "degenerate": true
+          },
+          "5": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX",
+              "s1"
+            ],
+            "key_sceneY": [
+              "uY",
+              "s1"
+            ],
+            "same_key": false,
+            "degenerate": true
+          }
+        },
+        "L0": {
+          "contrast": 0.0,
+          "target_sceneX": 0.9,
+          "target_sceneY": 0.9,
+          "seed": "s1"
+        },
+        "L1": {
+          "contrast": 0.0,
+          "target_sceneX": 0.9,
+          "target_sceneY": 0.9,
+          "seed": "s1"
+        },
+        "L2": {
+          "contrast": 1.0,
+          "target_sceneX": 1.0,
+          "target_sceneY": 0.0,
+          "prefix": [
+            "uX",
+            "s1"
+          ]
+        },
+        "readonly_ok": true
+      },
+      "3": {
+        "scenes": {
+          "X": [
+            "uX",
+            "s1",
+            "s2",
+            "C"
+          ],
+          "Y": [
+            "uY",
+            "s1",
+            "s2",
+            "D"
+          ]
+        },
+        "degree_by_k": {
+          "1": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "s2"
+            ],
+            "key_sceneY": [
+              "s2"
+            ],
+            "same_key": true,
+            "degenerate": false
+          },
+          "2": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "s1",
+              "s2"
+            ],
+            "key_sceneY": [
+              "s1",
+              "s2"
+            ],
+            "same_key": true,
+            "degenerate": false
+          },
+          "3": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX",
+              "s1",
+              "s2"
+            ],
+            "key_sceneY": [
+              "uY",
+              "s1",
+              "s2"
+            ],
+            "same_key": false,
+            "degenerate": false
+          },
+          "4": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX",
+              "s1",
+              "s2"
+            ],
+            "key_sceneY": [
+              "uY",
+              "s1",
+              "s2"
+            ],
+            "same_key": false,
+            "degenerate": true
+          },
+          "5": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX",
+              "s1",
+              "s2"
+            ],
+            "key_sceneY": [
+              "uY",
+              "s1",
+              "s2"
+            ],
+            "same_key": false,
+            "degenerate": true
+          }
+        },
+        "L0": {
+          "contrast": 0.0,
+          "target_sceneX": 0.45,
+          "target_sceneY": 0.45,
+          "seed": "s2"
+        },
+        "L1": {
+          "contrast": 0.0,
+          "target_sceneX": 0.9,
+          "target_sceneY": 0.9,
+          "seed": "s2"
+        },
+        "L2": {
+          "contrast": 0.0,
+          "target_sceneX": 1.0,
+          "target_sceneY": 1.0,
+          "prefix": [
+            "s1",
+            "s2"
+          ]
+        },
+        "readonly_ok": true
+      },
+      "4": {
+        "scenes": {
+          "X": [
+            "uX",
+            "s1",
+            "s2",
+            "s3",
+            "C"
+          ],
+          "Y": [
+            "uY",
+            "s1",
+            "s2",
+            "s3",
+            "D"
+          ]
+        },
+        "degree_by_k": {
+          "1": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "s3"
+            ],
+            "key_sceneY": [
+              "s3"
+            ],
+            "same_key": true,
+            "degenerate": false
+          },
+          "2": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "s2",
+              "s3"
+            ],
+            "key_sceneY": [
+              "s2",
+              "s3"
+            ],
+            "same_key": true,
+            "degenerate": false
+          },
+          "3": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "s1",
+              "s2",
+              "s3"
+            ],
+            "key_sceneY": [
+              "s1",
+              "s2",
+              "s3"
+            ],
+            "same_key": true,
+            "degenerate": false
+          },
+          "4": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX",
+              "s1",
+              "s2",
+              "s3"
+            ],
+            "key_sceneY": [
+              "uY",
+              "s1",
+              "s2",
+              "s3"
+            ],
+            "same_key": false,
+            "degenerate": false
+          },
+          "5": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX",
+              "s1",
+              "s2",
+              "s3"
+            ],
+            "key_sceneY": [
+              "uY",
+              "s1",
+              "s2",
+              "s3"
+            ],
+            "same_key": false,
+            "degenerate": true
+          }
+        },
+        "L0": {
+          "contrast": 0.0,
+          "target_sceneX": 0.45,
+          "target_sceneY": 0.45,
+          "seed": "s3"
+        },
+        "L1": {
+          "contrast": 0.0,
+          "target_sceneX": 0.9,
+          "target_sceneY": 0.9,
+          "seed": "s3"
+        },
+        "L2": {
+          "contrast": 0.0,
+          "target_sceneX": 1.0,
+          "target_sceneY": 1.0,
+          "prefix": [
+            "s2",
+            "s3"
+          ]
+        },
+        "readonly_ok": true
+      },
+      "5": {
+        "scenes": {
+          "X": [
+            "uX",
+            "s1",
+            "s2",
+            "s3",
+            "s4",
+            "C"
+          ],
+          "Y": [
+            "uY",
+            "s1",
+            "s2",
+            "s3",
+            "s4",
+            "D"
+          ]
+        },
+        "degree_by_k": {
+          "1": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "s4"
+            ],
+            "key_sceneY": [
+              "s4"
+            ],
+            "same_key": true,
+            "degenerate": false
+          },
+          "2": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "s3",
+              "s4"
+            ],
+            "key_sceneY": [
+              "s3",
+              "s4"
+            ],
+            "same_key": true,
+            "degenerate": false
+          },
+          "3": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "s2",
+              "s3",
+              "s4"
+            ],
+            "key_sceneY": [
+              "s2",
+              "s3",
+              "s4"
+            ],
+            "same_key": true,
+            "degenerate": false
+          },
+          "4": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "s1",
+              "s2",
+              "s3",
+              "s4"
+            ],
+            "key_sceneY": [
+              "s1",
+              "s2",
+              "s3",
+              "s4"
+            ],
+            "same_key": true,
+            "degenerate": false
+          },
+          "5": {
+            "degree": 1.0,
+            "p_sceneX": 1.0,
+            "p_sceneY": 1.0,
+            "key_sceneX": [
+              "uX",
+              "s1",
+              "s2",
+              "s3",
+              "s4"
+            ],
+            "key_sceneY": [
+              "uY",
+              "s1",
+              "s2",
+              "s3",
+              "s4"
+            ],
+            "same_key": false,
+            "degenerate": false
+          }
+        },
+        "L0": {
+          "contrast": 0.0,
+          "target_sceneX": 0.45,
+          "target_sceneY": 0.45,
+          "seed": "s4"
+        },
+        "L1": {
+          "contrast": 0.0,
+          "target_sceneX": 0.9,
+          "target_sceneY": 0.9,
+          "seed": "s4"
+        },
+        "L2": {
+          "contrast": 0.0,
+          "target_sceneX": 1.0,
+          "target_sceneY": 1.0,
+          "prefix": [
+            "s3",
+            "s4"
+          ]
+        },
+        "readonly_ok": true
+      },
+      "inf": {
+        "scenes": {
+          "X": [
+            "B",
+            "C"
+          ],
+          "Y": [
+            "B",
+            "D"
+          ]
+        },
+        "degree_by_k": {
+          "1": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "B"
+            ],
+            "key_sceneY": [
+              "B"
+            ],
+            "same_key": true,
+            "degenerate": false
+          },
+          "2": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "B"
+            ],
+            "key_sceneY": [
+              "B"
+            ],
+            "same_key": true,
+            "degenerate": true
+          },
+          "3": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "B"
+            ],
+            "key_sceneY": [
+              "B"
+            ],
+            "same_key": true,
+            "degenerate": true
+          },
+          "4": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "B"
+            ],
+            "key_sceneY": [
+              "B"
+            ],
+            "same_key": true,
+            "degenerate": true
+          },
+          "5": {
+            "degree": 0.5,
+            "p_sceneX": 0.5,
+            "p_sceneY": 0.5,
+            "key_sceneX": [
+              "B"
+            ],
+            "key_sceneY": [
+              "B"
+            ],
+            "same_key": true,
+            "degenerate": true
+          }
+        },
+        "L0": {
+          "contrast": 0.0,
+          "target_sceneX": 0.9,
+          "target_sceneY": 0.9,
+          "seed": "B"
+        },
+        "L1": {
+          "contrast": 0.0,
+          "target_sceneX": 0.9,
+          "target_sceneY": 0.9,
+          "seed": "B"
+        },
+        "L2": {
+          "contrast": null,
+          "note": "序列不足 3 token，L2 无 2 前缀可用（N/A）"
+        },
+        "readonly_ok": true
+      }
+    },
+    "k_min": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "5": 5
+    },
+    "unbalanced_exposure": [
+      {
+        "exposure_X": 1,
+        "exposure_Y": 1,
+        "degree": 0.5
+      },
+      {
+        "exposure_X": 1,
+        "exposure_Y": 2,
+        "degree": 0.3333333333333333
+      },
+      {
+        "exposure_X": 1,
+        "exposure_Y": 5,
+        "degree": 0.16666666666666666
+      }
+    ],
+    "tolerances": {
+      "ambiguity": 1e-06,
+      "zero": 1e-09
+    },
+    "reps_per_scene": 100,
+    "layer_hashes": {
+      "before": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be"
+      },
+      "after": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be"
+      }
+    },
+    "registration": {
+      "C27": "C27：在\"中间 token 共享、只有最远 token 不同\"的受控语料族下，现有层（L0/L1/L2）的最大可用消歧前缀长度 = 2；当判别上下文到决策点的距离 k* >= 3 时，决定度恒为 0.50；最小可消歧前缀长度 k_min 精确等于 k*（k* ∈ {1,2,3,4,5} 上验证）。阳性对照：k*=2 时 L2 决定度 = 1.00。",
+      "B01_upgraded": "B01（升级）：现有层最大前缀 = 2；k* >= 3 时决定度恒为 0.50；k_min = k*；k* >= 3 的上下文消歧需要最小窗口 k* 的新层。"
+    },
+    "note": "probe-k 是实验侧只读计数探针，不是新层；本实验不新增层文件。"
+  }
+}
