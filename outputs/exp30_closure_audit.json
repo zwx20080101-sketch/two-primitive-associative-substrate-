@@ -1,0 +1,242 @@
+{
+  "id": "exp30_closure_audit",
+  "title": "E30 闭包审计: 五个已学集合逐层核对 + 失败语义表",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P1 接口回归: E24 植入语料重现 ARI=1.000 / 3 模块 / ρ=0.0019",
+      "ok": true,
+      "detail": "ARI=1.000, 模块数=3, ρ=0.0019"
+    },
+    {
+      "name": "P2 闭包审计（顺序 L0/L1 → L2 → L4①/L4②）: 逐层核对输出 ⊆ 该层已学集合",
+      "ok": true,
+      "detail": "L0 违例=0; L1 违例=0; L2① 违例=0; L4① 违例=0; L4② 违例=0；总违例=0"
+    },
+    {
+      "name": "P3 失败语义表完整（5 列 × 输入类型枚举，无空格）",
+      "ok": true,
+      "detail": "12 行 × 5 列填满；【静默放行】（期望拒绝但未报错）1 行：L2.query(未知前缀) → 返回 dict(keys=[])；另注：L4.learn_unit(单元素) 返回 None 属【有信息的正常返回】（None 与块 id 可区分），不计入静默"
+    },
+    {
+      "name": "P5 只读（纪律 ⑧）: 层文件 sha256 前后一致",
+      "ok": true,
+      "detail": "before={'synapse_net.py': 'cf99a07a0e60fd4d', 'order_layer.py': '419d54745a9eb795', 'context_layer.py': 'bd029d7bbdc345be', 'chunk_layer.py': '46f5857be0fc7c7e'}；after={'synapse_net.py': 'cf99a07a0e60fd4d', 'order_layer.py': '419d54745a9eb795', 'context_layer.py': 'bd029d7bbdc345be', 'chunk_layer.py': '46f5857be0fc7c7e'}"
+    },
+    {
+      "name": "P6 登记: 按双向预注册落定（A → B21+C30；B → B21+B22）",
+      "ok": true,
+      "detail": "闭包结局=A（总违例=0）→ 登记 ['B21', 'C30']"
+    }
+  ],
+  "data": {
+    "closure_audit": [
+      {
+        "层": "L0",
+        "调用": "L0.activate",
+        "已学集合定义": "L0 已学集合 = net.nodes",
+        "样本输入数": 3,
+        "输出并集大小": 3,
+        "违例数": 0,
+        "违例节点": []
+      },
+      {
+        "层": "L1",
+        "调用": "L1.activate",
+        "已学集合定义": "L1 已学集合 = order_layer.nodes",
+        "样本输入数": 3,
+        "输出并集大小": 3,
+        "违例数": 0,
+        "违例节点": []
+      },
+      {
+        "层": "L2①",
+        "调用": "L2.query(已知前缀)",
+        "已学集合定义": "L2 已学集合 = 2-前缀 token 集（L2 无独立节点集，闭包构造性成立）",
+        "样本输入数": 1,
+        "输出并集大小": 1,
+        "违例数": 0,
+        "违例节点": []
+      },
+      {
+        "层": "L4①",
+        "调用": "L4.spell(块节点) → 值域",
+        "已学集合定义": "① 块节点集合 = chunk_ids()（spell 定义域）",
+        "样本输入数": 1,
+        "输出并集大小": 4,
+        "违例数": 0,
+        "违例节点": []
+      },
+      {
+        "层": "L4②",
+        "调用": "L4.spell(非块节点) → 定义域核对",
+        "已学集合定义": "② 块成员集合 = 所有 spell 值域",
+        "样本输入数": 1,
+        "输出并集大小": 0,
+        "违例数": 0,
+        "违例节点": [],
+        "note": "非块节点 True"
+      }
+    ],
+    "violations_total": 0,
+    "outcome": "A",
+    "failure_semantics_table": [
+      {
+        "调用": "L0.activate(已学)",
+        "输入类型": "已学",
+        "期望语义": "返回激活分布",
+        "实测语义": "返回 dict(keys=['A', 'B', 'C'])",
+        "是否报错": false
+      },
+      {
+        "调用": "L0.activate(未学过)",
+        "输入类型": "未学过",
+        "期望语义": "拒绝（闭包硬约束）",
+        "实测语义": "KeyError: \"node not in network: 'ZZZ' (learn() it first)\"",
+        "是否报错": true
+      },
+      {
+        "调用": "L1.activate(已学)",
+        "输入类型": "已学",
+        "期望语义": "返回激活分布",
+        "实测语义": "返回 dict(keys=['A', 'B', 'C'])",
+        "是否报错": false
+      },
+      {
+        "调用": "L1.activate(未学过)",
+        "输入类型": "未学过",
+        "期望语义": "拒绝（闭包硬约束）",
+        "实测语义": "KeyError: \"node not in order layer: 'ZZZ'\"",
+        "是否报错": true
+      },
+      {
+        "调用": "L2.query(已知前缀)",
+        "输入类型": "已学",
+        "期望语义": "返回候选分布",
+        "实测语义": "返回 dict(keys=['C'])",
+        "是否报错": false
+      },
+      {
+        "调用": "L2.query(未知前缀)",
+        "输入类型": "未知前缀",
+        "期望语义": "拒绝（闭包硬约束）",
+        "实测语义": "返回 dict(keys=[])",
+        "是否报错": false
+      },
+      {
+        "调用": "L2.query(长度 != 2)",
+        "输入类型": "参数错误",
+        "期望语义": "拒绝（参数校验）",
+        "实测语义": "ValueError: L2 只支持 2 前缀查询, 收到 1 个",
+        "是否报错": true
+      },
+      {
+        "调用": "L4.spell(已知块)",
+        "输入类型": "已学",
+        "期望语义": "返回值域 token 列表",
+        "实测语义": "返回 list['H', 'e', 'l', 'l', 'o']",
+        "是否报错": false
+      },
+      {
+        "调用": "L4.spell(不存在的块)",
+        "输入类型": "未学过",
+        "期望语义": "拒绝（闭包硬约束）",
+        "实测语义": "KeyError: 'unknown chunk: CH_不存在'",
+        "是否报错": true
+      },
+      {
+        "调用": "L4.activate(块节点)",
+        "输入类型": "已学",
+        "期望语义": "返回激活分布",
+        "实测语义": "返回 dict(keys=['CH_1'])",
+        "是否报错": false
+      },
+      {
+        "调用": "L4.activate(块成员)",
+        "输入类型": "未学过",
+        "期望语义": "拒绝（闭包硬约束）",
+        "实测语义": "KeyError: \"node not in chunk layer: 'H'\"",
+        "是否报错": true
+      },
+      {
+        "调用": "L4.learn_unit(单元素)",
+        "输入类型": "参数错误",
+        "期望语义": "忽略（不建块）",
+        "实测语义": "返回 NoneType(None)",
+        "是否报错": false
+      }
+    ],
+    "auxiliary": {
+      "aux1_L2_unknown_prefix": {
+        "auxiliary": true,
+        "期望": "{}（静默空返回）",
+        "实测": "返回 dict(keys=[])",
+        "符合预检": true
+      },
+      "aux2_L4_member_activate": {
+        "auxiliary": true,
+        "期望": "KeyError（硬拒绝）",
+        "实测": "KeyError: \"node not in chunk layer: 'H'\"",
+        "符合预检": true
+      },
+      "note": "辅助项是记录项不是判据；不符只记「预检观察未被正式复现」，不阻断 P1–P6。"
+    },
+    "learned_sets": {
+      "L0": [
+        "A",
+        "B",
+        "C"
+      ],
+      "L1": [
+        "A",
+        "B",
+        "C"
+      ],
+      "L2_prefixes": [
+        [
+          "A",
+          "B"
+        ]
+      ],
+      "L4_chunks": [
+        "CH_1"
+      ],
+      "L4_members": [
+        "H",
+        "e",
+        "l",
+        "o"
+      ]
+    },
+    "l2_tokens": [
+      "A",
+      "B",
+      "C"
+    ],
+    "layer_hashes": {
+      "before": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      },
+      "after": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      }
+    },
+    "registration": {
+      "outcome": "A",
+      "registered": [
+        "B21",
+        "C30"
+      ],
+      "B21": "B21（总是登记，与闭包结局无关）：失败语义在层间不统一——KeyError（L0/L1/L4 的未学过）、空字典（L2 未知前缀）、ValueError（L2 参数错误）、None（L4 未达 K）。其中【L2 的未知前缀不报错、返回 {}】是本实验认定的接口风险：调用方若不检查空结果，就无法区分「这个词没学过」与「学过但无候选」，与「不报错、给出看起来合理的结果」同族。本实验只记录，不修改报错行为。（更正：预检曾写「两处静默」，正式跑显示 L4 的 None 是【有信息】的——None 与块 id 可区分，故不计入静默；静默案例 = 1 处。）",
+      "C30": "C30（结局 A，仅当 P2 违例数 = 0 时登记）：闭包是【设计不变量】——在受控语料上逐层审计 L0/L1/L2/L4（五个已学集合），所有输出集合 ⊆ 该层已学集合，违例数 = 0。「不存在」在层间的表现不统一（KeyError / 空字典 / None / ValueError），但不产生闭包外节点。",
+      "B22": "B22（结局 B，仅当 P2 违例数 > 0 时登记）：闭包在某层被【软执行】——明细：<层 / 调用 / 输出节点 / 该层已学集合>。"
+    },
+    "note": "只读审计，不修改任何层的报错行为；改报错语义是另一个实验。"
+  }
+}

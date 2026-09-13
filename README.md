@@ -51,7 +51,7 @@ outputs/          # 每次运行的 JSON 报告(数据备份)
 | --- | --- | --- | --- | --- |
 | **第一轮** | **E0–E22** | **单层能力目录**：一次一层、每层一个现象，外加消融（E20）/规模（E21）/统计（E22） | **C01–C22 / B01–B07** | [DESIGN.md](./DESIGN.md)、[REPORT-zh.md](./REPORT-zh.md) |
 | **第二轮** | **E23–E26** | **组合律 + S1/S2/S3**：多层共存与归因 → 模块分化 → 模块内动力学 → 模块间协调 | **C23–C26 / B08–B19** | [DESIGN-E23.md](./DESIGN-E23.md)、[DESIGN-E24.md](./DESIGN-E24.md)、[DESIGN-E25.md](./DESIGN-E25.md)、[DESIGN-E26.md](./DESIGN-E26.md) |
-| 边界量化 | **E27 – E29** | **B01 正式化**：上下文窗口边界 `k_min = k*`；**B02+B03 正式化**：max 精确不叠加、sum 封顶且顺序依赖；**E29**：层级 = 多尺度读出（`k` 是预设参数，不是涌现） | **C27–C29 / B01–B03（升级）/ B20** | [DESIGN-E27.md](./DESIGN-E27.md)、[DESIGN-E28.md](./DESIGN-E28.md)、[DESIGN-E29.md](./DESIGN-E29.md) |
+| 边界量化 | **E27 – E30** | **B01 正式化**：上下文窗口边界 `k_min = k*`；**B02+B03**：max 精确不叠加、sum 封顶且顺序依赖；**E29**：层级 = 多尺度读出；**E30**：闭包审计（五个已学集合违例 = 0）+ 失败语义表 | **C27–C30 / B01–B05（升级/指针）/ B20–B21** | [DESIGN-E27.md](./DESIGN-E27.md)、[DESIGN-E28.md](./DESIGN-E28.md)、[DESIGN-E29.md](./DESIGN-E29.md)、[DESIGN-E30.md](./DESIGN-E30.md) |
 | 展示层 | **P5a** | S1–S3 **只读分析面板**（快照回放 + 字段级自检 + commit 溯源）；P5b 已决定不做 | 无新 C/B 条目 | [DESIGN-P5.md](./DESIGN-P5.md) |
 
 两轮的关系：第一轮回答"每一层各自能做什么"；第二轮回答"多层同时打开时怎么合成、

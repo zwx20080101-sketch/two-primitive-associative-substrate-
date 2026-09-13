@@ -32,6 +32,7 @@ from . import (
     exp27_context_window,
     exp28_readout_modes,
     exp29_hierarchy_scales,
+    exp30_closure_audit,
 )
 
 ALL = {
@@ -66,4 +67,5 @@ ALL = {
     "exp27_context_window": exp27_context_window,
     "exp28_readout_modes": exp28_readout_modes,
     "exp29_hierarchy_scales": exp29_hierarchy_scales,
+    "exp30_closure_audit": exp30_closure_audit,
 }
