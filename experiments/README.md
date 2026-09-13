@@ -66,9 +66,9 @@
 
 ---
 
-## 边界量化：E27 / E28 / E29 / E30（不属于两轮能力目录）
+## 边界量化：E27 – E31（不属于两轮能力目录）
 
-**产物**：C27–C30 / B01–B05（升级/指针）/ B20–B21　**设计文档**：[DESIGN-E27.md](../DESIGN-E27.md)、[DESIGN-E28.md](../DESIGN-E28.md)、[DESIGN-E29.md](../DESIGN-E29.md)、[DESIGN-E30.md](../DESIGN-E30.md)
+**产物**：C27–C31 / B01–B05（升级/指针）/ B20–B21　**设计文档**：[DESIGN-E27.md](../DESIGN-E27.md)、[DESIGN-E28.md](../DESIGN-E28.md)、[DESIGN-E29.md](../DESIGN-E29.md)、[DESIGN-E30.md](../DESIGN-E30.md)、[DESIGN-E31.md](../DESIGN-E31.md)
 
 主题：把第一轮的边界从"观测记录"升级为带数字的律。**纯计数，无 numpy 依赖；不改任何层文件。**
 
@@ -78,6 +78,7 @@
 | `exp28_readout_modes.py` | 读取端 max/sum 系统对比：max 精确不叠加（`max(a,a)=a`）、sum 封顶且**顺序依赖**（T5 三角）；T4 环为 sum 终止性自检 | C28 / B02（指针）/ B03（升级） |
 | `exp29_hierarchy_scales.py` | 层级 = **多尺度读出**：k=2 读超模块、k=4 读子模块；消融跨子模块边后层级塌陷；L0 统计跨 k 逐位不变 | C29 / B20 |
 | `exp30_closure_audit.py` | **闭包审计**：五个已学集合逐层核对（违例 = 0）；失败语义表（KeyError / `{}` / None / ValueError 并存） | C30 / B21（B05 指针） |
+| `exp31_auto_scale.py` | **自动尺度选择（弱版本）**：eigengap / modularity / BIC 在三个植入语料（k=4/3/5）上的命中检验；BIC 跨语料 3/3 命中 | C31 |
 
 ---
 
