@@ -34,13 +34,15 @@ LAYER_FILES = ["synapse_net.py", "order_layer.py", "context_layer.py"]
 C27_TEXT = (
     "C27：在\"中间 token 共享、只有最远 token 不同\"的受控语料族下，"
     "现有层（L0/L1/L2）的最大可用消歧前缀长度 = 2；"
-    "当判别上下文到决策点的距离 k* >= 3 时，决定度恒为 0.50；"
+    "当判别上下文到决策点的距离 k* >= 3 且两场景暴露均衡时，决定度恒为 0.50；"
     "最小可消歧前缀长度 k_min 精确等于 k*（k* ∈ {1,2,3,4,5} 上验证）。"
     "阳性对照：k*=2 时 L2 决定度 = 1.00。"
+    "边界说明：0.50 不是绝对量，而是均衡暴露下的值——"
+    "暴露比 1:2 时决定度 0.333、1:5 时 0.167（辅助记录）。"
 )
 B01_TEXT = (
-    "B01（升级）：现有层最大前缀 = 2；k* >= 3 时决定度恒为 0.50；"
-    "k_min = k*；k* >= 3 的上下文消歧需要最小窗口 k* 的新层。"
+    "B01（升级）：现有层最大前缀 = 2；k* >= 3 的上下文超出当前层集合能力；"
+    "k_min = k* 给出了消歧所需窗口的下界（加新层的可行性不在 E27 范围）。"
 )
 
 
@@ -108,15 +110,25 @@ def seed_contrast(built, layer: str):
 
 
 def l2_contrast(built):
-    """L2 用它自己的 2 前缀查询，看候选里 C/D 的对比度（序列不足 3 时记 N/A）。"""
+    """L2 用它自己的 2 前缀查询，看候选里 C/D 的对比度。
+
+    序列不足 3 token（无 2 前缀可用）时，`contrast` 写成 JSON `null` 并给出
+    `reason`，**字段一个不少**——省略字段会让下游脚本把"缺字段"误判成数据损坏。
+    """
     sX, sY = built["sX"], built["sY"]
     if len(sX) < 3:
-        return {"contrast": None, "note": "序列不足 3 token，L2 无 2 前缀可用（N/A）"}
+        return {
+            "contrast": None, "reason": "sequence_too_short",
+            "prefix": None, "target_sceneX": None, "target_sceneY": None,
+        }
     pref = sX[-3:-1]
     q = built["l2"].query(pref)
     c = float(q.get(sX[-1], 0.0))
     d = float(q.get(sY[-1], 0.0))
-    return {"contrast": contrast(c, d), "target_sceneX": c, "target_sceneY": d, "prefix": pref}
+    return {
+        "contrast": contrast(c, d), "reason": None,
+        "prefix": pref, "target_sceneX": c, "target_sceneY": d,
+    }
 
 
 def structure_ok(kstar):
@@ -154,7 +166,9 @@ def run() -> dict:
     struct = {str(k): structure_ok(k) for k in LEVELS + [CONTROL]}
     c.check("P1 语料构造核查: 两场景仅'最远 token'与'目标'不同; 对照行无判别 token",
             all(ok for ok, _ in struct.values()),
-            "; ".join(f"k*={k}: 差异位置={d}" for k, (_, d) in struct.items()))
+            "; ".join(f"k*={k}: 差异位置={d}" for k, (_, d) in struct.items())
+            + f"; 辅助(暴露比档)语料结构同 k*=3 语料族: {structure_ok(3)[0]}"
+            + "（辅助档按预注册归类 auxiliary，不进 C27 数据表）")
 
     # ---------- 全阶梯测量 ----------
     ladder = {}
@@ -210,12 +224,24 @@ def run() -> dict:
             f"层文件哈希 before==after: {hashes_before == hashes_after}; "
             f"各档测量前后计数一致: {all(r['readonly_ok'] for r in ladder.values())}")
 
-    # ---------- 辅助: 不平衡暴露 ----------
+    # ---------- 辅助（不进 C27 数据表）: 不平衡暴露 ----------
     bal = []
     for rx, ry in UNBALANCED:
         b = build(3, reps_x=REPS * rx, reps_y=REPS * ry)
         d = decision_degree(b, 2, reps_x=REPS * rx, reps_y=REPS * ry)
-        bal.append({"exposure_X": rx, "exposure_Y": ry, "degree": d["degree"]})
+        bal.append({
+            "auxiliary": True,
+            "exposure_X": rx, "exposure_Y": ry, "degree": d["degree"],
+            "scene_structure": "k*=3 的场景结构不变（中间 token 共享、只有最远 token 不同），仅两场景的暴露次数不同",
+            "structure_ok": structure_ok(3)[0],
+            "excluded_from": "C27 数据表（C27 的数值只取自暴露均衡的 k* 阶梯）",
+        })
+    aux = {
+        "auxiliary": True,
+        "in_C27_corpus_family": False,
+        "note": "序列结构同 k*=3 语料族，但暴露比偏离 1:1，因此按预注册只作辅助记录，不参与 P1–P6 判据，也不进 C27 数据表。",
+        "rows": bal,
+    }
 
     # ---------- P6 登记文本 ----------
     c.check("P6 登记: JSON 内含 C27 与 B01(升级) 的拟登记文本",
@@ -230,7 +256,7 @@ def run() -> dict:
         "data": {
             "ladder": ladder,
             "k_min": k_min,
-            "unbalanced_exposure": bal,
+            "auxiliary_unbalanced_exposure": aux,
             "tolerances": {"ambiguity": TOL_AMBIG, "zero": TOL_ZERO},
             "reps_per_scene": REPS,
             "layer_hashes": {"before": hashes_before, "after": hashes_after},
