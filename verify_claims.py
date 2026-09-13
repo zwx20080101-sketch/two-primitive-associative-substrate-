@@ -38,7 +38,11 @@ def main() -> int:
     checks: list[dict] = []
 
     # ---- 1) 每个实验 JSON passed + checks ok ----
+    # 例外：文件名以 _FAIL 结尾的是【归档的失败记录】（如 E32 v1 的预注册失败），
+    # 它们按设计就应当是 passed=False，不参与"全部通过"的通过性检查。
     for p in sorted(OUT.glob("exp*.json")):
+        if p.stem.endswith("_FAIL"):
+            continue
         if p.name in ("exp20_ablation.json", "exp21_scale.json", "exp22_stats.json"):
             continue  # 自定义套件数据, 单独核对
         try:

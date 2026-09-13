@@ -34,6 +34,7 @@ from . import (
     exp29_hierarchy_scales,
     exp30_closure_audit,
     exp31_auto_scale,
+    exp32_nesting_depth,
 )
 
 ALL = {
@@ -70,4 +71,5 @@ ALL = {
     "exp29_hierarchy_scales": exp29_hierarchy_scales,
     "exp30_closure_audit": exp30_closure_audit,
     "exp31_auto_scale": exp31_auto_scale,
+    "exp32_nesting_depth": exp32_nesting_depth,
 }

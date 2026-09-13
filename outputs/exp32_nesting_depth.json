@@ -1,0 +1,356 @@
+{
+  "id": "exp32_nesting_depth",
+  "title": "E32 v2 可读性条件: r_j 是否决定谱聚类读出（B23 的适用边界）",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P1a 接口回归: E24 植入语料(15 节点)重现 ARI=1.000 / 3 模块 / ρ=0.0019",
+      "ok": true,
+      "detail": "ARI=1.000, 模块数=3, ρ=0.0019"
+    },
+    {
+      "name": "P1b 语料构造核查: 边集逐边 + 质量非简并 + 嵌套性逐相邻层代码校验",
+      "ok": true,
+      "detail": "L=1: 12 节点/18 边, 各层[3], 质量最小差=0.0909, 嵌套=True; L=2: 12 节点/30 边, 各层[4, 2], 质量最小差=0.0833, 嵌套=True; L=3: 24 节点/132 边, 各层[8, 4, 2], 质量最小差=0.0625, 嵌套=True; L=4: 24 节点/148 边, 各层[12, 6, 4, 2], 质量最小差=0.0345, 嵌套=True"
+    },
+    {
+      "name": "P1b' 读出可实现性 + P2 可读性曲线完整性: 每(语料,层)都有 r_j 与 ARI(中位/最小)",
+      "ok": true,
+      "detail": "6 个非 boundary 点 + 4 个 boundary 点；L=2层1: r=0.75 ARI中位=1.0 最小=1.0 可读; L=3层1: r=0.3409 ARI中位=1.0 最小=0.7783 不可读; L=3层2: r=1.8646 ARI中位=1.0 最小=1.0 可读; L=4层1: r=0.1731 ARI中位=0.8054 最小=0.8054 不可读; L=4层2: r=0.796 ARI中位=1.0 最小=0.7202 不可读; L=4层3: r=3.224 ARI中位=1.0 最小=1.0 可读"
+    },
+    {
+      "name": "P3 可读性条件（主判据, 只看非 boundary 点）: 完全可分 → 报 r* 区间; 否则报反例",
+      "ok": true,
+      "detail": "不完全可分：反例——可读点 L=2层1 r=0.75 < 不可读点 L=4层2 r=0.796"
+    },
+    {
+      "name": "P4 近零特征值个数(λ<1e-6) = 最粗层块数 bL",
+      "ok": true,
+      "detail": "L=1: #3 vs bL=3（首个显著 λ=1.0）; L=2: #2 vs bL=2（首个显著 λ=0.516667）; L=3: #2 vs bL=2（首个显著 λ=0.275083）; L=4: #2 vs bL=2（首个显著 λ=0.113535）"
+    },
+    {
+      "name": "P5 只读: 层文件 sha256 前后一致 + L0 签名前后一致（边集合排序逐项比较）",
+      "ok": true,
+      "detail": "层文件哈希一致=True；L0 签名一致=True"
+    },
+    {
+      "name": "P6 登记: 完全可分 → C32（报 r* 区间）；否则 → B24（报反例）",
+      "ok": true,
+      "detail": "落定 B24；文本已写入 JSON"
+    }
+  ],
+  "data": {
+    "readability_points": [
+      {
+        "L": 2,
+        "层": 1,
+        "b_j": 4,
+        "r_j": 0.75,
+        "r_reason": null,
+        "boundary": false,
+        "ari_median": 1.0,
+        "ari_min": 1.0,
+        "ari_max": 1.0,
+        "readable": true
+      },
+      {
+        "L": 3,
+        "层": 1,
+        "b_j": 8,
+        "r_j": 0.3409,
+        "r_reason": null,
+        "boundary": false,
+        "ari_median": 1.0,
+        "ari_min": 0.7783,
+        "ari_max": 1.0,
+        "readable": false
+      },
+      {
+        "L": 3,
+        "层": 2,
+        "b_j": 4,
+        "r_j": 1.8646,
+        "r_reason": null,
+        "boundary": false,
+        "ari_median": 1.0,
+        "ari_min": 1.0,
+        "ari_max": 1.0,
+        "readable": true
+      },
+      {
+        "L": 4,
+        "层": 1,
+        "b_j": 12,
+        "r_j": 0.1731,
+        "r_reason": null,
+        "boundary": false,
+        "ari_median": 0.8054,
+        "ari_min": 0.8054,
+        "ari_max": 1.0,
+        "readable": false
+      },
+      {
+        "L": 4,
+        "层": 2,
+        "b_j": 6,
+        "r_j": 0.796,
+        "r_reason": null,
+        "boundary": false,
+        "ari_median": 1.0,
+        "ari_min": 0.7202,
+        "ari_max": 1.0,
+        "readable": false
+      },
+      {
+        "L": 4,
+        "层": 3,
+        "b_j": 4,
+        "r_j": 3.224,
+        "r_reason": null,
+        "boundary": false,
+        "ari_median": 1.0,
+        "ari_min": 1.0,
+        "ari_max": 1.0,
+        "readable": true
+      }
+    ],
+    "boundary_points": [
+      {
+        "L": 1,
+        "层": 1,
+        "b_j": 3,
+        "r_j": null,
+        "r_reason": "no_external_edges",
+        "boundary": true,
+        "ari_median": 1.0,
+        "ari_min": 1.0,
+        "ari_max": 1.0,
+        "readable": true
+      },
+      {
+        "L": 2,
+        "层": 2,
+        "b_j": 2,
+        "r_j": null,
+        "r_reason": "no_external_edges",
+        "boundary": true,
+        "ari_median": 1.0,
+        "ari_min": 1.0,
+        "ari_max": 1.0,
+        "readable": true
+      },
+      {
+        "L": 3,
+        "层": 3,
+        "b_j": 2,
+        "r_j": null,
+        "r_reason": "no_external_edges",
+        "boundary": true,
+        "ari_median": 1.0,
+        "ari_min": 1.0,
+        "ari_max": 1.0,
+        "readable": true
+      },
+      {
+        "L": 4,
+        "层": 4,
+        "b_j": 2,
+        "r_j": null,
+        "r_reason": "no_external_edges",
+        "boundary": true,
+        "ari_median": 1.0,
+        "ari_min": 1.0,
+        "ari_max": 1.0,
+        "readable": true
+      }
+    ],
+    "boundary_note": "r=∞（对外无边）的层按定义可读（最粗层 = 连通分量），不作为 r 的证据、不参与 r* 估计。",
+    "P1b_rows": [
+      {
+        "L": 1,
+        "节点数": 12,
+        "各层块数": [
+          3
+        ],
+        "边集一致": true,
+        "边数": 18,
+        "最小相对质量差": 0.0909,
+        "嵌套性": true,
+        "嵌套性说明": "逐相邻层校验通过"
+      },
+      {
+        "L": 2,
+        "节点数": 12,
+        "各层块数": [
+          4,
+          2
+        ],
+        "边集一致": true,
+        "边数": 30,
+        "最小相对质量差": 0.0833,
+        "嵌套性": true,
+        "嵌套性说明": "逐相邻层校验通过"
+      },
+      {
+        "L": 3,
+        "节点数": 24,
+        "各层块数": [
+          8,
+          4,
+          2
+        ],
+        "边集一致": true,
+        "边数": 132,
+        "最小相对质量差": 0.0625,
+        "嵌套性": true,
+        "嵌套性说明": "逐相邻层校验通过"
+      },
+      {
+        "L": 4,
+        "节点数": 24,
+        "各层块数": [
+          12,
+          6,
+          4,
+          2
+        ],
+        "边集一致": true,
+        "边数": 148,
+        "最小相对质量差": 0.0345,
+        "嵌套性": true,
+        "嵌套性说明": "逐相邻层校验通过"
+      }
+    ],
+    "near_zero_rows": [
+      {
+        "L": 1,
+        "near_zero": 3,
+        "b_L": 3,
+        "match": true,
+        "first_significant": 1.0
+      },
+      {
+        "L": 2,
+        "near_zero": 2,
+        "b_L": 2,
+        "match": true,
+        "first_significant": 0.516667
+      },
+      {
+        "L": 3,
+        "near_zero": 2,
+        "b_L": 2,
+        "match": true,
+        "first_significant": 0.275083
+      },
+      {
+        "L": 4,
+        "near_zero": 2,
+        "b_L": 2,
+        "match": true,
+        "first_significant": 0.113535
+      }
+    ],
+    "separable": false,
+    "r_star_interval": null,
+    "counterexample": {
+      "可读点": {
+        "L": 2,
+        "层": 1,
+        "b_j": 4,
+        "r_j": 0.75,
+        "r_reason": null,
+        "boundary": false,
+        "ari_median": 1.0,
+        "ari_min": 1.0,
+        "ari_max": 1.0,
+        "readable": true
+      },
+      "不可读点": {
+        "L": 4,
+        "层": 2,
+        "b_j": 6,
+        "r_j": 0.796,
+        "r_reason": null,
+        "boundary": false,
+        "ari_median": 1.0,
+        "ari_min": 0.7202,
+        "ari_max": 1.0,
+        "readable": false
+      }
+    },
+    "outcome": "B24",
+    "eigenvalues": {
+      "1": [
+        -0.0,
+        -0.0,
+        -0.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "2": [
+        -0.0,
+        -0.0,
+        0.516667,
+        0.593407,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "3": [
+        0.0,
+        0.0,
+        0.275083,
+        0.332319,
+        0.592947,
+        0.646191,
+        0.70997,
+        0.7877,
+        1.0,
+        1.0
+      ],
+      "4": [
+        -0.0,
+        -0.0,
+        0.113535,
+        0.202389,
+        0.452717,
+        0.492549,
+        0.628268,
+        0.658702,
+        0.76053,
+        0.791902
+      ]
+    },
+    "l1_cross_validation": {
+      "note": "L=1 语料 ≡ E31 的 C2（逐参数相同）；L=1 只有一层且对外无边，故它落在 boundary 表；v1 实测三准则在 L=1 上均命中 k=3，与 E31 记录一致",
+      "L1_ari_at_k3": 1.0
+    },
+    "layer_hashes": {
+      "before": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      },
+      "after": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      }
+    },
+    "registration": {
+      "outcome": "B24",
+      "text": "B24：r_j 不足以刻画谱聚类的可读性——即使 r_j 占优（>1），该层也可能不可读（反例见 JSON 的 counterexample 字段：哪个可读点的 r 小于哪个不可读点的 r）；反之 r_j < 1（组外质量占优）的点均不可读。即：组外质量占优是实测到的不可读方向，组内质量占优不是可读的保证。"
+    }
+  }
+}
