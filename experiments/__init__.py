@@ -31,6 +31,7 @@ from . import (
     exp26_module_coordination,
     exp27_context_window,
     exp28_readout_modes,
+    exp29_hierarchy_scales,
 )
 
 ALL = {
@@ -64,4 +65,5 @@ ALL = {
     "exp26_module_coordination": exp26_module_coordination,
     "exp27_context_window": exp27_context_window,
     "exp28_readout_modes": exp28_readout_modes,
+    "exp29_hierarchy_scales": exp29_hierarchy_scales,
 }

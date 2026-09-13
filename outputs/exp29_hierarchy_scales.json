@@ -1,0 +1,213 @@
+{
+  "id": "exp29_hierarchy_scales",
+  "title": "E29 层级 = 多尺度读出: k=2 超模块 / k=4 子模块（k 是预设参数）",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P1a 接口回归: E24 植入语料重现 ARI=1.000 / 3 模块 / ρ=0.0019",
+      "ok": true,
+      "detail": "ARI=1.000, 模块数=3, ρ=0.0019"
+    },
+    {
+      "name": "P1b 语料构造核查: 4 子模块/2 超模块边集逐边核对; 质量非简并",
+      "ok": true,
+      "detail": "声明 43 边 / 实测 43 边 / 一致=True; 质量=[270, 300, 440, 480], 最小相对差=0.083; 节点=14"
+    },
+    {
+      "name": "P2 多尺度读出: k=4 → ARI vs 子模块 >= 0.99; k=2 → ARI vs 超模块 >= 0.99",
+      "ok": true,
+      "detail": "k=4 子模块 1.000 [1.000,1.000]; k=2 超模块 1.000 [1.000,1.000]（0.99 为余量阈值，预检复现值 1.000）"
+    },
+    {
+      "name": "P3 消融必要性: 切掉跨子模块边后 k=2 的 ARI vs 超模块 <= 0.4（粗阈值）",
+      "ok": true,
+      "detail": "消融后 k=2 超模块=0.286（预检 0.286；粗阈值 0.4 → 通过）；k=4 子模块=1.000（应保持 1.000，说明消融只打掉层级不打坏统计）"
+    },
+    {
+      "name": "P4 L0 统计不变: ① activate 前后一致; ② 边集合排序逐项比较跨 k 完全相同",
+      "ok": true,
+      "detail": "activate 前后一致=True; 跨 k 一致=True; 签名=(节点 14, 边 43, 43 项排序边集合)"
+    },
+    {
+      "name": "P5 只读（纪律 ⑧）: 层文件 sha256 前后一致",
+      "ok": true,
+      "detail": "before={'synapse_net.py': 'cf99a07a0e60fd4d', 'order_layer.py': '419d54745a9eb795', 'context_layer.py': 'bd029d7bbdc345be'}；after={'synapse_net.py': 'cf99a07a0e60fd4d', 'order_layer.py': '419d54745a9eb795', 'context_layer.py': 'bd029d7bbdc345be'}"
+    },
+    {
+      "name": "P6 登记: JSON 内含 C29 与 B(候选) 文本",
+      "ok": true,
+      "detail": "文本已写入 JSON 的 registration 字段"
+    }
+  ],
+  "data": {
+    "k_curve": [
+      {
+        "k": 1,
+        "ari_sub_median": 0.0,
+        "ari_sub_min": 0.0,
+        "ari_sub_max": 0.0,
+        "ari_super_median": 0.0,
+        "ari_super_min": 0.0,
+        "ari_super_max": 0.0,
+        "definitional": true,
+        "note": "ARI 的定义性质（单簇对多簇真值恒为 0），非经验结果"
+      },
+      {
+        "k": 2,
+        "ari_sub_median": 0.4316762428178865,
+        "ari_sub_min": 0.4316762428178865,
+        "ari_sub_max": 0.4316762428178865,
+        "ari_super_median": 1.0,
+        "ari_super_min": 1.0,
+        "ari_super_max": 1.0,
+        "definitional": false,
+        "note": null
+      },
+      {
+        "k": 3,
+        "ari_sub_median": 0.7377521613832854,
+        "ari_sub_min": 0.7377521613832854,
+        "ari_sub_max": 0.7377521613832854,
+        "ari_super_median": 0.6403162055335968,
+        "ari_super_min": 0.6403162055335968,
+        "ari_super_max": 0.6403162055335968,
+        "definitional": false,
+        "note": null
+      },
+      {
+        "k": 4,
+        "ari_sub_median": 1.0,
+        "ari_sub_min": 1.0,
+        "ari_sub_max": 1.0,
+        "ari_super_median": 0.4316762428178865,
+        "ari_super_min": 0.4316762428178865,
+        "ari_super_max": 0.4316762428178865,
+        "definitional": false,
+        "note": null
+      },
+      {
+        "k": 5,
+        "ari_sub_median": 0.9277204130262113,
+        "ari_sub_min": 0.9277204130262113,
+        "ari_sub_max": 0.9277204130262113,
+        "ari_super_median": 0.38467317806160783,
+        "ari_super_min": 0.38467317806160783,
+        "ari_super_max": 0.38467317806160783,
+        "definitional": false,
+        "note": null
+      }
+    ],
+    "ablation": {
+      "k2_super": {
+        "k": 2,
+        "ari_sub_median": 0.24606462303231152,
+        "ari_sub_min": 0.24606462303231152,
+        "ari_sub_max": 0.24606462303231152,
+        "ari_super_median": 0.28551034975017847,
+        "ari_super_min": 0.28551034975017847,
+        "ari_super_max": 0.28551034975017847,
+        "definitional": false,
+        "note": null
+      },
+      "k4_sub": {
+        "k": 4,
+        "ari_sub_median": 1.0,
+        "ari_sub_min": 1.0,
+        "ari_sub_max": 1.0,
+        "ari_super_median": 0.4316762428178865,
+        "ari_super_min": 0.4316762428178865,
+        "ari_super_max": 0.4316762428178865,
+        "definitional": false,
+        "note": null
+      }
+    },
+    "l0_signature": {
+      "nodes": 14,
+      "edges": 43,
+      "edge_items_sample": [
+        [
+          "('m0_0', 'm0_1')",
+          "90"
+        ],
+        [
+          "('m0_0', 'm0_2')",
+          "90"
+        ],
+        [
+          "('m0_0', 'm1_0')",
+          "40"
+        ],
+        [
+          "('m0_0', 'm1_1')",
+          "40"
+        ],
+        [
+          "('m0_0', 'm1_2')",
+          "40"
+        ]
+      ],
+      "same_across_k": true,
+      "same_after_activate": true
+    },
+    "s3_auxiliary": {
+      "auxiliary": true,
+      "note": "第三层弱耦合（s3=10）；预检显示对 k>=2 读数无影响。仅记录，不进判据。",
+      "k2_super_median": 1.0,
+      "k4_sub_median": 1.0
+    },
+    "corpus": {
+      "nodes": 14,
+      "sizes": [
+        3,
+        3,
+        4,
+        4
+      ],
+      "strengths": [
+        90,
+        100,
+        110,
+        120
+      ],
+      "masses": [
+        270,
+        300,
+        440,
+        480
+      ],
+      "s2": 40,
+      "s3_aux": 10,
+      "params_locked": "正式语料 = 预检语料，逐参数一致（改参数须重跑预检）"
+    },
+    "km_seeds": [
+      1000,
+      1001,
+      1002,
+      1003,
+      1004,
+      1005,
+      1006,
+      1007,
+      1008,
+      1009
+    ],
+    "layer_hashes": {
+      "before": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be"
+      },
+      "after": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be"
+      }
+    },
+    "registration": {
+      "C29": "C29：在 14 节点、4 子模块（大小 3/3/4/4，质量 270/300/440/480 两两不同）、跨子模块强度 s2=40 的受控嵌套语料上，同一份 L0 共现统计支持多尺度读出：谱聚类 k=2 读出 2 个超模块（ARI=1.000），k=4 读出 4 个子模块（ARI=1.000），k=3 为混合；消融跨子模块边后 k=2 的超模块读出塌到 0.286（接近随机）。因此层级 = 读出尺度 k 的函数；k 是预设参数（与 λ、hop_decay、K 同级），不是涌现的结构。",
+      "B_candidate": "B（候选，编号待定）：谱聚类读出需要外部给定尺度 k。当前实现没有从数据自动判断层数的机制；特征值间隙等自动选择准则不在本工作范围。层数分辨率有上限：更弱的第三层耦合（s3=10）在 k>=2 时对读数无影响（辅助记录）。",
+      "methodology_4th_class": "指标对退化方向不敏感（并入合并总述；不占 B 编号）"
+    },
+    "note": "层级 = 读出尺度 k 的函数；k 是预设参数，不是涌现的结构。"
+  }
+}
