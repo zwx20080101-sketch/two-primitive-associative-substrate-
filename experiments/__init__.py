@@ -30,6 +30,7 @@ from . import (
     exp25_module_dynamics,
     exp26_module_coordination,
     exp27_context_window,
+    exp28_readout_modes,
 )
 
 ALL = {
@@ -62,4 +63,5 @@ ALL = {
     "exp25_module_dynamics": exp25_module_dynamics,
     "exp26_module_coordination": exp26_module_coordination,
     "exp27_context_window": exp27_context_window,
+    "exp28_readout_modes": exp28_readout_modes,
 }

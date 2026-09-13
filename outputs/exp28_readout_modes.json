@@ -1,0 +1,388 @@
+{
+  "id": "exp28_readout_modes",
+  "title": "E28 读取端 max/sum 系统对比: max 精确不叠加, sum 封顶且顺序依赖",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P1 语料构造核查: T1-T5 边集合逐边核对(含 T5 无多余边)",
+      "ok": true,
+      "detail": "T1: 声明 2 边 / 实测 2 边 / 精确一致=True; T2: 声明 4 边 / 实测 4 边 / 精确一致=True; T3: 声明 6 边 / 实测 6 边 / 精确一致=True; T4: 声明 2 边 / 实测 2 边 / 精确一致=True; T5: 声明 3 边 / 实测 3 边 / 精确一致=True"
+    },
+    {
+      "name": "P2 max 精确不叠加(B02 主体): T1/T2/T3 的 a(C) 严格相等",
+      "ok": true,
+      "detail": "T1/T2/T3 a(C) = ['0.8100', '0.8100', '0.8100']；极差=0.000e+00（容差 1e-12；> 容差即停查机制，不许调容差）"
+    },
+    {
+      "name": "P3 sum 封顶 + 原始和: T2/T3 封顶后 = 1.0，并记录原始和与损失",
+      "ok": true,
+      "detail": "T1: 原始和=0.8100 → 封顶 0.8100（损失 0.0000）; T2: 原始和=1.6200 → 封顶 1.0000（损失 0.6200）; T3: 原始和=2.4300 → 封顶 1.0000（损失 1.4300）"
+    },
+    {
+      "name": "P4 T4 环 sum 终止且封顶（sum 可用性自检）: 单次调用出队数 = 节点数，且所有值 <= 1.0",
+      "ok": true,
+      "detail": "单次 activate 调用出队数=3，节点数=3，最大值=1.0000（cap=1.0）"
+    },
+    {
+      "name": "P5 max 顺序无关: 重标签到哈希顺序不同的 token 名后激活值逐点相同",
+      "ok": true,
+      "detail": "重标签 {'A': 'P', 'B': 'Q', 'C': 'R'}；最大逐点差=0.000e+00（容差 1e-12）；原={'A': 1.0, 'B': 0.9, 'C': 0.9} 重标签={'P': 1.0, 'Q': 0.9, 'R': 0.9}"
+    },
+    {
+      "name": "P6 只读: 层文件 sha256 前后一致",
+      "ok": true,
+      "detail": "before={'synapse_net.py': 'cf99a07a0e60fd4d', 'order_layer.py': '419d54745a9eb795', 'context_layer.py': 'bd029d7bbdc345be'}；after={'synapse_net.py': 'cf99a07a0e60fd4d', 'order_layer.py': '419d54745a9eb795', 'context_layer.py': 'bd029d7bbdc345be'}"
+    },
+    {
+      "name": "P7 登记: JSON 内含 C28 / B03(升级) / B02(指针) 文本",
+      "ok": true,
+      "detail": "三段文本已写入 JSON 的 registration 字段"
+    }
+  ],
+  "data": {
+    "table": {
+      "T1": {
+        "max_target": 0.81,
+        "sum_target": 0.81,
+        "sum_raw_target": 0.81,
+        "cap_loss_target": 0.0,
+        "sum_fired": 3,
+        "nodes": 3,
+        "arrivals_max": {
+          "absolute": 3,
+          "relative": 3
+        },
+        "arrivals_sum": {
+          "absolute": 3,
+          "relative": 3
+        }
+      },
+      "T2": {
+        "max_target": 0.81,
+        "sum_target": 1.0,
+        "sum_raw_target": 1.62,
+        "cap_loss_target": 0.6200000000000001,
+        "sum_fired": 4,
+        "nodes": 4,
+        "arrivals_max": {
+          "absolute": 4,
+          "relative": 4
+        },
+        "arrivals_sum": {
+          "absolute": 4,
+          "relative": 4
+        }
+      },
+      "T3": {
+        "max_target": 0.81,
+        "sum_target": 1.0,
+        "sum_raw_target": 2.43,
+        "cap_loss_target": 1.4300000000000002,
+        "sum_fired": 5,
+        "nodes": 5,
+        "arrivals_max": {
+          "absolute": 5,
+          "relative": 5
+        },
+        "arrivals_sum": {
+          "absolute": 5,
+          "relative": 5
+        }
+      },
+      "T4": {
+        "max_target": 0.81,
+        "sum_target": 0.81,
+        "sum_raw_target": 0.81,
+        "cap_loss_target": 0.0,
+        "sum_fired": 3,
+        "nodes": 3,
+        "arrivals_max": {
+          "absolute": 3,
+          "relative": 3
+        },
+        "arrivals_sum": {
+          "absolute": 3,
+          "relative": 3
+        }
+      },
+      "T5": {
+        "max_target": 0.9,
+        "sum_target": 1.0,
+        "sum_raw_target": 1.71,
+        "cap_loss_target": 0.71,
+        "sum_fired": 3,
+        "nodes": 3,
+        "arrivals_max": {
+          "absolute": 3,
+          "relative": 3
+        },
+        "arrivals_sum": {
+          "absolute": 3,
+          "relative": 3
+        }
+      }
+    },
+    "activations": {
+      "T1": {
+        "max_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 0.81
+        },
+        "sum_asc_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 0.81
+        },
+        "sum_desc_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 0.81
+        },
+        "sum_raw_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 0.81
+        },
+        "order_dependent_nodes": []
+      },
+      "T2": {
+        "max_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 0.81,
+          "D": 0.9
+        },
+        "sum_asc_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 1.0,
+          "D": 0.9
+        },
+        "sum_desc_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 1.0,
+          "D": 0.9
+        },
+        "sum_raw_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 1.62,
+          "D": 0.9
+        },
+        "order_dependent_nodes": []
+      },
+      "T3": {
+        "max_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 0.81,
+          "D": 0.9,
+          "E": 0.9
+        },
+        "sum_asc_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 1.0,
+          "D": 0.9,
+          "E": 0.9
+        },
+        "sum_desc_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 1.0,
+          "D": 0.9,
+          "E": 0.9
+        },
+        "sum_raw_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 2.43,
+          "D": 0.9,
+          "E": 0.9
+        },
+        "order_dependent_nodes": []
+      },
+      "T4": {
+        "max_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 0.81
+        },
+        "sum_asc_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 0.81
+        },
+        "sum_desc_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 0.81
+        },
+        "sum_raw_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 0.81
+        },
+        "order_dependent_nodes": []
+      },
+      "T5": {
+        "max_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 0.9
+        },
+        "sum_asc_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 1.0
+        },
+        "sum_desc_acts": {
+          "A": 1.0,
+          "B": 1.0,
+          "C": 0.9
+        },
+        "sum_raw_acts": {
+          "A": 1.0,
+          "B": 0.9,
+          "C": 1.71
+        },
+        "order_dependent_nodes": [
+          "B",
+          "C"
+        ]
+      }
+    },
+    "auxiliary_order_dependence": {
+      "auxiliary": true,
+      "note": "sum 的顺序依赖是它的固有性质（B03），本实验要证明它有，不是要求它没有；不参与 PASS/FAIL。",
+      "T5_asc": {
+        "A": 1.0,
+        "B": 0.9,
+        "C": 1.0
+      },
+      "T5_desc": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 0.9
+      },
+      "T5_order_dependent_nodes": [
+        "B",
+        "C"
+      ],
+      "T5_max": {
+        "A": 1.0,
+        "B": 0.9,
+        "C": 0.9
+      }
+    },
+    "auxiliary_arrivals": {
+      "auxiliary": true,
+      "note": "到达节点数两套阈值口径（不一致时以 relative 为准）。",
+      "rows": {
+        "T1": {
+          "max": {
+            "absolute": 3,
+            "relative": 3
+          },
+          "sum": {
+            "absolute": 3,
+            "relative": 3
+          }
+        },
+        "T2": {
+          "max": {
+            "absolute": 4,
+            "relative": 4
+          },
+          "sum": {
+            "absolute": 4,
+            "relative": 4
+          }
+        },
+        "T3": {
+          "max": {
+            "absolute": 5,
+            "relative": 5
+          },
+          "sum": {
+            "absolute": 5,
+            "relative": 5
+          }
+        },
+        "T4": {
+          "max": {
+            "absolute": 3,
+            "relative": 3
+          },
+          "sum": {
+            "absolute": 3,
+            "relative": 3
+          }
+        },
+        "T5": {
+          "max": {
+            "absolute": 3,
+            "relative": 3
+          },
+          "sum": {
+            "absolute": 3,
+            "relative": 3
+          }
+        }
+      }
+    },
+    "corpus_structure": {
+      "T1": {
+        "declared": 2,
+        "observed": 2,
+        "exact": true
+      },
+      "T2": {
+        "declared": 4,
+        "observed": 4,
+        "exact": true
+      },
+      "T3": {
+        "declared": 6,
+        "observed": 6,
+        "exact": true
+      },
+      "T4": {
+        "declared": 2,
+        "observed": 2,
+        "exact": true
+      },
+      "T5": {
+        "declared": 3,
+        "observed": 3,
+        "exact": true
+      }
+    },
+    "tolerances": {
+      "strict": 1e-12,
+      "relative_factor": 1e-09,
+      "cap": 1.0,
+      "hop_decay": 0.9
+    },
+    "layer_hashes": {
+      "before": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be"
+      },
+      "after": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be"
+      }
+    },
+    "registration": {
+      "C28": "C28：max 与 sum 是读取端的两种选择，不是对错。(a) max 精确定律：max(a, a) = a，容差 1e-12，任意路径数下严格成立；(b) sum 是另一种选择：单次发射 + 封顶 1.0，封顶损失随路径数单调增（记录原始和）；(c) max 顺序无关，sum 顺序依赖（字典序为默认遍历口径，换序差异是 B03 的量化指标）。",
+      "B03_upgraded": "B03（升级）：sum 模式的遍历顺序影响封顶落点。同拓扑同输入下，sum 的输出非交换（顺序依赖，三角语料上升序 [1.0, 0.9, 1.0] vs 降序 [1.0, 1.0, 0.9]），max 的输出可交换（顺序无关，均为 [1.0, 0.9, 0.9]）。封顶损失随路径数单调增：单路 0.00、双路 0.62、三路 1.43。因此 sum 的输出不可与 max 直接对比。exp14 的 JSON detail 抖动是这一性质的直接后果，不是测试缺陷。",
+      "B02_pointer": "B02（指针）：已并入 C28 —— max 的精确不叠加是读取端设计选择，不是机制缺陷；原始观测「多路证据在 max 下不叠加」保留在此。"
+    },
+    "note": "sum 只在实验层实现（E14 语义：单次发射 + 出队冻结），不改 L0、不新增层文件。"
+  }
+}

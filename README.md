@@ -51,7 +51,7 @@ outputs/          # 每次运行的 JSON 报告(数据备份)
 | --- | --- | --- | --- | --- |
 | **第一轮** | **E0–E22** | **单层能力目录**：一次一层、每层一个现象，外加消融（E20）/规模（E21）/统计（E22） | **C01–C22 / B01–B07** | [DESIGN.md](./DESIGN.md)、[REPORT-zh.md](./REPORT-zh.md) |
 | **第二轮** | **E23–E26** | **组合律 + S1/S2/S3**：多层共存与归因 → 模块分化 → 模块内动力学 → 模块间协调 | **C23–C26 / B08–B19** | [DESIGN-E23.md](./DESIGN-E23.md)、[DESIGN-E24.md](./DESIGN-E24.md)、[DESIGN-E25.md](./DESIGN-E25.md)、[DESIGN-E26.md](./DESIGN-E26.md) |
-| 边界量化 | **E27** | **B01 正式化**：上下文窗口边界 `k_min = k*`；现有层天花板 = 2（不属于两轮能力目录） | **C27 / B01（升级）** | [DESIGN-E27.md](./DESIGN-E27.md) |
+| 边界量化 | **E27 / E28** | **B01 正式化**：上下文窗口边界 `k_min = k*`，现有层天花板 = 2；**B02+B03 正式化**：max 精确不叠加、sum 封顶且顺序依赖（不属于两轮能力目录） | **C27–C28 / B01–B03（升级）** | [DESIGN-E27.md](./DESIGN-E27.md)、[DESIGN-E28.md](./DESIGN-E28.md) |
 | 展示层 | **P5a** | S1–S3 **只读分析面板**（快照回放 + 字段级自检 + commit 溯源）；P5b 已决定不做 | 无新 C/B 条目 | [DESIGN-P5.md](./DESIGN-P5.md) |
 
 两轮的关系：第一轮回答"每一层各自能做什么"；第二轮回答"多层同时打开时怎么合成、
@@ -143,7 +143,8 @@ E12 组块双写、E18 拼写、E17 叠词外推、E19 情绪。
 ## 复现与发布
 
 ```powershell
-python main.py            # 全量实验 E0-E26(确定性, 逐项 PASS)
+$env:PYTHONHASHSEED=0    # 固定字符串哈希顺序(顺序类结论可复现; E28 起要求)
+python main.py            # 全量实验 E0-E28(确定性, 逐项 PASS)
 python main.py exp20_ablation_suite   # 只跑单个实验
 python benchmark.py       # 复杂度基准 -> outputs/benchmark.json
 python verify_claims.py   # 会审: 草稿数值/红线/数据一致性 81 项核对
