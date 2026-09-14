@@ -66,9 +66,9 @@
 
 ---
 
-## 边界量化：E27 – E31（不属于两轮能力目录）
+## 边界量化：E27 – E32 + 生成方向：E33（不属于两轮能力目录）
 
-**产物**：C27–C31 / B01–B05（升级/指针）/ B20–B21　**设计文档**：[DESIGN-E27.md](../DESIGN-E27.md)、[DESIGN-E28.md](../DESIGN-E28.md)、[DESIGN-E29.md](../DESIGN-E29.md)、[DESIGN-E30.md](../DESIGN-E30.md)、[DESIGN-E31.md](../DESIGN-E31.md)
+**产物**：C27–C33 / B01–B05（升级/指针）/ B20–B21 / B23 / B24 / B26　**设计文档**：[DESIGN-E27.md](../DESIGN-E27.md)、[DESIGN-E28.md](../DESIGN-E28.md)、[DESIGN-E29.md](../DESIGN-E29.md)、[DESIGN-E30.md](../DESIGN-E30.md)、[DESIGN-E31.md](../DESIGN-E31.md)、[DESIGN-E32.md](../DESIGN-E32.md)、[DESIGN-E33.md](../DESIGN-E33.md)
 
 主题：把第一轮的边界从"观测记录"升级为带数字的律。**纯计数，无 numpy 依赖；不改任何层文件。**
 
@@ -79,6 +79,8 @@
 | `exp29_hierarchy_scales.py` | 层级 = **多尺度读出**：k=2 读超模块、k=4 读子模块；消融跨子模块边后层级塌陷；L0 统计跨 k 逐位不变 | C29 / B20 |
 | `exp30_closure_audit.py` | **闭包审计**：五个已学集合逐层核对（违例 = 0）；失败语义表（KeyError / `{}` / None / ValueError 并存） | C30 / B21（B05 指针） |
 | `exp31_auto_scale.py` | **自动尺度选择（弱版本）**：eigengap / modularity / BIC 在三个植入语料（k=4/3/5）上的命中检验；BIC 跨语料 3/3 命中 | C31 |
+| `exp32_nesting_depth.py` | **可读性条件（v2）**：r_j = 组内/组外质量；r_j 不能完全预测可读性（反例 L=4 层2）；可读性随嵌套深度下降，只有最粗层稳定可读。v1（层数律版）失败记录归档为 `exp32_nesting_depth_v1_FAIL.json` | 落 B24 |
+| `exp33_landscape_sampling.py` | **能量景观采样（v2，主对象 = 精确 Boltzmann）**：4 个主导联合状态中 max 只给 1 个，另 3 个共 0.751 质量；节点级支撑 86→4（粗粒化）；单点 Gibbs 低温柔性不混合（归档 `exp33_landscape_sampling_v1_FAIL.json`） | C33 / B26 |
 
 ---
 

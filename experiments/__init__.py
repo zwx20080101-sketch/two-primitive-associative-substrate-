@@ -35,6 +35,7 @@ from . import (
     exp30_closure_audit,
     exp31_auto_scale,
     exp32_nesting_depth,
+    exp33_landscape_sampling,
 )
 
 ALL = {
@@ -72,4 +73,5 @@ ALL = {
     "exp30_closure_audit": exp30_closure_audit,
     "exp31_auto_scale": exp31_auto_scale,
     "exp32_nesting_depth": exp32_nesting_depth,
+    "exp33_landscape_sampling": exp33_landscape_sampling,
 }
