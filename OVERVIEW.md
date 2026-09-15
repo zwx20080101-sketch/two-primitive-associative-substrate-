@@ -10,12 +10,12 @@
 
 | 项 | 数量 | 说明 |
 | --- | --- | --- |
-| 实验 | **E0–E37（38 个）** | 全部 PASS（`python main.py` 汇总全绿） |
-| C 条目（能做什么） | **36 条** | C01–C31 + C33–C37；**C32 未立**（E32 落在 B24，不是漏号） |
-| B 条目（在哪不行） | **25 条** | B01–B30 中 **B22 / B25 / B31 未触发**（预注册的条件编号） |
-| L0 实现版本 | **v1 + v2** | v1 `cf99a07a0e60fd4d`（冻结，E0–E36）；v2 `ee6df589eb2f6983`（平行分支，E37 起） |
+| 实验 | **E0–E39（40 个）** | 全部 PASS（`python main.py` 汇总全绿） |
+| C 条目（能做什么） | **37 条** | C01–C31 + C33–C38；**C32 未立**（E32 落在 B24，不是漏号） |
+| B 条目（在哪不行） | **27 条** | B01–B33 中 **B22 / B25 / B27 / B28 / B29 / B31 未触发**（预注册的条件编号） |
+| L0 实现版本 | **v1 + v2 + v3** | v1 `cf99a07a0e60fd4d`（冻结，E0–E36）；v2 `ee6df589eb2f6983`（平行分支，E37 起）；v3 `085be73a06f0694c`（从 v2 继承，E39 起） |
 | 方法学类别 | **6 类** | 见 §4，含"不报错的坏结果"六个失效模式 |
-| 归档的失败记录 | 2 份 | `exp32_nesting_depth_v1_FAIL.json`、`exp33_landscape_sampling_v1_FAIL.json` |
+| 归档的失败记录 | 3 份 | `exp32_nesting_depth_v1_FAIL.json`、`exp33_landscape_sampling_v1_FAIL.json`、`exp39_reach_compression_v1_FAIL.json` |
 
 ---
 
