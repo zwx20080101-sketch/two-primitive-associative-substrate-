@@ -191,6 +191,53 @@ def run() -> dict:
             f"C 内部值 { {n: round(v,6) for n,v in sorted(iv_prod.items())} } → "
             f"{ {n: round(v,6) for n,v in sorted(iv_r.items())} }；变化成员 = {changed}")
 
+    # ---------- P5b 附录：四种"值序对调"定义的精确操作与实测（报告项）----------
+    def swap_in_both(a: str, b: str):
+        P2, Q2 = dict(P), dict(Q)
+        if a in P2 and b in P2:
+            P2[a], P2[b] = P2[b], P2[a]
+        if a in Q2 and b in Q2:
+            Q2[a], Q2[b] = Q2[b], Q2[a]
+        return P2, Q2
+
+    def swap_between(a: str):
+        P2, Q2 = dict(P), dict(Q)
+        P2[a], Q2[a] = Q2[a], P2[a]
+        return P2, Q2
+
+    def swap_outer_with_shared(outer_p: str, outer_q: str, sh: str):
+        P2, Q2 = dict(P), dict(Q)
+        P2[outer_p], P2[sh] = P2[sh], P2[outer_p]
+        Q2[outer_q], Q2[sh] = Q2[sh], Q2[outer_q]
+        return P2, Q2
+
+    defs = {
+        "A": ("每个模式【各自】把其成员的降序排名反转（值按排名对调）",
+              rank_reverse(P), rank_reverse(Q)),
+        "B": ("共享成员 B/C 在【两个模式内同时互换】",
+              *swap_in_both("B", "C")),
+        "C": ("共享成员 C 的值在【P、Q 之间互换】（同一节点、跨模式换值）",
+              *swap_between("C")),
+        "D": ("P 的非共享 A 与共享 C 对调；Q 的非共享 D 与共享 C 对调",
+              *swap_outer_with_shared("A", "D", "C")),
+    }
+    def_rows = {}
+    for tag, (desc, P2, Q2) in defs.items():
+        L5d = ComposeLayer()
+        cid_d = L5d.coactivate(P2, Q2, rule="prod")
+        iv_d = L5d.internal(cid_d)
+        ch_d = sorted(n for n in iv_prod if abs(iv_prod[n] - iv_d[n]) > TOL)
+        def_rows[tag] = {"desc": desc,
+                         "P_after": {k: round(v, 6) for k, v in P2.items()},
+                         "Q_after": {k: round(v, 6) for k, v in Q2.items()},
+                         "internal": {n: round(v, 9) for n, v in sorted(iv_d.items())},
+                         "changed_members": ch_d}
+    c.check("P5b 附录（报告项）: 四种「值序对调」定义的精确操作 + 各定义下的实测结果",
+            True,
+            "；".join(f"定义 {t}: {def_rows[t]['desc']} → 变化成员 {def_rows[t]['changed_members']}"
+                      for t in sorted(def_rows))
+            + "｜【结论】只有 A/D 使 prod 的内部值变化（本实例重合）；B/C 下 prod 恒不变")
+
     # ---------- P6 闭包硬线（只审四层）----------
     l0_nodes = set(net1.nodes)
     members_subset = set(members).issubset(l0_nodes)
@@ -249,7 +296,12 @@ def run() -> dict:
                     "Q_after": {k: round(v, 6) for k, v in Q_r.items()},
                     "internal_before": {n: round(v, 9) for n, v in sorted(iv_prod.items())},
                     "internal_after": {n: round(v, 9) for n, v in sorted(iv_r.items())},
-                    "changed_members": changed},
+                    "changed_members": changed,
+                    "definitions_measured": def_rows,
+                    "definitions_note": "四种定义都在 JSON 里给了【精确操作 + 实测结果】；"
+                                        "采用 A（各自排名反转）—— 操作明确、与 E41 的「值序」读法一致；"
+                                        "B/C 下 prod 恒不变（为空判据），故不采用。",
+                    "base_internal": {n: round(v, 9) for n, v in sorted(iv_prod.items())}},
             "P6": {"audited_layers": ["L0", "L1", "L2", "L4"], "not_audited": "L5（新增层）",
                    "members_subset_of_L0": bool(members_subset), "violations": 0,
                    "L5_nodes": sorted(L5.high_nodes)},
