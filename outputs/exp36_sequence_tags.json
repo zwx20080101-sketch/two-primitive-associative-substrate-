@@ -1,0 +1,159 @@
+{
+  "id": "exp36_sequence_tags",
+  "title": "E36 顺序标记的适用边界: 分类 ≠ 排序",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P1a 接口不改: 四个层文件 sha256 前后一致",
+      "ok": true,
+      "detail": "before==after: True"
+    },
+    {
+      "name": "P1b L0 不改: 节点数/边数/边集合签名逐位相同",
+      "ok": true,
+      "detail": "26 节点 / 25 边；签名相同=True"
+    },
+    {
+      "name": "P2 顺序标记正确: W 中每个节点带正确 step；seeds(step=1)/(2) 逐项一致",
+      "ok": true,
+      "detail": "tags={'A': (1.0, 1), 'B': (0.9, 1), 'C': (0.81, 1), 'Z': (1.0, 2), 'Y': (0.9, 2), 'X': (0.81, 2)}；seeds(1)=['A', 'B', 'C']；seeds(2)=['Z', 'Y', 'X']"
+    },
+    {
+      "name": "P3 分类差异可测: seeds(step=1) 只返回步1 的 3 个；注入后 A=1.0；与不注入之差 >= 0.5",
+      "ok": true,
+      "detail": "seeds(step=1)=['A', 'B', 'C']；A(注入)=1.000000；A(不注入)=0.071789799；差异=0.928210"
+    },
+    {
+      "name": "P4（负面记录，不是 FAIL）: 注入后所有痕迹在基底里都是 1.0，无相对权重差异",
+      "ok": true,
+      "detail": "注入集合=['A', 'B', 'C', 'Z']；基底中的值={'A': 1.0, 'B': 1.0, 'C': 1.0, 'Z': 1.0}；全部 1.0=True"
+    },
+    {
+      "name": "P5 消融: 无过滤时 X=1.0；有过滤时 X=0.81；两者差 >= 0.1",
+      "ok": true,
+      "detail": "X(有过滤)=0.810000（期望 0.9^2=0.810000）；X(无过滤)=1.000000（期望 1.0）；差=0.190000"
+    },
+    {
+      "name": "P6 双向结局: P3 + P5 通过 → C36；不通过 → B29",
+      "ok": true,
+      "detail": "落定 C36（P3 差异=0.9282；P5 差异=0.1900）"
+    }
+  ],
+  "data": {
+    "spec": {
+      "K": 3,
+      "tie_break": "值降序；同值节点名升序（与 E35 §6 一致，此处复述以保证 E36 可独立复现）",
+      "W": "{node: (value, step)}；seeds(step=k) 只返回该步痕迹"
+    },
+    "depends_on": [
+      "E34（W 层外部工具）",
+      "E35（W 栈行为已验证）"
+    ],
+    "tags": {
+      "A": [
+        1.0,
+        1
+      ],
+      "B": [
+        0.9,
+        1
+      ],
+      "C": [
+        0.81,
+        1
+      ],
+      "Z": [
+        1.0,
+        2
+      ],
+      "Y": [
+        0.9,
+        2
+      ],
+      "X": [
+        0.81,
+        2
+      ]
+    },
+    "seeds_step1": [
+      "A",
+      "B",
+      "C"
+    ],
+    "seeds_step2": [
+      "Z",
+      "Y",
+      "X"
+    ],
+    "seeds_all": [
+      "A",
+      "Z",
+      "B",
+      "Y",
+      "C",
+      "X"
+    ],
+    "P3": {
+      "A_injected": 1.0,
+      "A_not_injected": 0.071789799,
+      "expected_A_not_injected": 0.071789799,
+      "diff": 0.928210201
+    },
+    "P4": {
+      "injected_nodes": [
+        "A",
+        "B",
+        "C",
+        "Z"
+      ],
+      "values_in_substrate": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 1.0,
+        "Z": 1.0
+      },
+      "all_are_1.0": true,
+      "diagnosis_order_if_violated": [
+        "synapse_net.py:98 是否被改",
+        "seeds() 是否传了值而不是节点名",
+        "activate 内部是否在某种情形下保留了值"
+      ]
+    },
+    "P5": {
+      "X_with_filter": 0.81,
+      "expected_with_filter": 0.81,
+      "X_without_filter": 1.0,
+      "diff": 0.19
+    },
+    "aux_interface_note": {
+      "activate_dict_silently_accepted": true,
+      "detail": "activate({'A':1}) 被接受：dict 被当成 iterable，只取 keys → 只激活 A",
+      "registry": "写入 B21 补充实例（与 L2 的 {}、L4 的 None 同族）"
+    },
+    "readonly": {
+      "layer_hashes_before": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      },
+      "layer_hashes_after": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      },
+      "L0_signature_same": true,
+      "L0_nodes": 26,
+      "L0_edges": 25
+    },
+    "outcome": "C36",
+    "registration": {
+      "outcome": "C36",
+      "text": "C36：外部 W 层的顺序标记【只作用于读取端过滤】（哪些痕迹被包含在种子集里），不影响基底内部——基底种子入口把值抹平（E34 已证），因此顺序标记不产生优先级排序。范围限定：分类 ≠ 排序；外部工具 ≠ 基底能力；排序差异需要值域编码，涉及改基底入口行为，属越权嫌疑，不在本实验。",
+      "C36": "C36：外部 W 层的顺序标记【只作用于读取端过滤】（哪些痕迹被包含在种子集里），不影响基底内部——基底种子入口把值抹平（E34 已证），因此顺序标记不产生优先级排序。范围限定：分类 ≠ 排序；外部工具 ≠ 基底能力；排序差异需要值域编码，涉及改基底入口行为，属越权嫌疑，不在本实验。",
+      "B29": "B29：按 step 分类的注入未能产生可测差异（具体偏差见 JSON）；顺序标记在该语料上不足以支撑「按来源分类」，需要重新定位机制。"
+    },
+    "note": "标签只活在 W 层内部；基底对它一无所知（预检已证 activate 只吃节点名）。"
+  }
+}

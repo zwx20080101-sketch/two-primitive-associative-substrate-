@@ -83,6 +83,7 @@
 | `exp33_landscape_sampling.py` | **能量景观采样（v2，主对象 = 精确 Boltzmann）**：4 个主导联合状态中 max 只给 1 个，另 3 个共 0.751 质量；节点级支撑 86→4（粗粒化）；单点 Gibbs 低温柔性不混合（归档 `exp33_landscape_sampling_v1_FAIL.json`） | C33 / B26 |
 | `exp34_working_memory.py` | **工作记忆（最小版本）**：外部 W 层（top-3）跨次携带状态 —— `activate([Z,A,B,C])` 使 A 从 0.071790 跳到 1.0；消融后回到 0.071790；W 不写 L0、不改层文件 | C34 |
 | `exp35_working_memory_chain.py` | **工作记忆串联**：重注入是构造性（seed1 恒 1.0）；停止注入后痕迹 = 纯图衰减 0.9¹³ = 0.254187；被携带值全 1.0（无优先级）；成员由 tie-break 决定（D/E 挤不进） | C35 |
+| `exp36_sequence_tags.py` | **顺序标记的适用边界（分类 ≠ 排序）**：seeds(step=1) 过滤可测（A=1.0，差 0.928），但注入后痕迹全 1.0（无权重差异）；排除效果可测（X：0.81 vs 1.0）；`activate({"A":1})` 静默接受 → B21 补充实例 | C36 |
 
 ---
 

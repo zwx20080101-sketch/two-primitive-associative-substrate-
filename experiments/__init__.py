@@ -38,6 +38,7 @@ from . import (
     exp33_landscape_sampling,
     exp34_working_memory,
     exp35_working_memory_chain,
+    exp36_sequence_tags,
 )
 
 ALL = {
@@ -78,4 +79,5 @@ ALL = {
     "exp33_landscape_sampling": exp33_landscape_sampling,
     "exp34_working_memory": exp34_working_memory,
     "exp35_working_memory_chain": exp35_working_memory_chain,
+    "exp36_sequence_tags": exp36_sequence_tags,
 }
