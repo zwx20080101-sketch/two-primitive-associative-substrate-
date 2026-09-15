@@ -81,6 +81,7 @@
 | `exp31_auto_scale.py` | **自动尺度选择（弱版本）**：eigengap / modularity / BIC 在三个植入语料（k=4/3/5）上的命中检验；BIC 跨语料 3/3 命中 | C31 |
 | `exp32_nesting_depth.py` | **可读性条件（v2）**：r_j = 组内/组外质量；r_j 不能完全预测可读性（反例 L=4 层2）；可读性随嵌套深度下降，只有最粗层稳定可读。v1（层数律版）失败记录归档为 `exp32_nesting_depth_v1_FAIL.json` | 落 B24 |
 | `exp33_landscape_sampling.py` | **能量景观采样（v2，主对象 = 精确 Boltzmann）**：4 个主导联合状态中 max 只给 1 个，另 3 个共 0.751 质量；节点级支撑 86→4（粗粒化）；单点 Gibbs 低温柔性不混合（归档 `exp33_landscape_sampling_v1_FAIL.json`） | C33 / B26 |
+| `exp34_working_memory.py` | **工作记忆（最小版本）**：外部 W 层（top-3）跨次携带状态 —— `activate([Z,A,B,C])` 使 A 从 0.071790 跳到 1.0；消融后回到 0.071790；W 不写 L0、不改层文件 | C34 |
 
 ---
 
