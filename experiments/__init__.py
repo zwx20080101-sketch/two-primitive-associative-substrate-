@@ -40,6 +40,7 @@ from . import (
     exp35_working_memory_chain,
     exp36_sequence_tags,
     exp37_seed_values,
+    exp38_mass_allocation,
 )
 
 ALL = {
@@ -82,4 +83,5 @@ ALL = {
     "exp35_working_memory_chain": exp35_working_memory_chain,
     "exp36_sequence_tags": exp36_sequence_tags,
     "exp37_seed_values": exp37_seed_values,
+    "exp38_mass_allocation": exp38_mass_allocation,
 }
