@@ -109,6 +109,10 @@
 > [DESIGN-E35.md](./DESIGN-E35.md) / [DESIGN-E36.md](./DESIGN-E36.md) §6，
 > 以及 `experiments/exp34_working_memory.py` / `exp35_working_memory_chain.py` /
 > `exp36_sequence_tags.py` 的 `B27_TEXT` / `B28_TEXT` / `B29_TEXT`。
+>
+> **为什么跳号这么密**：未触发编号集中在 E30 与 E33–E37 —— 自 E30 起，每个实验的预注册
+> 都预先留出一个 FAIL 分支的编号（双向结局：通过落 C、不通过落 B），通过时该编号就空着。
+> 故空号是【预注册纪律的副产品】，不是登记表失控；这也是它们**必须逐个解释**的原因。
 
 > **实现期"不报错错数"六类（B17 / B18 / B19 / E29 / E32-v2 / E33，合并总述）**
 >
