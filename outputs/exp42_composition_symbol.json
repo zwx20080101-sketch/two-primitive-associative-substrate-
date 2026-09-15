@@ -1,0 +1,240 @@
+{
+  "id": "exp42_composition_symbol",
+  "title": "E42 组合符号: 两模式共现绑定产生新符号（L5）",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P0 前置: 落地层=L5（compose_layer.py，与 L4 同构）；origins 已定义；闭包已声明；四文件哈希待 P7",
+      "ok": true,
+      "detail": "L5 = compose_layer.py；origins = \"coactivation\"；C 是 L5 的显式新增结构（P6 只审 L0/L1/L2/L4）；P={'A': 1.0, 'B': 0.9, 'C': 0.81} Q={'C': 1.0, 'B': 0.9, 'D': 0.9} 共享=['B', 'C']"
+    },
+    {
+      "name": "P1 组合产生: coactivate(P,Q) → L5 产生组合符号，origins = \"coactivation\"",
+      "ok": true,
+      "detail": "cid=CMP_1；origins='coactivation'；成员=['A', 'B', 'C', 'D']；成员边（C↔成员，计数均为 1 ⇒ strength=1.0）= {'A': 1, 'B': 1, 'C': 1, 'D': 1}"
+    },
+    {
+      "name": "P2a 字段级: L5 的 origins 字段把组合符号与组块区分（不用命名约定）",
+      "ok": true,
+      "detail": "L5.origins[CMP_1] = 'coactivation'；L4 侧无该字段（§0.6 局限已声明）"
+    },
+    {
+      "name": "P2b 行为级: 两条交叉操作互不响应（重复不在 L5 造符号；共现不在 L4 造符号）",
+      "ok": true,
+      "detail": "正向：L4 重复 3 次 → L4 产生 CH_1（组块）；L5 的符号集合不变=True；反向：独立 L5 实例 coactivate → 产生 CMP_1（组合符号）；L4 的 chunks 不变=True"
+    },
+    {
+      "name": "P3 组合符号可再激活（L5 级）: activate(CMP) 的输出包含 P∪Q 的全部成员（4/4）",
+      "ok": true,
+      "detail": "activate(CMP_1) = {'A': 0.9, 'B': 0.9, 'C': 0.9, 'CMP_1': 1.0, 'D': 0.9}；成员命中 4/4 = ['A', 'B', 'C', 'D']"
+    },
+    {
+      "name": "P4 带值被保留: C 的内部值逐位 = v1×v2（prod）/ = 1.0（keep）；差异成员数 >= 1",
+      "ok": true,
+      "detail": "prod 内部值 = {'A': 0.0, 'B': 0.81, 'C': 0.81, 'D': 0.0}（逐位 = v1×v2：True）；keep 内部值 = {'A': 1.0, 'B': 1.0, 'C': 1.0, 'D': 1.0}（逐位 = 1.0：True）；差异成员数 = 4 = ['A', 'B', 'C', 'D']；辅助项（L0 输出差异）=14（阈值 ≥10）"
+    },
+    {
+      "name": "P5 区分性（L0 级）: 三分布两两差异 >= 1（防\"拼接即生成\"）",
+      "ok": true,
+      "detail": "组合 vs P = 12 个节点不同（预检 12）；组合 vs Q = 14（预检 14）；P vs Q = 13"
+    },
+    {
+      "name": "P5b 值序敏感度（定义 A：各自排名反转）: C 内部值变化的共享成员数 >= 1",
+      "ok": true,
+      "detail": "对调前 P={'A': 1.0, 'B': 0.9, 'C': 0.81} Q={'C': 1.0, 'B': 0.9, 'D': 0.9}；对调后 P'={'A': 0.81, 'B': 0.9, 'C': 1.0} Q'={'C': 0.9, 'B': 0.9, 'D': 1.0}；C 内部值 {'A': 0.0, 'B': 0.81, 'C': 0.81, 'D': 0.0} → {'A': 0.0, 'B': 0.81, 'C': 0.9, 'D': 0.0}；变化成员 = ['C']"
+    },
+    {
+      "name": "P6 闭包硬线（C30，只审 L0/L1/L2/L4）: 违例数 = 0；不审 L5（新增层，本实验首次声明）",
+      "ok": true,
+      "detail": "L5 的成员 ['A', 'B', 'C', 'D'] ⊆ L0 已学节点（26 个）=True；L0/L1/L2/L4 的违例数 = 0（本实验不改四层）；L5 的节点集合 = ['A', 'B', 'C', 'CMP_1', 'D']（新增结构的记录）"
+    },
+    {
+      "name": "P7 只读: v1/v2/v3 + 三个层文件哈希前后一致；compose_layer.py 首次记录",
+      "ok": true,
+      "detail": "before==after = True；v1=cf99a07a0e60fd4d v2=ee6df589eb2f6983 v3=085be73a06f0694c；order/context/chunk = 419d54745a9eb795/bd029d7bbdc345be/46f5857be0fc7c7e；compose_layer.py 首记录 = 81e350497e9e9960"
+    },
+    {
+      "name": "P8 双向结局: P1+P2+P3+P4+P5+P5b 全过 → 新 C 条目；否则 → 如实记录（不预分配 B 编号）",
+      "ok": true,
+      "detail": "落定 C 条目（组合符号能力）（前序判据全过 = True）；未预分配 FAIL 分支编号"
+    }
+  ],
+  "data": {
+    "patterns": {
+      "P": {
+        "A": 1.0,
+        "B": 0.9,
+        "C": 0.81
+      },
+      "Q": {
+        "C": 1.0,
+        "B": 0.9,
+        "D": 0.9
+      },
+      "shared": [
+        "B",
+        "C"
+      ]
+    },
+    "L4_vs_L5": {
+      "L4_trigger": "repeat >= K",
+      "L5_trigger": "coactivation",
+      "L4_file": "chunk_layer.py (unchanged)",
+      "L5_file": "compose_layer.py (new)",
+      "L4_origin_field": null,
+      "L5_origin_field": "coactivation",
+      "L4_note": "CH_n 无来源字段；靠触发路径推断（unit_counts 写入点只有 chunk_layer.py:49）"
+    },
+    "P1": {
+      "cid": "CMP_1",
+      "members": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "origins": "coactivation",
+      "member_edge_counts": {
+        "A": 1,
+        "B": 1,
+        "C": 1,
+        "D": 1
+      }
+    },
+    "P2b": {
+      "forward_L4_creates_chunk": "CH_1",
+      "forward_L5_unchanged": true,
+      "reverse_L5_creates_symbol": true,
+      "reverse_L4_unchanged": true
+    },
+    "P3": {
+      "activation": {
+        "A": 0.9,
+        "B": 0.9,
+        "C": 0.9,
+        "CMP_1": 1.0,
+        "D": 0.9
+      },
+      "members_hit": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "hit_rate": "4/4"
+    },
+    "P4": {
+      "internal_prod": {
+        "A": 0.0,
+        "B": 0.81,
+        "C": 0.81,
+        "D": 0.0
+      },
+      "internal_keep": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 1.0,
+        "D": 1.0
+      },
+      "internal_diff_members": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "aux_L0_output_diff_nodes": 14,
+      "aux_threshold": 10
+    },
+    "P5": {
+      "combined_vs_P": 12,
+      "combined_vs_Q": 14,
+      "P_vs_Q": 13,
+      "level": "L0（注入内部值 / P / Q 三个配置）"
+    },
+    "P5b": {
+      "definition": "定义 A：每个模式各自把降序排名反转",
+      "P_after": {
+        "A": 0.81,
+        "B": 0.9,
+        "C": 1.0
+      },
+      "Q_after": {
+        "C": 0.9,
+        "B": 0.9,
+        "D": 1.0
+      },
+      "internal_before": {
+        "A": 0.0,
+        "B": 0.81,
+        "C": 0.81,
+        "D": 0.0
+      },
+      "internal_after": {
+        "A": 0.0,
+        "B": 0.81,
+        "C": 0.9,
+        "D": 0.0
+      },
+      "changed_members": [
+        "C"
+      ]
+    },
+    "P6": {
+      "audited_layers": [
+        "L0",
+        "L1",
+        "L2",
+        "L4"
+      ],
+      "not_audited": "L5（新增层）",
+      "members_subset_of_L0": true,
+      "violations": 0,
+      "L5_nodes": [
+        "A",
+        "B",
+        "C",
+        "CMP_1",
+        "D"
+      ]
+    },
+    "readonly": {
+      "hashes_before": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "synapse_net_v2.py": "ee6df589eb2f6983",
+        "synapse_net_v3.py": "085be73a06f0694c",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      },
+      "hashes_after": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "synapse_net_v2.py": "ee6df589eb2f6983",
+        "synapse_net_v3.py": "085be73a06f0694c",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      },
+      "v1_expected": "cf99a07a0e60fd4d",
+      "v2_expected": "ee6df589eb2f6983",
+      "v3_expected": "085be73a06f0694c",
+      "layer_expected": {
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      },
+      "compose_layer.py": {
+        "sha256_16": "81e350497e9e9960",
+        "role": "新层 L5（E42 首次声明）"
+      }
+    },
+    "outcome": "C 条目（组合符号能力）",
+    "registration": {
+      "outcome": "C 条目（组合符号能力）",
+      "text": "C??：两个模式经【共现绑定】（一次 coactivate(P, Q)）在 L5 产生新的组合符号 CMP_n；CMP_n 与 P∪Q 的成员之间有【显式成员边】⇒ activate(CMP_n) 的可分性成立（4/4 成员被激活，各 0.9）。L5 的 origins 字段（\"coactivation\"）把 CMP_n 与 L4 的组块 CH_n（\"repeat\" 触发）在【数据上】区分开，并由 P2b 的两条行为事实（交叉操作互不响应）在【行为上】复核。【带值】主口径 prod：内部值 = v1×v2（共享成员保留乘积，非共享成员清零 —— 共现语义）；辅助口径 keep：内部值全 1.0。范围限定：① CMP_n 是【景观外的新对象】—— 与 E33 的\"采已有状态\"不同层；② 功劳归【L5 这一新增层的创建机制】，不是基底新能力（L0 未动）；③ 可再激活依赖【显式成员边】—— 若不给成员边，符号会退化成 L4 那样的\"不展开\"符号；④ 语料限于 E1 的 26 字母链；P、Q 刻意重叠（压力测试）；⑤ CMP_n 的成员边是【E42 手工建】的，不是 L5 自动产生的 —— \"自动建立成员边\"属另一命题。",
+      "C_entry": "C??：两个模式经【共现绑定】（一次 coactivate(P, Q)）在 L5 产生新的组合符号 CMP_n；CMP_n 与 P∪Q 的成员之间有【显式成员边】⇒ activate(CMP_n) 的可分性成立（4/4 成员被激活，各 0.9）。L5 的 origins 字段（\"coactivation\"）把 CMP_n 与 L4 的组块 CH_n（\"repeat\" 触发）在【数据上】区分开，并由 P2b 的两条行为事实（交叉操作互不响应）在【行为上】复核。【带值】主口径 prod：内部值 = v1×v2（共享成员保留乘积，非共享成员清零 —— 共现语义）；辅助口径 keep：内部值全 1.0。范围限定：① CMP_n 是【景观外的新对象】—— 与 E33 的\"采已有状态\"不同层；② 功劳归【L5 这一新增层的创建机制】，不是基底新能力（L0 未动）；③ 可再激活依赖【显式成员边】—— 若不给成员边，符号会退化成 L4 那样的\"不展开\"符号；④ 语料限于 E1 的 26 字母链；P、Q 刻意重叠（压力测试）；⑤ CMP_n 的成员边是【E42 手工建】的，不是 L5 自动产生的 —— \"自动建立成员边\"属另一命题。",
+      "E42_FAIL": "E42 未通过：哪条判据挂、实测值见 exp42 JSON。失败分层：① 触发是否发生（P1）→ ② 是否与组块可分（P2a/P2b）→ ③ 可分性（P3）→ ④ 带值是否被保留（P4）→ ⑤ 值序（P5b）。机制性 FAIL 才在跑完后新立 B 编号；实现/判据问题则修正后重跑（不新立编号）。",
+      "note": "C 条目编号留白（C??），跑完按登记表定 —— 与\"不预分配编号\"一致。"
+    },
+    "note": "L5 与 L4 同构（自有节点集 + 自有边 + 同一条扩散规则）；三点差异见 compose_layer.py 的 docstring。P、Q 刻意重叠（压力测试）；sum/max 规则已在预检排除。"
+  }
+}
