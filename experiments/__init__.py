@@ -43,6 +43,7 @@ from . import (
     exp38_mass_allocation,
     exp39_reach_compression,
     exp40_unconditional_sampling,
+    exp41_seed_value_encoding,
 )
 
 ALL = {
@@ -88,4 +89,5 @@ ALL = {
     "exp38_mass_allocation": exp38_mass_allocation,
     "exp39_reach_compression": exp39_reach_compression,
     "exp40_unconditional_sampling": exp40_unconditional_sampling,
+    "exp41_seed_value_encoding": exp41_seed_value_encoding,
 }
