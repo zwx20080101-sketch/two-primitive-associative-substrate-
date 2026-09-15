@@ -308,3 +308,20 @@ STATUS.md             —— 逐实验状态流水（历史记录，非入口）
 
 **运行环境**：Python 用仓库约定的解释器；跑任何实验前设 `PYTHONHASHSEED=0`（纪律 ⑧ 相关）。
 **校验命令**：`main.py`、`verify_claims.py`、`verify_playground.py`、`scan_norms.py`。
+
+---
+
+## 8. 提交规范
+
+```text
+实验 commit message 应自证以下五项（E42 起）：
+  ① 判据结果（P0–Pn PASS/FAIL）
+  ② 新增登记的 C/B 条目编号与关键限定
+  ③ 运行中暴露的问题与修法
+  ④ 未触及文件（哈希证明）
+  ⑤ 不省略字段（引用纪律⑧）
+理由：commit message 是唯一不依赖文件系统的证据入口，git log 即可复查。
+【与纪律⑩的关系】这是仓库卫生，不占新的纪律编号 —— 它与纪律⑧（证据完整性）同族。
+【tag 惯例】tag 指向【实验提交】，指向实验状态；纯文档同步（HANDOFF/OVERVIEW/规格/北极星）
+  另起 doc commit，不打 tag。
+```
