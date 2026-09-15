@@ -82,6 +82,7 @@
 | `exp32_nesting_depth.py` | **可读性条件（v2）**：r_j = 组内/组外质量；r_j 不能完全预测可读性（反例 L=4 层2）；可读性随嵌套深度下降，只有最粗层稳定可读。v1（层数律版）失败记录归档为 `exp32_nesting_depth_v1_FAIL.json` | 落 B24 |
 | `exp33_landscape_sampling.py` | **能量景观采样（v2，主对象 = 精确 Boltzmann）**：4 个主导联合状态中 max 只给 1 个，另 3 个共 0.751 质量；节点级支撑 86→4（粗粒化）；单点 Gibbs 低温柔性不混合（归档 `exp33_landscape_sampling_v1_FAIL.json`） | C33 / B26 |
 | `exp34_working_memory.py` | **工作记忆（最小版本）**：外部 W 层（top-3）跨次携带状态 —— `activate([Z,A,B,C])` 使 A 从 0.071790 跳到 1.0；消融后回到 0.071790；W 不写 L0、不改层文件 | C34 |
+| `exp35_working_memory_chain.py` | **工作记忆串联**：重注入是构造性（seed1 恒 1.0）；停止注入后痕迹 = 纯图衰减 0.9¹³ = 0.254187；被携带值全 1.0（无优先级）；成员由 tie-break 决定（D/E 挤不进） | C35 |
 
 ---
 

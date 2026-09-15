@@ -1,0 +1,348 @@
+{
+  "id": "exp35_working_memory_chain",
+  "title": "E35 工作记忆串联: 携带的是重注入还是图传播",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P1a 接口不改: 四个层文件 sha256 前后一致",
+      "ok": true,
+      "detail": "before={'synapse_net.py': 'cf99a07a0e60fd4d', 'order_layer.py': '419d54745a9eb795', 'context_layer.py': 'bd029d7bbdc345be', 'chunk_layer.py': '46f5857be0fc7c7e'}；after={'synapse_net.py': 'cf99a07a0e60fd4d', 'order_layer.py': '419d54745a9eb795', 'context_layer.py': 'bd029d7bbdc345be', 'chunk_layer.py': '46f5857be0fc7c7e'}"
+    },
+    {
+      "name": "P1b L0 不改: 节点数/边数/边集合签名逐位相同",
+      "ok": true,
+      "detail": "26 节点 / 25 边；签名相同=True"
+    },
+    {
+      "name": "P_a（对照，构造性，不作正结果）: 每步重注入 → seed1 恒 1.0、W 集合从步2起恒定",
+      "ok": true,
+      "detail": "seed1 值逐步=[1.0, 1.0, 1.0, 1.0, 1.0]；W 集合从步2起恒定=True（内容=['L', 'M', 'N']）"
+    },
+    {
+      "name": "P_b 实证: 只注入一次后，痕迹 = 纯图衰减 0.9^13 = 0.254186583",
+      "ok": true,
+      "detail": "步3/步5 的 seed1=[0.254186583, 0.254186583]；期望 0.254186583；最大偏差=1.671e-10（容差 1e-09）"
+    },
+    {
+      "name": "P_c 平权性: ① 被携带成员值全为 1.0；② 变体3 里 D/E 均未挤入 W",
+      "ok": true,
+      "detail": "① 各步被携带值=[[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]]（全 1.0=True）；② 变体3 最终 W=['A', 'B', 'C']，D 在=False，E 在=False"
+    },
+    {
+      "name": "P5 双向结局: P_b + P_c 通过 → C35；否则 → B28",
+      "ok": true,
+      "detail": "落定 C35（P_b=True, P_c=True）"
+    }
+  ],
+  "data": {
+    "spec": {
+      "K": 3,
+      "N_STEPS": 5,
+      "tie_break": "值降序；同值按节点名升序（预注册）",
+      "decay_reference": {
+        "formula": "0.9^13",
+        "value": 0.254186583,
+        "derivation": "M=第13个字母，Z=第26个；Z→M 共 26-13=13 跳"
+      }
+    },
+    "Pa_reinjection_chain": [
+      {
+        "step": 1,
+        "seeds": [
+          "M"
+        ],
+        "W": {
+          "M": 1.0,
+          "L": 0.9,
+          "N": 0.9
+        },
+        "W_seeds": [
+          "M",
+          "L",
+          "N"
+        ],
+        "seed1_value": 1.0
+      },
+      {
+        "step": 2,
+        "seeds": [
+          "Z",
+          "M",
+          "L",
+          "N"
+        ],
+        "W": {
+          "L": 1.0,
+          "M": 1.0,
+          "N": 1.0
+        },
+        "W_seeds": [
+          "L",
+          "M",
+          "N"
+        ],
+        "seed1_value": 1.0
+      },
+      {
+        "step": 3,
+        "seeds": [
+          "Z",
+          "L",
+          "M",
+          "N"
+        ],
+        "W": {
+          "L": 1.0,
+          "M": 1.0,
+          "N": 1.0
+        },
+        "W_seeds": [
+          "L",
+          "M",
+          "N"
+        ],
+        "seed1_value": 1.0
+      },
+      {
+        "step": 4,
+        "seeds": [
+          "Z",
+          "L",
+          "M",
+          "N"
+        ],
+        "W": {
+          "L": 1.0,
+          "M": 1.0,
+          "N": 1.0
+        },
+        "W_seeds": [
+          "L",
+          "M",
+          "N"
+        ],
+        "seed1_value": 1.0
+      },
+      {
+        "step": 5,
+        "seeds": [
+          "Z",
+          "L",
+          "M",
+          "N"
+        ],
+        "W": {
+          "L": 1.0,
+          "M": 1.0,
+          "N": 1.0
+        },
+        "W_seeds": [
+          "L",
+          "M",
+          "N"
+        ],
+        "seed1_value": 1.0
+      }
+    ],
+    "Pa_W_sets_constant_from_step2": true,
+    "Pb_single_injection": {
+      "chain": [
+        {
+          "step": 2,
+          "seeds": [
+            "Z",
+            "M",
+            "L",
+            "N"
+          ],
+          "seed1_value": 1.0
+        },
+        {
+          "step": 3,
+          "seeds": [
+            "Z"
+          ],
+          "seed1_value": 0.254186583
+        },
+        {
+          "step": 5,
+          "seeds": [
+            "Z"
+          ],
+          "seed1_value": 0.254186583
+        }
+      ],
+      "expected": 0.254186583,
+      "max_deviation": 1.6709994499208847e-10
+    },
+    "Pc_equality": {
+      "carried_values_per_step": [
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "all_carried_are_1.0": true,
+      "variant3_chain": [
+        {
+          "step": 1,
+          "seed": "A",
+          "seeds": [
+            "A"
+          ],
+          "W_seeds": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "step": 2,
+          "seed": "B",
+          "seeds": [
+            "B",
+            "A",
+            "B",
+            "C"
+          ],
+          "W_seeds": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "step": 3,
+          "seed": "C",
+          "seeds": [
+            "C",
+            "A",
+            "B",
+            "C"
+          ],
+          "W_seeds": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "step": 4,
+          "seed": "D",
+          "seeds": [
+            "D",
+            "A",
+            "B",
+            "C"
+          ],
+          "W_seeds": [
+            "A",
+            "B",
+            "C"
+          ]
+        },
+        {
+          "step": 5,
+          "seed": "E",
+          "seeds": [
+            "E",
+            "A",
+            "B",
+            "C"
+          ],
+          "W_seeds": [
+            "A",
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "variant3_final_W": [
+        "A",
+        "B",
+        "C"
+      ],
+      "D_in_final_W": false,
+      "E_in_final_W": false
+    },
+    "aux_variant4_step_scan": [
+      {
+        "N": 2,
+        "W": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "seed1_Z_value": 1.0
+      },
+      {
+        "N": 3,
+        "W": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "seed1_Z_value": 1.0
+      },
+      {
+        "N": 5,
+        "W": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "seed1_Z_value": 1.0
+      },
+      {
+        "N": 8,
+        "W": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "seed1_Z_value": 1.0
+      }
+    ],
+    "readonly": {
+      "layer_hashes_before": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      },
+      "layer_hashes_after": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      },
+      "L0_signature_same": true,
+      "L0_nodes": 26,
+      "L0_edges": 25
+    },
+    "outcome": "C35",
+    "registration": {
+      "outcome": "C35",
+      "text": "C35：W 栈可以在多步链路中携带 N 个痕迹，但(a) 只在【每步重注入】时维持——停止重注入后痕迹立即退化为纯图衰减（0.9^13 = 0.254187），W 不留下任何持续影响；(b) 痕迹之间【无优先级、无时间顺序】（被携带成员的值全部 1.0）；(c) 成员由 tie-break 决定，新痕迹可能挤不进去（变体3：D/E 均未进 W）。⇒ 这是【载体】行为，不是【状态整合】。范围限定：26 字母链语料；W 仍是实验侧读取端工具（同 E34）。边界登记：要区分「哪个痕迹来自哪一步」，至少需要 ① 顺序标签（写入 W 时记时间戳）或 ② 值域编码（保留种子原始激活值）；两者都不在 E35 范围内——E36 的入口。",
+      "C35": "C35：W 栈可以在多步链路中携带 N 个痕迹，但(a) 只在【每步重注入】时维持——停止重注入后痕迹立即退化为纯图衰减（0.9^13 = 0.254187），W 不留下任何持续影响；(b) 痕迹之间【无优先级、无时间顺序】（被携带成员的值全部 1.0）；(c) 成员由 tie-break 决定，新痕迹可能挤不进去（变体3：D/E 均未进 W）。⇒ 这是【载体】行为，不是【状态整合】。范围限定：26 字母链语料；W 仍是实验侧读取端工具（同 E34）。边界登记：要区分「哪个痕迹来自哪一步」，至少需要 ① 顺序标签（写入 W 时记时间戳）或 ② 值域编码（保留种子原始激活值）；两者都不在 E35 范围内——E36 的入口。",
+      "B28": "B28：多步串联的行为与「重注入 + 值抹平 + tie-break」三者决定的三条性质不符（具体偏差见 JSON）；W 栈的携带在该语料上需要重新定位机制。"
+    },
+    "note": "W 复用 E34 的同一实现（import）；W 不进 LAYERS、不改 BOUNDARY。"
+  }
+}

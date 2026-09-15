@@ -37,6 +37,7 @@ from . import (
     exp32_nesting_depth,
     exp33_landscape_sampling,
     exp34_working_memory,
+    exp35_working_memory_chain,
 )
 
 ALL = {
@@ -76,4 +77,5 @@ ALL = {
     "exp32_nesting_depth": exp32_nesting_depth,
     "exp33_landscape_sampling": exp33_landscape_sampling,
     "exp34_working_memory": exp34_working_memory,
+    "exp35_working_memory_chain": exp35_working_memory_chain,
 }
