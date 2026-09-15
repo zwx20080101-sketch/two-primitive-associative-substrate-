@@ -79,9 +79,17 @@ def top3(acts: dict) -> dict:
     return dict(sorted(acts.items(), key=lambda kv: (-kv[1], kv[0]))[:3])
 
 
-def rank_reverse(X: dict) -> dict:
-    """定义 A：把该模式成员的【降序排名反转】（值按排名对调）。"""
-    items = sorted(X.items(), key=lambda kv: (-kv[1], kv[0]))
+def rank_reverse(X: dict, tie_asc: bool = True) -> dict:
+    """定义 A：把该模式成员的【降序排名反转】（值按排名对调）。
+
+    【tie-break 写死】同值成员的先后按【节点名升序】—— 与项目统一约定一致
+    （E34 的 W.hold 取 top-k 用"值降序、同值按名升序"；L4 的 learn_unit 亦然）。
+    tie_asc=False 是【备选变体】，仅用于记录"换 tie-break 会怎样"，不参与判据。
+    """
+    if tie_asc:
+        items = sorted(X.items(), key=lambda kv: (-kv[1], kv[0]))
+    else:
+        items = sorted(X.items(), key=lambda kv: (-kv[1], "".join(chr(0x10FFFF - ord(c)) for c in kv[0])))
     vals = [v for _, v in items][::-1]
     return {n: vals[i] for i, (n, _) in enumerate(items)}
 
@@ -212,8 +220,10 @@ def run() -> dict:
         return P2, Q2
 
     defs = {
-        "A": ("每个模式【各自】把其成员的降序排名反转（值按排名对调）",
+        "A": ("每个模式【各自】把其成员的降序排名反转（值按排名对调）；同值按【节点名升序】",
               rank_reverse(P), rank_reverse(Q)),
+        "A′": ("A 的【tie-break 变体】：同值按【节点名降序】（仅作对照，不参与判据）",
+               rank_reverse(P, tie_asc=False), rank_reverse(Q, tie_asc=False)),
         "B": ("共享成员 B/C 在【两个模式内同时互换】",
               *swap_in_both("B", "C")),
         "C": ("共享成员 C 的值在【P、Q 之间互换】（同一节点、跨模式换值）",
