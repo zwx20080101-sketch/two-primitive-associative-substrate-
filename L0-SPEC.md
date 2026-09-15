@@ -46,10 +46,13 @@ v1 适用范围：E0–E36 全部实验；tag v0.9.15-e36 即其精确快照
 
 ---
 
-## 3. 实现约定 —— v2（`synapse_net_v2.py`，**计划中**，从 E37 起）
+## 3. 实现约定 —— v2（`synapse_net_v2.py`，**已实现**，从 E37 起）
 
 ```text
 唯一差异：种子入口支持【带值 mapping】，且种子值【常量】（不可变）。
+v2 校验值：sha256(synapse_net_v2.py) = ee6df589eb2f6983（前 16 位，E37 首记录）
+实现形态：【子类覆盖】——只重写 activate，learn / strength / state_snapshot 全部继承 v1，
+          因此不存在"第二份 learn/strength"（B17 那类漂移风险的来源）。
 ```
 
 | 约定 | v2 行为 |
@@ -80,7 +83,7 @@ v1 适用范围：E0–E36 全部实验；tag v0.9.15-e36 即其精确快照
 ③ 【不混用】：一个实验要么在 v1 上跑、要么在 v2 上跑，不许同一实验里两者并用；
 ④ 每个实验的 JSON 记录【所用版本 + 对应文件哈希】：
      synapse_net.py    = cf99a07a0e60fd4d   （v1）
-     synapse_net_v2.py = <当时哈希>          （v2）
+     synapse_net_v2.py = ee6df589eb2f6983   （v2，E37 首记录）
    这样 E37+ 的只读检查口径与 E27–E36 一致。
 ```
 
