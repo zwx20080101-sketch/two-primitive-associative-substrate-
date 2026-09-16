@@ -1,0 +1,275 @@
+{
+  "id": "exp48_nested_composition",
+  "title": "E48 组合的嵌套: combine(symbol_a, R) → symbol_b（符号作为模式）",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P0 前置: L5 接口对输入类型无检查（只取键）+ 语料就绪 + 八文件哈希",
+      "ok": true,
+      "detail": "coactivate(P,Q) 的成员 = set(P)|set(Q)（未校验键的类型）；symbol_b 的成员 = ['CMP_1', 'X', 'Y', 'Z']；v2=ee6df589eb2f6983、compose_layer=81e350497e9e9960；【撞车审计（E42 教训）】符号 id 与 L0 节点集的交集 = []（空 = 无撞车）"
+    },
+    {
+      "name": "P1 输入层（本实验的成立条件）: combine 的输入里含【至少一个 L5 符号】",
+      "ok": true,
+      "detail": "输入键集 = ['CMP_1', 'X', 'Y', 'Z']；其中 L5 符号（∈ L5.high_nodes 且 ∉ L0 节点集）= ['CMP_1']；一层符号 = CMP_1 在 L0 里吗 = False"
+    },
+    {
+      "name": "P2 输出层: activate(symbol_b) 里 CMP_1 与 A/B/C/D 都【出现】（key 在且值 > 0）",
+      "ok": true,
+      "detail": "判据对象 = ['CMP_1', 'A', 'B', 'C', 'D']；实际值 = CMP_1=0.900000；A=0.810000；B=0.810000；C=0.810000；D=0.810000；一跳层 X/Y/Z = X=0.900000；Y=0.900000；Z=0.900000；【报告②供 P3 对照】CMP_1=0.900000、A/B/C/D=0.810000/0.810000/0.810000/0.810000"
+    },
+    {
+      "name": "P3 定量关系: 嵌套深度 d 的 L0 可及强度 = 0.9^d（|实际 − 0.9^d| ≤ 1e-12）",
+      "ok": true,
+      "detail": "d=1: 实际 0.900000000000 vs 0.9^1=0.900000000000（差 0.000e+00）；d=2: 实际 0.810000000000 vs 0.9^2=0.810000000000（差 0.000e+00）【标注】这是 hop_decay 的数学必然，不是涌现"
+    },
+    {
+      "name": "P4 层级不膨胀: 一层/二层/二层样例的 4 个符号都在【同一个 L5 实例】⇒ 不需要 L6",
+      "ok": true,
+      "detail": "L5 的全部符号 = ['CMP_1', 'CMP_2', 'CMP_3', 'CMP_4']；每个符号的成员集 = CMP_1:['A', 'B', 'C', 'D']；CMP_2:['CMP_1', 'X', 'Y', 'Z']；CMP_3:['L', 'M', 'N', 'X', 'Y', 'Z']；CMP_4:['CMP_1', 'CMP_3']；实例数 = 1（全程只用一个 ComposeLayer）"
+    },
+    {
+      "name": "P5 B35 不触发（刻意设计）: 各符号成员集两两不同 ⇒ 无 last-write-wins 覆写",
+      "ok": true,
+      "detail": "成员集 = [['A', 'B', 'C', 'D'], ['CMP_1', 'X', 'Y', 'Z'], ['L', 'M', 'N', 'X', 'Y', 'Z'], ['CMP_1', 'CMP_3']]；两两不同 = True（设计声明：刻意选不重叠的成员集，避免嵌套与覆写两件事混在一起）"
+    },
+    {
+      "name": "辅助（不判定）: prod 口径下二层符号的内部值全 0（不相交输入）但级联结果与 keep 逐位相同",
+      "ok": true,
+      "detail": "prod: 二层符号的内部值 = {'CMP_1': 0.0, 'X': 0.0, 'Y': 0.0, 'Z': 0.0}；keep: 二层符号的内部值 = {'CMP_1': 1.0, 'X': 1.0, 'Y': 1.0, 'Z': 1.0}；【拓扑匹配】两口径的 activate(二层符号) 逐位相同 = True（同一符号集，只差 rule）；【最小见证】只含一层/二层符号的两实例逐位相同 = True"
+    },
+    {
+      "name": "P6 只读: 八文件哈希前后一致（含 compose_layer 与 exp34）+ L0 签名前后一致",
+      "ok": true,
+      "detail": "before==after = True；synapse_net.py=cf99a07a0e60fd4d；synapse_net_v2.py=ee6df589eb2f6983；synapse_net_v3.py=085be73a06f0694c；compose_layer.py=81e350497e9e9960；L0 签名 = 26 节点 / 25 边（未调用 learn/activate 之外无写入）"
+    },
+    {
+      "name": "P7 双向结局: P1–P5 全过 → 新 C 条目；否则 → 如实记录（不预分配 B 编号）",
+      "ok": true,
+      "detail": "落定 C 条目（符号可再次传入 combine）（前序判据全过 = True）"
+    }
+  ],
+  "data": {
+    "corpus": {
+      "kind": "E1 26 字母链",
+      "nodes": 26,
+      "edges": 25,
+      "hop_decay": 0.9,
+      "reps": 100
+    },
+    "patterns": {
+      "P": {
+        "A": 1.0,
+        "B": 0.9,
+        "C": 0.81
+      },
+      "Q": {
+        "C": 1.0,
+        "B": 0.9,
+        "D": 0.9
+      },
+      "R": {
+        "Z": 1.0,
+        "Y": 0.9,
+        "X": 0.81
+      },
+      "S": {
+        "M": 1.0,
+        "L": 0.9,
+        "N": 0.9
+      }
+    },
+    "rule": {
+      "main": "keep",
+      "aux": "prod",
+      "why_keep_main": "prod 在不相交输入下退化（内部值全 0）；P1/P2/P3 与 rule 无关（实测级联逐位相同）"
+    },
+    "P1_input_layer": {
+      "input_keys": [
+        "CMP_1",
+        "X",
+        "Y",
+        "Z"
+      ],
+      "l5_symbols_in_input": [
+        "CMP_1"
+      ],
+      "symbol_a_in_L0": false,
+      "symbol_ids": [
+        "CMP_1",
+        "CMP_2",
+        "CMP_3",
+        "CMP_4"
+      ],
+      "symbol_ids_collide_L0": []
+    },
+    "P2_cascade": {
+      "activation": {
+        "CMP_2": 1.0,
+        "Z": 0.9,
+        "X": 0.9,
+        "CMP_1": 0.9,
+        "Y": 0.9,
+        "CMP_3": 0.81,
+        "A": 0.81,
+        "CMP_4": 0.81,
+        "B": 0.81,
+        "D": 0.81,
+        "C": 0.81,
+        "N": 0.729,
+        "M": 0.729,
+        "L": 0.729
+      },
+      "required_visible": [
+        "CMP_1",
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "actual": {
+        "CMP_1": 0.9,
+        "A": 0.81,
+        "B": 0.81,
+        "C": 0.81,
+        "D": 0.81
+      },
+      "one_hop": {
+        "X": 0.9,
+        "Y": 0.9,
+        "Z": 0.9
+      }
+    },
+    "P3_decay": {
+      "d1_actual": 0.9,
+      "d1_expected": 0.9,
+      "d2_actual": 0.81,
+      "d2_expected": 0.81,
+      "note": "hop_decay^d 是数学必然，不是涌现"
+    },
+    "P4_symbols": {
+      "ids": [
+        "CMP_1",
+        "CMP_2",
+        "CMP_3",
+        "CMP_4"
+      ],
+      "members": {
+        "CMP_1": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "CMP_2": [
+          "CMP_1",
+          "X",
+          "Y",
+          "Z"
+        ],
+        "CMP_3": [
+          "L",
+          "M",
+          "N",
+          "X",
+          "Y",
+          "Z"
+        ],
+        "CMP_4": [
+          "CMP_1",
+          "CMP_3"
+        ]
+      },
+      "instances": 1,
+      "needs_L6": false
+    },
+    "P5_B35": {
+      "member_sets": [
+        [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        [
+          "CMP_1",
+          "X",
+          "Y",
+          "Z"
+        ],
+        [
+          "L",
+          "M",
+          "N",
+          "X",
+          "Y",
+          "Z"
+        ],
+        [
+          "CMP_1",
+          "CMP_3"
+        ]
+      ],
+      "pairwise_distinct": true,
+      "note": "刻意设计：不重叠，避免 last-write-wins"
+    },
+    "aux_prod_degenerate": {
+      "inner_internal_prod": {
+        "CMP_1": 0.0,
+        "X": 0.0,
+        "Y": 0.0,
+        "Z": 0.0
+      },
+      "inner_internal_keep": {
+        "CMP_1": 1.0,
+        "X": 1.0,
+        "Y": 1.0,
+        "Z": 1.0
+      },
+      "topology_matched_identical": true,
+      "clean_pair_identical": true,
+      "note": "第一版比较用『aux 只含前两个符号』对『主实例含 4 个符号』=> 比较的是拓扑而非 rule；改为拓扑匹配后为 True。"
+    },
+    "readonly": {
+      "hashes_before": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "synapse_net_v2.py": "ee6df589eb2f6983",
+        "synapse_net_v3.py": "085be73a06f0694c",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e",
+        "compose_layer.py": "81e350497e9e9960",
+        "experiments/exp34_working_memory.py": "e821f0df7ca165c3"
+      },
+      "hashes_after": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "synapse_net_v2.py": "ee6df589eb2f6983",
+        "synapse_net_v3.py": "085be73a06f0694c",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e",
+        "compose_layer.py": "81e350497e9e9960",
+        "experiments/exp34_working_memory.py": "e821f0df7ca165c3"
+      },
+      "expected": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "synapse_net_v2.py": "ee6df589eb2f6983",
+        "synapse_net_v3.py": "085be73a06f0694c",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e",
+        "compose_layer.py": "81e350497e9e9960",
+        "experiments/exp34_working_memory.py": "e821f0df7ca165c3"
+      }
+    },
+    "outcome": "C 条目（符号可再次传入 combine）",
+    "registration": {
+      "outcome": "C 条目（符号可再次传入 combine）",
+      "text": "C??：E42 的组合符号可作为模式【再次传入 combine】（**符号身份进入组合，而非它的成员**）；嵌套不膨胀层级（D 仍在 L5 同一实例，不需要 L6）；L0 可及强度随嵌套深度按 **0.9^d** 衰减（d=1 → 0.9、d=2 → 0.81，实测逐位吻合）。范围限定：① 这是 L5 的【层内递归】，不是基底新能力（L0 一字未动，节点/边签名逐位不变）；② 衰减律 0.9^d 是 hop_decay 的**数学必然**，不是涌现；③ 不声称「系统学会了递归」、「等于泛化」、「产生新机制」；④ 语料限于 E1 的 26 字母链；成员集刻意不重叠（避免 B35 覆写）。",
+      "C_entry": "C??：E42 的组合符号可作为模式【再次传入 combine】（**符号身份进入组合，而非它的成员**）；嵌套不膨胀层级（D 仍在 L5 同一实例，不需要 L6）；L0 可及强度随嵌套深度按 **0.9^d** 衰减（d=1 → 0.9、d=2 → 0.81，实测逐位吻合）。范围限定：① 这是 L5 的【层内递归】，不是基底新能力（L0 一字未动，节点/边签名逐位不变）；② 衰减律 0.9^d 是 hop_decay 的**数学必然**，不是涌现；③ 不声称「系统学会了递归」、「等于泛化」、「产生新机制」；④ 语料限于 E1 的 26 字母链；成员集刻意不重叠（避免 B35 覆写）。",
+      "E48_FAIL": "E48 未通过：哪条判据挂、实测值见 exp48 JSON。诊断：P1 挂（输入仍是投影拼接）→ 同 E47，可行但无新内容，不立条目；P2 挂 → 级联未发生；P2 过而 P3 挂 → 结构对、强度错（先查 L5 成员边与 hop_decay，再谈机制）。",
+      "note": "C 条目编号留白（C??），跑完按登记表定。"
+    },
+    "note": "E48 是 E47 判定规则（新内容必须在输入层判）的第一个反例/正例：输入层确实出现了 E41/E42/E47 都没有的量（L5 符号本身作为模式）。"
+  }
+}

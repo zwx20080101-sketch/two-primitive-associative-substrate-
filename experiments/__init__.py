@@ -46,6 +46,7 @@ from . import (
     exp41_seed_value_encoding,
     exp42_composition_symbol,
     exp43_trajectory_suppression,
+    exp48_nested_composition,
 )
 
 ALL = {
@@ -94,4 +95,5 @@ ALL = {
     "exp41_seed_value_encoding": exp41_seed_value_encoding,
     "exp42_composition_symbol": exp42_composition_symbol,
     "exp43_trajectory_suppression": exp43_trajectory_suppression,
+    "exp48_nested_composition": exp48_nested_composition,
 }
