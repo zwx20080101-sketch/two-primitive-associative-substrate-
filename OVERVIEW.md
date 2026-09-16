@@ -17,6 +17,9 @@
 | 方法学类别 | **6 类** | 见 §4，含"不报错的坏结果"六个失效模式 |
 | 归档的失败记录 | 4 份 | `exp32_nesting_depth_v1_FAIL.json`、`exp33_landscape_sampling_v1_FAIL.json`、`exp39_reach_compression_v1_FAIL.json`、`exp40_unconditional_sampling_v1_FAIL.json` |
 
+> **阶段收束**：本轮探索的"能 / 不能"边界见 **[STAGE-REPORT.md](./STAGE-REPORT.md)**
+> （按根因分组的不可能项 + 三条结构性论证 + "开新架构才算继续"的门槛位置）。
+
 ---
 
 ## 1. 四段式全景

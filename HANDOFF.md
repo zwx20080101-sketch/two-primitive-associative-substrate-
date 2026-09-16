@@ -314,6 +314,7 @@ B25（E33 P1b 不通过，条件未触发）、B31（E37 v2 与预期不符，�
 | [NEXT-PLAN.md](./NEXT-PLAN.md) | 待办与**纪律十条**（§5，本文件 §3 全文抄录） |
 | [OVERVIEW.md](./OVERVIEW.md) | 全景盘点：三轮 + 边界量化 + 生成/工作记忆 |
 | [CLAIMS-REGISTRY.md](./CLAIMS-REGISTRY.md) | **唯一结论来源**：C/B 条目全表 + 数据 JSON 引用 |
+| [STAGE-REPORT.md](./STAGE-REPORT.md) | **阶段收束**：当前架构的"能/不能"边界（按根因分组的不可能项 + 三条结构性论证） |
 
 配套：
 
