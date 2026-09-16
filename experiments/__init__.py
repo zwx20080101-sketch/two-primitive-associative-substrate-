@@ -45,6 +45,7 @@ from . import (
     exp40_unconditional_sampling,
     exp41_seed_value_encoding,
     exp42_composition_symbol,
+    exp43_trajectory_suppression,
 )
 
 ALL = {
@@ -92,4 +93,5 @@ ALL = {
     "exp40_unconditional_sampling": exp40_unconditional_sampling,
     "exp41_seed_value_encoding": exp41_seed_value_encoding,
     "exp42_composition_symbol": exp42_composition_symbol,
+    "exp43_trajectory_suppression": exp43_trajectory_suppression,
 }

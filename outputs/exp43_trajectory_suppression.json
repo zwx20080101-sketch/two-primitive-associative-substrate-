@@ -1,0 +1,267 @@
+{
+  "id": "exp43_trajectory_suppression",
+  "title": "E43 抑制控制: 负值注入对轨迹的压制效果（frozen 屏障）",
+  "passed": true,
+  "checks": [
+    {
+      "name": "P0 前置: v2 only + 拍平自检（注入后 arm1 的实际值 == 注入值）+ 六文件哈希",
+      "ok": true,
+      "detail": "拍平自检：arm1 = -0.800000（注入 -0.8，容差 1e-12）⇒ True；v1=cf99a07a0e60fd4d v2=ee6df589eb2f6983（若用 v1 的 dict 入口，arm1 会被静默拍平成 1.0 —— B21）"
+    },
+    {
+      "name": "P1 主判据（路径排他，定义 D）: 分支2 逐位不变 + 分支1 下游 <= 0 + 变化节点数 = 2",
+      "ok": true,
+      "detail": "变化节点 = ['arm1', 'tip1']（预期 2 个 = [arm1, tip1]）；分支2：arm2 0.729000 → 0.729000、tip2 0.656100 → 0.656100（逐位不变 = True）；分支1 下游：tip1 0.656100 → -0.720000（<= 0 = True）；逐节点对照 = start_node 1.000000→1.000000；trunk 0.900000→0.900000；junction 0.810000→0.810000；arm1 0.729000→-0.800000；tip1 0.656100→-0.720000；arm2 0.729000→0.729000；tip2 0.656100→0.656100"
+    },
+    {
+      "name": "P2 辅判据（下游压制，定义 B）: tip1 <= 0（只算下游节点，arm1 归 P3）",
+      "ok": true,
+      "detail": "tip1 = -0.720000（阈值 <= 0.0）；来源：紧邻叶子（唯一邻居 arm1 是 frozen）⇒ 精确值 = 注入值 x hop_decay = -0.8 x 0.9 = -0.720000"
+    },
+    {
+      "name": "P3 自检（定义 A）: 注入值保留（arm1 = -0.8）+ 种子未被压制（start_node = 1.0）",
+      "ok": true,
+      "detail": "arm1 = -0.800000（保留 = True）；start_node = 1.000000（未被压制 = True） ⇒ 与 B33（不压制种子）不冲突"
+    },
+    {
+      "name": "P4 阴性控制 1（割点条件）: 注入 junction ⇒ 变化节点数 = 5（两分支都被压）",
+      "ok": true,
+      "detail": "变化节点 = ['junction', 'arm1', 'tip1', 'arm2', 'tip2']（预期 5 个 = junction + 两分支的 4 个）；两分支下游：arm1=-0.000000、arm2=-0.000000（均 <= 0）｜对照 P1 的 2 个 ⇒ 「只有一支变」来自割点结构"
+    },
+    {
+      "name": "P5 阴性控制 2（割点必要性）: 加替代正路径后压制失败（tip1 保持正值）",
+      "ok": true,
+      "detail": "加 junction—tip1 后：变化节点 = ['arm1']（仅注入点自身）；tip1 = 0.729000（基线 0.729000，替代正路径 0.729000 赢过负值）⇒ 压制失败 ✓"
+    },
+    {
+      "name": "P6 辅助观察（不判定）: C1 区域压制 + 【重放后逐位一致性校验】",
+      "ok": true,
+      "detail": "【重放校验】net1: 15 节点 / 34 边；net2: 15 节点 / 34 边；逐边计数比较：完全一致；区域压制：模块均值 模块0 0.920000→0.580000；模块1 0.041625→0.041625；模块2 0.037125→0.001856；差异节点 7/15"
+    },
+    {
+      "name": "P7 只读: 六文件哈希前后一致",
+      "ok": true,
+      "detail": "before==after = True；v1=cf99a07a0e60fd4d v2=ee6df589eb2f6983 v3=085be73a06f0694c；L0 签名（节点/边）= 7/6"
+    },
+    {
+      "name": "P8 双向结局: P1–P5 全过 → 新 C 条目；否则 → 如实记录（不预分配 B 编号）",
+      "ok": true,
+      "detail": "落定 C 条目（轨迹压制能力）（前序判据全过 = True）"
+    }
+  ],
+  "data": {
+    "corpus": {
+      "nodes": [
+        "start_node",
+        "trunk",
+        "junction",
+        "arm1",
+        "tip1",
+        "arm2",
+        "tip2"
+      ],
+      "edges": [
+        [
+          "start_node",
+          "trunk"
+        ],
+        [
+          "trunk",
+          "junction"
+        ],
+        [
+          "junction",
+          "arm1"
+        ],
+        [
+          "arm1",
+          "tip1"
+        ],
+        [
+          "junction",
+          "arm2"
+        ],
+        [
+          "arm2",
+          "tip2"
+        ]
+      ],
+      "edge_reps": 100,
+      "topology_note": "start_node—trunk—junction—arm1—tip1 / └ arm2—tip2",
+      "injection_point": "arm1",
+      "cut_for": "tip1",
+      "suppressed_branch": [
+        "arm1",
+        "tip1"
+      ],
+      "untouched_branch": [
+        "arm2",
+        "tip2"
+      ]
+    },
+    "naming": {
+      "rule": "零撞车命名 + 常量集中定义 + 只用常量引用",
+      "collisions_measured": {
+        "seed": 114,
+        "hub": 14,
+        "src": 9,
+        "s0": 8,
+        "n0": 5,
+        "fork": 3,
+        "mid": 2,
+        "start_node": 0,
+        "trunk": 0,
+        "junction": 0,
+        "arm1": 0,
+        "tip1": 0,
+        "arm2": 0,
+        "tip2": 0
+      }
+    },
+    "baseline": {
+      "start_node": 1.0,
+      "trunk": 0.9,
+      "junction": 0.81,
+      "arm1": 0.729,
+      "tip1": 0.6561,
+      "arm2": 0.729,
+      "tip2": 0.6561
+    },
+    "baseline_expected": {
+      "start_node": 1.0,
+      "trunk": 0.9,
+      "junction": 0.81,
+      "arm1": 0.729,
+      "tip1": 0.6561,
+      "arm2": 0.729,
+      "tip2": 0.6561
+    },
+    "positive_injection": {
+      "cfg": {
+        "start_node": 1.0,
+        "arm1": -0.8
+      },
+      "values": {
+        "start_node": 1.0,
+        "trunk": 0.9,
+        "junction": 0.81,
+        "arm1": -0.8,
+        "tip1": -0.72,
+        "arm2": 0.729,
+        "tip2": 0.6561
+      },
+      "changed_nodes": [
+        "arm1",
+        "tip1"
+      ]
+    },
+    "P4_inject_junction": {
+      "changed_nodes": [
+        "junction",
+        "arm1",
+        "tip1",
+        "arm2",
+        "tip2"
+      ],
+      "values": {
+        "start_node": 1.0,
+        "trunk": 0.9,
+        "junction": -0.8,
+        "arm1": -0.0,
+        "tip1": -0.0,
+        "arm2": -0.0,
+        "tip2": -0.0
+      }
+    },
+    "P5_broken_cut": {
+      "added_edge": [
+        "junction",
+        "tip1"
+      ],
+      "changed_nodes": [
+        "arm1"
+      ],
+      "tip1": 0.729,
+      "tip1_baseline": 0.729
+    },
+    "side_probe_inject_tip1": {
+      "changed_nodes": [
+        "tip1"
+      ],
+      "values": {
+        "start_node": 1.0,
+        "trunk": 0.9,
+        "junction": 0.81,
+        "arm1": 0.729,
+        "tip1": -0.8,
+        "arm2": 0.729,
+        "tip2": 0.6561
+      }
+    },
+    "P6_replay_consistency": {
+      "net1_nodes": 15,
+      "net1_edges": 34,
+      "net2_nodes": 15,
+      "net2_edges": 34,
+      "edge_counts_identical": true,
+      "violations": 0
+    },
+    "P6_module_means": {
+      "0": {
+        "before": 0.92,
+        "after": 0.58
+      },
+      "1": {
+        "before": 0.041625,
+        "after": 0.041625
+      },
+      "2": {
+        "before": 0.037125,
+        "after": 0.00185625
+      }
+    },
+    "P6_changed_nodes": [
+      "g1_1",
+      "g2_0",
+      "g2_1",
+      "g2_2",
+      "g2_3",
+      "g2_4",
+      "g2_5"
+    ],
+    "readonly": {
+      "hashes_before": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "synapse_net_v2.py": "ee6df589eb2f6983",
+        "synapse_net_v3.py": "085be73a06f0694c",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      },
+      "hashes_after": {
+        "synapse_net.py": "cf99a07a0e60fd4d",
+        "synapse_net_v2.py": "ee6df589eb2f6983",
+        "synapse_net_v3.py": "085be73a06f0694c",
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      },
+      "v1_expected": "cf99a07a0e60fd4d",
+      "v2_expected": "ee6df589eb2f6983",
+      "v3_expected": "085be73a06f0694c",
+      "layer_expected": {
+        "order_layer.py": "419d54745a9eb795",
+        "context_layer.py": "bd029d7bbdc345be",
+        "chunk_layer.py": "46f5857be0fc7c7e"
+      }
+    },
+    "outcome": "C 条目（轨迹压制能力）",
+    "registration": {
+      "outcome": "C 条目（轨迹压制能力）",
+      "text": "C??：在【割点结构】上，用 v2 的已登记带值入口把负值注入【分叉点下游的第一个节点】，该节点成为【路径屏障】（frozen 集合阻断正值传播）⇒ 该分支的下游被压到 <= 0（本语料 tip1：0.656100 → -0.720000，精确 = 注入值 x hop_decay），而【另一分支逐位不变】（arm2/tip2 差异 = 0）。对照组（阴性）：注入到共同上游 junction（非割点）⇒ 两个分支都被压（5 个节点变化），证明「只有一支变」来自割点结构；给下游加替代正路径 ⇒ 压制失败（tip1 保持正值），证明割点条件的必要性。范围限定：① 机制是【结构屏障】（frozen 阻断），不是【数值压低】——与 C38 的「构造参数 g 在到达值算式做减法」（数学运算）机制不同；② 下游的【精确负值】只在「紧邻叶子（全部邻居 frozen）」时成立，含环下游会退化为 EPS 伪影 ⇒ 判据写「<= 0」，不写精确值；③ 不压制种子（start_node 恒 1.0）⇒ 与 B33 不冲突；④ 功劳归 v2 的已登记入口（C37/B30）的 frozen 行为 + 注入策略（选割点），不是基底新能力（L0 一字未动）；⑤ 语料是 E43 自造的 7 节点最小拓扑。",
+      "C_entry": "C??：在【割点结构】上，用 v2 的已登记带值入口把负值注入【分叉点下游的第一个节点】，该节点成为【路径屏障】（frozen 集合阻断正值传播）⇒ 该分支的下游被压到 <= 0（本语料 tip1：0.656100 → -0.720000，精确 = 注入值 x hop_decay），而【另一分支逐位不变】（arm2/tip2 差异 = 0）。对照组（阴性）：注入到共同上游 junction（非割点）⇒ 两个分支都被压（5 个节点变化），证明「只有一支变」来自割点结构；给下游加替代正路径 ⇒ 压制失败（tip1 保持正值），证明割点条件的必要性。范围限定：① 机制是【结构屏障】（frozen 阻断），不是【数值压低】——与 C38 的「构造参数 g 在到达值算式做减法」（数学运算）机制不同；② 下游的【精确负值】只在「紧邻叶子（全部邻居 frozen）」时成立，含环下游会退化为 EPS 伪影 ⇒ 判据写「<= 0」，不写精确值；③ 不压制种子（start_node 恒 1.0）⇒ 与 B33 不冲突；④ 功劳归 v2 的已登记入口（C37/B30）的 frozen 行为 + 注入策略（选割点），不是基底新能力（L0 一字未动）；⑤ 语料是 E43 自造的 7 节点最小拓扑。",
+      "E43_FAIL": "E43 未通过：哪条判据挂、实测值见 exp43 JSON。失败分层：① 入口是否保留负值（P0/P3）→ ② 屏障是否形成（P2）→ ③ 排他性是否来自割点（P4/P5）。机制性 FAIL 才在跑完后新立 B 编号；实现/判据问题则修正后重跑（不新立编号）。"
+    },
+    "note": "机制 = frozen 屏障阻断正值传播（结构），不是数值压低（数学）。全程 v2；节点名用零撞车常量引用（E42/E43 的命名教训）。"
+  }
+}
